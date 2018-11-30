@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Input, Form, InputNumber } from 'antd';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import Address from '../../Address';
@@ -8,11 +7,6 @@ import style from './index.less';
 @connect()
 class AddressItem extends PureComponent {
   state = {};
-
-  onChange = value => {
-    // const { form: { setFieldsValue }, feild: { key } } = this.props;
-    // setFieldsValue({ address: value })
-  };
 
   render() {
     const {
