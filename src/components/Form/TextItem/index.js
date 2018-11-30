@@ -1,19 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Input, Form, InputNumber } from 'antd';
 import { connect } from 'dva';
+import FormItem from '../FormItem';
 
-import styles from '../index.less';
-
-const FormItem = Form.Item;
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 2 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
 @connect()
 class TextItem extends PureComponent {
   state = {};
@@ -24,12 +13,14 @@ class TextItem extends PureComponent {
     } = this.props;
     if (max !== '' && value.length > max) {
       callback(`长度需小于${max}`);
+    } else {
+      callback();
     }
   };
 
   renderNumberInput = () => {
     const {
-      getFieldDecorator,
+      form: { getFieldDecorator },
       defaultValue,
       feild: { key, max, min, scale, name },
       required,
@@ -49,7 +40,7 @@ class TextItem extends PureComponent {
 
   renderTextArea = () => {
     const {
-      getFieldDecorator,
+      form: { getFieldDecorator },
       defaultValue,
       feild: { key, name },
       required,
@@ -67,7 +58,7 @@ class TextItem extends PureComponent {
 
   renderInput = () => {
     const {
-      getFieldDecorator,
+      form: { getFieldDecorator },
       defaultValue,
       feild: { key, name },
       required,
@@ -85,22 +76,16 @@ class TextItem extends PureComponent {
 
   render() {
     const {
-      feild: { width, height, x, y, type, name, line },
+      feild: { line, type },
+      feild,
     } = this.props;
-    const itemStyle = {
-      width,
-      height,
-      top: `${y}px`,
-      left: `${x}px`,
-    };
+
     return (
-      <div className={styles.form_item} style={itemStyle}>
-        <FormItem {...formItemLayout} label={name}>
-          {type === 'int' && this.renderNumberInput()}
-          {!!(type === 'text' && line !== 1) && this.renderTextArea()}
-          {!!(type === 'text' && line === 1) && this.renderInput()}
-        </FormItem>
-      </div>
+      <FormItem {...feild}>
+        {type === 'int' && this.renderNumberInput()}
+        {!!(type === 'text' && line !== 1) && this.renderTextArea()}
+        {!!(type === 'text' && line === 1) && this.renderInput()}
+      </FormItem>
     );
   }
 }

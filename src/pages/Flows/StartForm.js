@@ -3,7 +3,8 @@ import { Card, Form, Button } from 'antd';
 import { connect } from 'dva';
 // import OAForm
 //   from '../../components/OAForm';
-import { TextItem } from '../../components/Form/index';
+import { TextItem, AddressItem } from '../../components/Form/index';
+import Address from '../../components/Address';
 import style from './index.less';
 
 const typeInt = {
@@ -42,11 +43,11 @@ const typeInt = {
 const typeText = {
   edit: true,
   required: true,
-  defaultValue: '1哈哈',
+  defaultValue: '哈哈',
   feild: {
     id: 317,
     key: 'text',
-    name: '单行文本',
+    name: '文本',
     description: '',
     type: 'text',
     is_checkbox: 0,
@@ -106,38 +107,78 @@ const typeTextarea = {
     widgets: [],
   },
 };
+const typeAddress = {
+  defaultValue: { province: 120000 },
+  required: true,
+  feild: {
+    id: 304,
+    key: 'area',
+    name: '地点',
+    description: '',
+    type: 'region',
+    is_checkbox: 0,
+    condition: null,
+    region_level: 2,
+    min: '',
+    max: '',
+    scale: 0,
+    width: '700px',
+    height: '75px',
+    x: 50,
+    y: 10,
+    line: 1,
+    default_value: [],
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 2,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
 @Form.create()
 @connect()
 class StartForm extends PureComponent {
   state = {};
 
-  handleSubmit = () => {
+  handleSubmit = e => {
+    e.preventDefault();
     console.log('handleSubmit');
     this.props.form.validateFields((err, v) => {
-      console.log('v', v);
+      console.log('v:', v);
     });
   };
 
   render() {
     const {
+      // form: { getFieldDecorator ,setFieldsValue },
+      form,
       form: { getFieldDecorator },
     } = this.props;
 
     return (
       <Card bordered={false}>
-        <div className={style.edit_form} style={{ height: '100px' }}>
-          <TextItem {...typeInt} getFieldDecorator={getFieldDecorator} />
-        </div>
-        <div className={style.edit_form} style={{ height: '100px' }}>
-          <TextItem {...typeText} getFieldDecorator={getFieldDecorator} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <TextItem {...typeTextarea} getFieldDecorator={getFieldDecorator} />
-        </div>
+        <Form onSubmit={this.handleSubmit}>
+          <div className={style.edit_form} style={{ height: '100px' }}>
+            <TextItem {...typeInt} form={form} />
+          </div>
+          <div className={style.edit_form} style={{ height: '100px' }}>
+            <TextItem {...typeText} form={form} />
+          </div>
+          <div className={style.edit_form} style={{ height: '200px' }}>
+            <TextItem {...typeTextarea} form={form} />
+          </div>
+          <div className={style.edit_form} style={{ height: '200px' }}>
+            <AddressItem {...typeAddress} form={form} />
+          </div>
 
-        <Button type="primary" onClick={this.handleSubmit}>
-          提交
-        </Button>
+          <Button type="primary" htmlType="submit">
+            提交
+          </Button>
+        </Form>
       </Card>
     );
   }

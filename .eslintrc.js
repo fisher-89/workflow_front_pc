@@ -32,7 +32,7 @@ module.exports = {
     'jsx-a11y/anchor-is-valid': 0,
     'linebreak-style': 0,
     'react/destructuring-assignment': 0,
-    'no-unused-vars': 0,
+    'no-unused-vars': 1,
     'react/no-access-state-in-setstate': 0,
   },
   settings: {
