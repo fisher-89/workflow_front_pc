@@ -22,6 +22,16 @@ export default [
         path: '/test1',
         name: '发起流程',
         component: './Test/test',
+        // routes: [
+        //   {
+        //     path: '/test1/start_form',
+        //     component: './Flows/StartForm',
+        //   }
+        // ]
+      },
+      {
+        path: '/start_form/:id',
+        component: './Flows/StartForm',
       },
       {
         path: '/test',
@@ -45,6 +55,9 @@ export default [
       {
         path: '/exception/403',
         component: './Exception/403',
+      },
+      {
+        component: './Exception/404',
       },
     ],
   },

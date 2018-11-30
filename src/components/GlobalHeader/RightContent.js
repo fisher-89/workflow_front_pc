@@ -79,9 +79,10 @@ export default class GlobalHeaderRight extends PureComponent {
         >
           搜索
         </HeaderSearch>
-        <span className={`${styles.action} ${styles.setting}`}><Icon type="setting" /> 设置</span>
+        <span className={`${styles.action} ${styles.setting}`}>
+          <Icon type="setting" /> 设置
+        </span>
         {currentUser.realname ? (
-
           <span className={`${styles.action} ${styles.account}`}>
             <Avatar
               size="small"
@@ -90,15 +91,14 @@ export default class GlobalHeaderRight extends PureComponent {
               style={{ width: 48, height: 48 }}
               src={currentUser.avatar || '/default_avatar.png'}
             />
-            <span className={styles.name} style={{ marginRight: 20 }}>{currentUser.realname}</span>
+            <span className={styles.name} style={{ marginRight: 20 }}>
+              {currentUser.realname}
+            </span>
             <Icon type="down" />
-
           </span>
-        ) :
-          (
-            <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
-          )
-        }
+        ) : (
+          <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
+        )}
       </div>
     );
   }

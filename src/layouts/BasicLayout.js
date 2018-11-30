@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title';
 import isEqual from 'lodash/isEqual';
 import memoizeOne from 'memoize-one';
 import { connect } from 'dva';
-import { keys } from "lodash";
+import { keys } from 'lodash';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import pathToRegexp from 'path-to-regexp';
@@ -87,6 +87,7 @@ class BasicLayout extends React.PureComponent {
     this.getPageTitle = memoizeOne(this.getPageTitle);
     this.getBreadcrumbNameMap = memoizeOne(this.getBreadcrumbNameMap, isEqual);
     this.breadcrumbNameMap = this.getBreadcrumbNameMap();
+
     this.matchParamsPath = memoizeOne(this.matchParamsPath, isEqual);
   }
 
@@ -178,7 +179,6 @@ class BasicLayout extends React.PureComponent {
 
   getPageTitle = pathname => {
     const currRouterData = this.matchParamsPath(pathname);
-
     if (!currRouterData) {
       return 'Ant Design Pro';
     }
@@ -253,7 +253,7 @@ class BasicLayout extends React.PureComponent {
           style={{
             ...this.getLayoutStyle(),
             minHeight: '100vh',
-            background: '#fff'
+            background: '#fff',
           }}
         >
           <Header
