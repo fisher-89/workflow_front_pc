@@ -3,8 +3,7 @@ import { Card, Form, Button } from 'antd';
 import { connect } from 'dva';
 // import OAForm
 //   from '../../components/OAForm';
-import { TextItem, AddressItem } from '../../components/Form/index';
-import Address from '../../components/Address';
+import { TextItem, AddressItem, UploadItem } from '../../components/Form/index';
 import style from './index.less';
 
 const typeInt = {
@@ -139,6 +138,35 @@ const typeAddress = {
     widgets: [],
   },
 };
+const typeFile = {
+  defaultValue: [
+    'http://112.74.177.132:8006/storage/uploads/temporary/2018/12/03/120752_20181203154046_822531_thumb.jpg',
+  ],
+  required: true,
+  feild: {
+    id: 302,
+    key: 'file',
+    name: '文件',
+    description: '',
+    type: 'file',
+    is_checkbox: 0,
+    condition: null,
+    region_level: null,
+    min: '',
+    max: '',
+    scale: 0,
+    default_value: '',
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 0,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
 @Form.create()
 @connect()
 class StartForm extends PureComponent {
@@ -146,7 +174,6 @@ class StartForm extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log('handleSubmit');
     this.props.form.validateFields((err, v) => {
       console.log('v:', v);
     });
@@ -173,6 +200,9 @@ class StartForm extends PureComponent {
           </div>
           <div className={style.edit_form} style={{ height: '200px' }}>
             <AddressItem {...typeAddress} form={form} />
+          </div>
+          <div className={style.edit_form} style={{ height: '200px' }}>
+            <UploadItem {...typeFile} form={form} />
           </div>
 
           <Button type="primary" htmlType="submit">

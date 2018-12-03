@@ -34,6 +34,7 @@ module.exports = {
     'react/destructuring-assignment': 0,
     'no-unused-vars': 1,
     'react/no-access-state-in-setstate': 0,
+    'no-undef': 0,
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url'],

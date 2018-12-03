@@ -27,12 +27,12 @@ const plugins = [
       },
       ...(!process.env.TEST && os.platform() === 'darwin'
         ? {
-          dll: {
-            include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
-            exclude: ['@babel/runtime'],
-          },
-          hardSource: true,
-        }
+            dll: {
+              include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+              exclude: ['@babel/runtime'],
+            },
+            hardSource: true,
+          }
         : {}),
     },
   ],
@@ -47,32 +47,38 @@ if (process.env.APP_TYPE === 'site') {
     },
   ]);
 }
-
+const localIp = 'http://192.168.20.16:8006';
+const test = 'http://112.74.177.132:8006';
+const host = test;
 const proxy = {
   '/oauth': {
     // changeOrigin: true,
     target: 'http://112.74.177.132:8002/oauth',
     pathRewrite: { '^/oauth': '' },
   },
-  '/api': {
+  '/api/current-user': {
     // changeOrigin: true,
-    target: 'http://112.74.177.132:8002/api/',
+    target: 'http://112.74.177.132:8002/api',
     pathRewrite: { '^/api': '' },
   },
-}
+  '/api/files': {
+    target: `http://112.74.177.132:8006/api`,
+    pathRewrite: { '^/api': '' },
+  },
+};
 
 export default {
   // add for transfer to umi
   plugins,
   targets: { ie: 11 },
   define: {
-    AUTH_NAME: "pro",
-    OA_CLIENT_ID: "2",
-    TOKEN_PREFIX: "OA_",
+    AUTH_NAME: 'pro',
+    OA_CLIENT_ID: '2',
+    TOKEN_PREFIX: 'OA_',
     APP_TYPE: process.env.APP_TYPE || '',
-    OA_PATH: "http://112.74.177.132:8002",
+    OA_PATH: 'http://112.74.177.132:8002',
     // OA_CRM_UPLOAD: "http://112.74.177.132:8003/admin/",
-    OA_CLIENT_SECRET: "Z77PmFkOD9SMAIbVDZcKRxOD6f0YA0ck54amYEr1",
+    OA_CLIENT_SECRET: 'Z77PmFkOD9SMAIbVDZcKRxOD6f0YA0ck54amYEr1',
     ...define,
   },
   // 路由配置

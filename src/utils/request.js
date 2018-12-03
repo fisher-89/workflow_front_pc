@@ -1,4 +1,6 @@
-import fetch from 'dva/fetch';
+// import fetch from 'dva/fetch';
+import axios from 'axios';
+
 import router from 'umi/router';
 import { notification } from 'antd';
 
@@ -20,10 +22,37 @@ const codeMessage = {
   504: '网关超时。',
 };
 
-const checkStatus = response => {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
+const fetch = (url, options) => {
+  const { method, body, headers } = options;
+  const axo = axios.create({
+    timeout: 20000,
+    headers,
+  });
+
+  const newMethod = method.toLowerCase();
+  switch (true) {
+    case newMethod === 'get':
+      return axo.get(url);
+    case newMethod === 'post':
+      return axo.post(url, body);
+    case newMethod === 'put' && body === undefined:
+      return axo.put(url);
+    case newMethod === 'put':
+      return axo.put(url, body);
+    case newMethod === 'delete':
+      return axo.delete(url);
+    case newMethod === 'patch':
+      return axo.patch(url, body);
+    default:
+      return axo.get(url);
   }
+};
+const checkStatus = errors => {
+  // if (response.status >= 200 && response.status < 300) {
+  //   return response;
+  // }
+  console.log('checkStatus:', errors);
+  const { response } = errors;
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
     message: `请求错误 ${response.status}: ${response.url}`,
@@ -43,87 +72,86 @@ const checkStatus = response => {
  * @return {object}           An object containing either "data" or "err"
  */
 
-export default function request(url, option) {
-  const options = { ...option };
-  let urlParam = url;
+export default function request(uri, params) {
+  let urlParam = uri;
+
   const defaultOptions = {
     credentials: 'include',
-    method: 'GET',
   };
-  const newOptions = { ...defaultOptions, ...options };
-  newOptions.headers = {
-    Accept: 'application/json',
-    ...(options && options.headers),
-  };
-
-  if (url.match(/\/api\//)) {
-    const tokenPrefix = TOKEN_PREFIX;
-    const accessToken = localStorage.getItem(`${tokenPrefix}access_token`);
-    const expiresIn = localStorage.getItem(`${tokenPrefix}access_token_expires_in`);
-    if (accessToken && expiresIn > new Date().getTime()) {
-      newOptions.headers = {
-        Authorization: `Bearer ${localStorage.getItem(`${tokenPrefix}access_token`)}`,
-        ...newOptions.headers,
+  if (uri.match(/\/api\//)) {
+    if (
+      localStorage.getItem('OA_access_token') &&
+      localStorage.getItem('OA_access_token_expires_in') > new Date().getTime()
+    ) {
+      defaultOptions.headers = {
+        Authorization: `Bearer ${localStorage.getItem('OA_access_token')}`,
       };
     } else {
-      router.push('/passport/redirect_to_authorize');
+      window.location.href = `${OA_PATH}/oauth/authorize?client_id=${OA_CLIENT_ID}&response_type=code`;
     }
   }
-
-  if (newOptions.method === 'POST' || newOptions.method === 'PUT' || newOptions.method === 'PATCH') {
+  const newOptions = {
+    ...defaultOptions,
+    ...params,
+    method: params ? params.method : 'GET',
+  };
+  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
-      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      'Content-Type': 'application/json;charset=utf-8',
       ...newOptions.headers,
     };
-    newOptions.body = JSON.stringify(newOptions.body);
   } else if (newOptions.method === 'GET' && newOptions.body) {
     const paramsArray = [];
-    Object.keys(newOptions.body).forEach((key) => {
+    Object.keys(newOptions.body).forEach(key => {
       let param = newOptions.body[key];
       if (typeof param === 'object') {
         param = JSON.stringify(param);
       }
       paramsArray.push(`${key}=${param}`);
     });
-    delete newOptions.body;
-    if (url.search(/\?/) === -1 && paramsArray.length > 0) {
+    if (uri.search(/\?/) === -1 && paramsArray.length > 0) {
       urlParam += `?${paramsArray.join('&')}`;
     } else if (paramsArray.length > 0) {
       urlParam += `&${paramsArray.join('&')}`;
     }
   }
-
-  return fetch(urlParam, newOptions)
-    .then(checkStatus)
-    .then(response => {
-      // DELETE and 204 do not return data by default
-      // using .json will report an error.
-      if (newOptions.method === 'DELETE' || response.status === 204) {
-        return response.text();
-      }
-      return response.json();
-    })
-    .catch(e => {
-      const status = e.name;
-      if (status === 401) {
-        // @HACK
-        /* eslint-disable no-underscore-dangle */
-        window.g_app._store.dispatch({
-          type: 'login/logout',
-        });
-        return;
-      }
-      // environment should not be used
-      if (status === 403) {
-        router.push('/exception/403');
-        return;
-      }
-      if (status <= 504 && status >= 500) {
-        router.push('/exception/500');
-        return;
-      }
-      if (status >= 404 && status < 422) {
-        router.push('/exception/404');
-      }
-    });
+  return (
+    fetch(urlParam, newOptions)
+      // .then(checkStatus)
+      .then(response => {
+        // DELETE and 204 do not return data by default
+        // using .json will report an error.
+        if (newOptions.method === 'DELETE' || response.status === 204) {
+          // return response.text();
+          const obj = { status: '204', message: '删除成功' };
+          return { ...obj };
+        }
+        return response.data;
+      })
+      .catch(checkStatus)
+      .catch(e => {
+        const status = e.name;
+        if (status === 401) {
+          // @HACK
+          /* eslint-disable no-underscore-dangle */
+          window.g_app._store.dispatch({
+            type: 'login/logout',
+          });
+          return;
+        }
+        // environment should not be used
+        if (status === 403) {
+          router.push('/exception/403');
+          return;
+        }
+        if (status <= 504 && status >= 500) {
+          router.push('/exception/500');
+          return;
+        }
+        if (status >= 404 && status < 422) {
+          router.push('/exception/404');
+        }
+      })
+  );
 }
