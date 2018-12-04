@@ -61,7 +61,7 @@ const proxy = {
     target: 'http://112.74.177.132:8002/api',
     pathRewrite: { '^/api': '' },
   },
-  '/api/files': {
+  '/api': {
     target: `http://112.74.177.132:8006/api`,
     pathRewrite: { '^/api': '' },
   },

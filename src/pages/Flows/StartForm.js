@@ -3,14 +3,14 @@ import { Card, Form, Button } from 'antd';
 import { connect } from 'dva';
 // import OAForm
 //   from '../../components/OAForm';
-import { TextItem, AddressItem, UploadItem } from '../../components/Form/index';
+import { TextItem, AddressItem, UploadItem, InterfaceItem } from '../../components/Form/index';
 import style from './index.less';
 
 const typeInt = {
   edit: true,
   required: true,
   defaultValue: '1.0',
-  feild: {
+  field: {
     id: 303,
     key: 'number',
     name: '数字',
@@ -43,7 +43,7 @@ const typeText = {
   edit: true,
   required: true,
   defaultValue: '哈哈',
-  feild: {
+  field: {
     id: 317,
     key: 'text',
     name: '文本',
@@ -77,7 +77,7 @@ const typeTextarea = {
   edit: true,
   required: true,
   defaultValue: '好嗨呀',
-  feild: {
+  field: {
     id: 317,
     key: 'textarea',
     name: '多行文本',
@@ -109,7 +109,7 @@ const typeTextarea = {
 const typeAddress = {
   defaultValue: { province: 120000 },
   required: true,
-  feild: {
+  field: {
     id: 304,
     key: 'area',
     name: '地点',
@@ -141,7 +141,7 @@ const typeAddress = {
 const typeFile = {
   defaultValue: ['/storage/uploads/temporary/2018/12/03/120752_20181203154046_822531.jpg'],
   required: true,
-  feild: {
+  field: {
     id: 302,
     key: 'file',
     name: '文件',
@@ -165,6 +165,61 @@ const typeFile = {
     widgets: [],
   },
 };
+const typeInterface = {
+  defaultValue: 1,
+  required: true,
+  field: {
+    id: 314,
+    key: 'interface',
+    name: '接口（单选）',
+    description: '',
+    type: 'api',
+    is_checkbox: 0,
+    condition: null,
+    region_level: null,
+    min: '',
+    max: '',
+    scale: 0,
+    default_value: '7',
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 12,
+    field_api_configuration_id: 1,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
+const typeInterfaces = {
+  defaultValue: [1, 4],
+  required: true,
+  field: {
+    id: 315,
+    key: 'interfaces',
+    name: '接口（多选）',
+    description: '',
+    type: 'api',
+    is_checkbox: 1,
+    condition: null,
+    region_level: null,
+    min: '',
+    max: '',
+    scale: 0,
+    width: '600px',
+    default_value: '7',
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 12,
+    field_api_configuration_id: 1,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
 @Form.create()
 @connect()
 class StartForm extends PureComponent {
@@ -180,25 +235,30 @@ class StartForm extends PureComponent {
   render() {
     const { form } = this.props;
 
+    // <div className={style.edit_form} style={{ height: '200px' }}>
+    //   <AddressItem {...typeAddress}  />
+    // </div>
+    // <div className={style.edit_form} style={{ height: '200px' }}>
+    //   <UploadItem {...typeFile} />
+    // </div>
+    // <div className={style.edit_form} style={{ height: '200px' }}>
+    //   <InterfaceItem {...typeInterface}  />
+    // </div>
+    // <div className={style.edit_form} style={{ height: '200px' }}>
+    //   <InterfaceItem {...typeInterfaces} />
+    // </div>
     return (
       <Card bordered={false}>
         <Form onSubmit={this.handleSubmit}>
           <div className={style.edit_form} style={{ height: '100px' }}>
-            <TextItem {...typeInt} form={form} />
+            <TextItem {...typeText} />
           </div>
           <div className={style.edit_form} style={{ height: '100px' }}>
-            <TextItem {...typeText} form={form} />
+            <TextItem {...typeInt} />
           </div>
           <div className={style.edit_form} style={{ height: '200px' }}>
-            <TextItem {...typeTextarea} form={form} />
+            <TextItem {...typeTextarea} />
           </div>
-          <div className={style.edit_form} style={{ height: '200px' }}>
-            <AddressItem {...typeAddress} form={form} />
-          </div>
-          <div className={style.edit_form} style={{ height: '200px' }}>
-            <UploadItem {...typeFile} form={form} />
-          </div>
-
           <Button type="primary" htmlType="submit">
             提交
           </Button>

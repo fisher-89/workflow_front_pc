@@ -1,87 +1,106 @@
 import React, { PureComponent } from 'react';
-import { Input, Form, InputNumber } from 'antd';
+import { Input, InputNumber } from 'antd';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
+import style from './index.less';
 
 @connect()
 class TextItem extends PureComponent {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: props.defaultValue,
+      errorMsg: '',
+    };
+  }
 
-  validateInput = (rule, value, callback) => {
+  inputOnChange = e => {
     const {
-      feild: { max },
+      field: { max, name },
+      onChange,
     } = this.props;
+    const { value } = e.target;
+    let errorMsg = '';
     if (max !== '' && value.length > max) {
-      callback(`长度需小于${max}`);
-    } else {
-      callback();
+      errorMsg = `长度需小于${max}`;
+    } else if (value === '') {
+      errorMsg = `请输入${name}`;
     }
+    this.setState(
+      {
+        errorMsg,
+        value,
+      },
+      () => {
+        onChange(value, errorMsg);
+      }
+    );
+  };
+
+  numberInputChange = value => {
+    const {
+      field: { name },
+      onChange,
+    } = this.props;
+    let errorMsg = '';
+    if (value === '') {
+      errorMsg = `请输入${name}`;
+    }
+    this.setState(
+      {
+        errorMsg,
+        value,
+      },
+      () => {
+        onChange(value, errorMsg);
+      }
+    );
   };
 
   renderNumberInput = () => {
+    const { value, errorMsg } = this.state;
     const {
-      form: { getFieldDecorator },
-      defaultValue,
-      feild: { key, max, min, scale, name },
-      required,
+      field: { max, min, scale },
     } = this.props;
-    return getFieldDecorator(key, {
-      initialValue: defaultValue,
-      rules: [{ required, message: `请输入${name}` }],
-    })(
-      <InputNumber
-        max={max === '' ? Infinity : max - 0}
-        min={min === '' ? -Infinity : min - 0}
-        precision={scale}
-        onChange={this.handleOnChange}
-      />
+    return (
+      <div className={errorMsg ? style.errorMsg : style.noerror}>
+        <InputNumber
+          max={max === '' ? Infinity : max - 0}
+          min={min === '' ? -Infinity : min - 0}
+          precision={scale}
+          value={value}
+          onChange={this.numberInputChange}
+        />
+      </div>
     );
   };
 
   renderTextArea = () => {
-    const {
-      form: { getFieldDecorator },
-      defaultValue,
-      feild: { key, name },
-      required,
-    } = this.props;
-    return getFieldDecorator(key, {
-      initialValue: defaultValue,
-      rules: [
-        { required, message: `请输入${name}` },
-        {
-          validator: this.validateInput,
-        },
-      ],
-    })(<Input.TextArea autosize={false} onChange={this.handleOnChange} />);
+    const { value, errorMsg } = this.state;
+    return (
+      <div className={errorMsg ? style.errorMsg : style.noerror}>
+        <Input.TextArea value={value} autosize={false} onChange={this.inputOnChange} />
+      </div>
+    );
   };
 
   renderInput = () => {
-    const {
-      form: { getFieldDecorator },
-      defaultValue,
-      feild: { key, name },
-      required,
-    } = this.props;
-    return getFieldDecorator(key, {
-      initialValue: defaultValue,
-      rules: [
-        { required, message: `请输入${name}` },
-        {
-          validator: this.validateInput,
-        },
-      ],
-    })(<Input />);
+    const { value, errorMsg } = this.state;
+    return (
+      <div className={errorMsg ? style.errorMsg : style.noerror}>
+        <Input value={value} onChange={this.inputOnChange} />
+      </div>
+    );
   };
 
   render() {
     const {
-      feild: { line, type },
-      feild,
+      field: { line, type },
+      field,
     } = this.props;
-
+    const { errorMsg } = this.state;
     return (
-      <FormItem {...feild}>
+      <FormItem {...field} errorMsg={errorMsg}>
         {type === 'int' && this.renderNumberInput()}
         {!!(type === 'text' && line !== 1) && this.renderTextArea()}
         {!!(type === 'text' && line === 1) && this.renderInput()}
@@ -89,5 +108,7 @@ class TextItem extends PureComponent {
     );
   }
 }
-
-export default Form.create()(TextItem);
+TextItem.defaultProps = {
+  onChange: () => {},
+};
+export default TextItem;

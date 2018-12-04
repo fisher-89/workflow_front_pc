@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FileUpload from '../../FileUpload';
 import FormItem from '../FormItem';
-import { rebackImg, reAgainImg, dealThumbImg } from '../../../utils/convert';
+import { dealThumbImg } from '../../../utils/convert';
 
 import style from './index.less';
 
@@ -11,7 +11,7 @@ class UploadItem extends PureComponent {
   onChange = value => {
     const {
       form: { setFieldsValue },
-      feild: { key },
+      field: { key },
     } = this.props;
     setFieldsValue({ [key]: value });
   };
@@ -25,8 +25,8 @@ class UploadItem extends PureComponent {
 
   render() {
     const {
-      feild,
-      feild: { key, name },
+      field,
+      field: { key, name },
       required,
       defaultValue,
       form: { getFieldDecorator },
@@ -36,7 +36,7 @@ class UploadItem extends PureComponent {
       return file;
     });
     return (
-      <FormItem {...feild} width="900px" height="auto" className="file">
+      <FormItem {...field} width="900px" height="auto" className="file">
         {getFieldDecorator(key, {
           initialValue: files,
           rules: [

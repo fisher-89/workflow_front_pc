@@ -13,17 +13,17 @@ class AddressItem extends PureComponent {
       form: { getFieldDecorator },
       defaultValue,
       required,
-      feild: { key, name },
-      feild,
+      field: { key, name },
+      field,
     } = this.props;
     return (
-      <FormItem className={style.address} {...feild} width="675px" height="150px">
+      <FormItem className={style.address} {...field} width="675px" height="150px">
         {getFieldDecorator(key, {
           initialValue: defaultValue,
           rules: [{ required, message: `请输入${name}` }],
         })(
           <Address
-            {...feild}
+            {...field}
             name={{
               province_id: 'province',
               city_id: 'city',
