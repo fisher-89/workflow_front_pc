@@ -139,9 +139,7 @@ const typeAddress = {
   },
 };
 const typeFile = {
-  defaultValue: [
-    'http://112.74.177.132:8006/storage/uploads/temporary/2018/12/03/120752_20181203154046_822531_thumb.jpg',
-  ],
+  defaultValue: ['/storage/uploads/temporary/2018/12/03/120752_20181203154046_822531.jpg'],
   required: true,
   feild: {
     id: 302,
@@ -180,11 +178,7 @@ class StartForm extends PureComponent {
   };
 
   render() {
-    const {
-      // form: { getFieldDecorator ,setFieldsValue },
-      form,
-      form: { getFieldDecorator },
-    } = this.props;
+    const { form } = this.props;
 
     return (
       <Card bordered={false}>
