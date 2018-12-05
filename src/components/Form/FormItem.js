@@ -15,7 +15,7 @@ class FormItem extends PureComponent {
   state = {};
 
   render() {
-    const { children, className, width, height, x, y, name, errorMsg, require } = this.props;
+    const { children, className, width, height, x, y, name, errorMsg, required } = this.props;
     const itemStyle = {
       width,
       height,
@@ -23,14 +23,11 @@ class FormItem extends PureComponent {
       left: `${x}px`,
     };
     const classnames = [styles.form_item, className].join(' ');
-    //   <Form.Item {...formItemLayout} label={name}>
-    //   {children}
-    // </Form.Item>
     return (
       <div className={classnames} style={itemStyle}>
         <div className={styles.item}>
           <div className={styles.aside}>
-            {require && <span style={{ color: '#d9333f' }}>*</span>}
+            {required && <span style={{ color: '#d9333f' }}>*</span>}
             {name}：
           </div>
           <div className={styles.right}>{children}</div>
@@ -43,6 +40,6 @@ class FormItem extends PureComponent {
   }
 }
 FormItem.defaultProps = {
-  errorMsg: '嗨',
+  errorMsg: '',
 };
 export default FormItem;

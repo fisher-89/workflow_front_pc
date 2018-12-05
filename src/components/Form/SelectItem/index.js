@@ -5,7 +5,7 @@ import Select from '../../Select';
 import style from './index.less';
 
 @connect(({ interfaceApi }) => ({ sourceDetails: interfaceApi.sourceDetails }))
-class UploadItem extends PureComponent {
+class SelectItem extends PureComponent {
   constructor(props) {
     super(props);
     const { defaultValue, field } = this.props;
@@ -14,17 +14,6 @@ class UploadItem extends PureComponent {
       value: defaultValue || (muti ? [] : ''),
       errorMsg: '',
     };
-  }
-
-  componentWillMount() {
-    const { dispatch, field } = this.props;
-    this.id = field.field_api_configuration_id;
-    dispatch({
-      type: 'interfaceApi/fetchApi',
-      payload: {
-        id: this.id,
-      },
-    });
   }
 
   onSingleChange = value => {
@@ -56,15 +45,14 @@ class UploadItem extends PureComponent {
   };
 
   getOptions = () => {
-    const { sourceDetails } = this.props;
-    return sourceDetails[this.id] || [];
-  };
-
-  validateFile = (rule, value, callback) => {
-    const { required } = this.props;
-    if (required && (!value || value.length === 0)) {
-      callback();
-    } else callback();
+    const {
+      field: { options },
+    } = this.props;
+    const newOpts = (options || []).map(item => {
+      const opt = { value: item, text: item };
+      return opt;
+    });
+    return newOpts;
   };
 
   render() {
@@ -72,7 +60,7 @@ class UploadItem extends PureComponent {
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
     if (!field.is_checkbox) {
-      const className = [style.inteface, errorMsg ? style.errorMsg : ''].join(' ');
+      const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
         <FormItem {...field} errorMsg={errorMsg} required={required}>
           <div className={className}>
@@ -81,15 +69,15 @@ class UploadItem extends PureComponent {
         </FormItem>
       );
     }
-    const className = [style.mutiinteface, errorMsg ? style.errorMsg : ''].join(' ');
+    const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     return (
       <FormItem {...field} height="auto" errorMsg={errorMsg} required={required}>
         <div className={className}>
-          <Select options={options} value={value} mode="multiple" onChange={this.onMutiChange} />
+          <Select options={options} mode="multiple" value={value} onChange={this.onMutiChange} />
         </div>
       </FormItem>
     );
   }
 }
 
-export default UploadItem;
+export default SelectItem;

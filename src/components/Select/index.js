@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Select } from 'antd';
 
 const { Option } = Select;
-class SingleSelect extends PureComponent {
+class SelectComp extends PureComponent {
   constructor(props) {
     super(props);
     const { value } = props;
@@ -22,14 +22,9 @@ class SingleSelect extends PureComponent {
 
   handleOnChange = v => {
     const { onChange } = this.props;
-    this.setState(
-      {
-        value: v,
-      },
-      () => {
-        onChange(v);
-      }
-    );
+    this.setState({ value: v }, () => {
+      onChange(v);
+    });
   };
 
   renderOptions = () => {
@@ -53,11 +48,12 @@ class SingleSelect extends PureComponent {
     );
   }
 }
-SingleSelect.defaultProps = {
+SelectComp.defaultProps = {
   name: {
     value: 'value',
     text: 'text',
   },
   allowClear: true,
+  onChange: () => {},
 };
-export default SingleSelect;
+export default SelectComp;

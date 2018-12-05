@@ -3,7 +3,14 @@ import { Card, Form, Button } from 'antd';
 import { connect } from 'dva';
 // import OAForm
 //   from '../../components/OAForm';
-import { TextItem, AddressItem, UploadItem, InterfaceItem } from '../../components/Form/index';
+import {
+  TextItem,
+  AddressItem,
+  UploadItem,
+  InterfaceItem,
+  SelectItem,
+  ArrayItem,
+} from '../../components/Form/index';
 import style from './index.less';
 
 const typeInt = {
@@ -220,49 +227,137 @@ const typeInterfaces = {
     widgets: [],
   },
 };
-@Form.create()
+const typeSelect = {
+  defaultValue: 1,
+  required: true,
+  field: {
+    id: 305,
+    key: 'single',
+    name: '单选',
+    description: '',
+    type: 'select',
+    is_checkbox: 0,
+    condition: null,
+    region_level: null,
+    min: '',
+    max: '',
+    scale: 0,
+    default_value: '给',
+    options: ['给', '我', '发'],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 3,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
+const typeMutiSelect = {
+  defaultValue: [1],
+  required: true,
+  field: {
+    id: 306,
+    key: 'muti',
+    name: '多选',
+    description: '',
+    type: 'select',
+    is_checkbox: 1,
+    condition: null,
+    region_level: null,
+    min: '',
+    max: '',
+    scale: 0,
+    default_value: '给',
+    options: ['给', '我', '发'],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 3,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
+const typeArray = {
+  defaultValue: ['1'],
+  required: true,
+  field: {
+    id: 307,
+    key: 'arra',
+    name: '数组',
+    description: '',
+    type: 'array',
+    is_checkbox: 0,
+    condition: null,
+    region_level: null,
+    min: '2',
+    max: '5',
+    scale: 0,
+    width: '700px',
+    height: '75px',
+    x: 50,
+    y: 10,
+    line: 1,
+    default_value: ['2', '5'],
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 5,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
 @connect()
 class StartForm extends PureComponent {
   state = {};
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, v) => {
-      console.log('v:', v);
-    });
   };
 
   render() {
-    const { form } = this.props;
-
-    // <div className={style.edit_form} style={{ height: '200px' }}>
-    //   <AddressItem {...typeAddress}  />
-    // </div>
-    // <div className={style.edit_form} style={{ height: '200px' }}>
-    //   <UploadItem {...typeFile} />
-    // </div>
-    // <div className={style.edit_form} style={{ height: '200px' }}>
-    //   <InterfaceItem {...typeInterface}  />
-    // </div>
-    // <div className={style.edit_form} style={{ height: '200px' }}>
-    //   <InterfaceItem {...typeInterfaces} />
-    // </div>
     return (
       <Card bordered={false}>
-        <Form onSubmit={this.handleSubmit}>
-          <div className={style.edit_form} style={{ height: '100px' }}>
-            <TextItem {...typeText} />
-          </div>
-          <div className={style.edit_form} style={{ height: '100px' }}>
-            <TextItem {...typeInt} />
-          </div>
-          <div className={style.edit_form} style={{ height: '200px' }}>
-            <TextItem {...typeTextarea} />
-          </div>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-        </Form>
+        <div className={style.edit_form} style={{ height: '100px' }}>
+          <TextItem {...typeText} />
+        </div>
+        <div className={style.edit_form} style={{ height: '100px' }}>
+          <TextItem {...typeInt} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <TextItem {...typeTextarea} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <AddressItem {...typeAddress} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <UploadItem {...typeFile} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <InterfaceItem {...typeInterface} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <InterfaceItem {...typeInterfaces} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <SelectItem {...typeSelect} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <SelectItem {...typeMutiSelect} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <ArrayItem {...typeArray} />
+        </div>
+
+        <Button type="primary" onClick={this.handleSubmit}>
+          提交
+        </Button>
       </Card>
     );
   }

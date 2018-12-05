@@ -43,7 +43,7 @@ class TextItem extends PureComponent {
       onChange,
     } = this.props;
     let errorMsg = '';
-    if (value === '') {
+    if (value === '' || value === undefined) {
       errorMsg = `请输入${name}`;
     }
     this.setState(
@@ -58,56 +58,59 @@ class TextItem extends PureComponent {
   };
 
   renderNumberInput = () => {
-    const { value, errorMsg } = this.state;
+    const { value } = this.state;
     const {
       field: { max, min, scale },
     } = this.props;
     return (
-      <div className={errorMsg ? style.errorMsg : style.noerror}>
-        <InputNumber
-          max={max === '' ? Infinity : max - 0}
-          min={min === '' ? -Infinity : min - 0}
-          precision={scale}
-          value={value}
-          onChange={this.numberInputChange}
-        />
-      </div>
+      <InputNumber
+        max={max === '' ? Infinity : max - 0}
+        min={min === '' ? -Infinity : min - 0}
+        precision={scale}
+        value={value}
+        onChange={this.numberInputChange}
+      />
     );
   };
 
   renderTextArea = () => {
-    const { value, errorMsg } = this.state;
-    return (
-      <div className={errorMsg ? style.errorMsg : style.noerror}>
-        <Input.TextArea value={value} autosize={false} onChange={this.inputOnChange} />
-      </div>
-    );
+    const { value } = this.state;
+    return <Input.TextArea value={value} autosize={false} onChange={this.inputOnChange} />;
   };
 
   renderInput = () => {
-    const { value, errorMsg } = this.state;
-    return (
-      <div className={errorMsg ? style.errorMsg : style.noerror}>
-        <Input value={value} onChange={this.inputOnChange} />
-      </div>
-    );
+    const { value } = this.state;
+    return <Input value={value} onChange={this.inputOnChange} />;
+  };
+
+  makeNewProps = () => {
+    const { field, required } = this.props;
+    const { errorMsg } = this.state;
+    const props = {
+      ...field,
+      required,
+      errorMsg,
+    };
+    return props;
   };
 
   render() {
     const {
       field: { line, type },
-      field,
     } = this.props;
     const { errorMsg } = this.state;
     return (
-      <FormItem {...field} errorMsg={errorMsg}>
-        {type === 'int' && this.renderNumberInput()}
-        {!!(type === 'text' && line !== 1) && this.renderTextArea()}
-        {!!(type === 'text' && line === 1) && this.renderInput()}
+      <FormItem {...this.makeNewProps()}>
+        <div className={errorMsg ? style.errorMsg : style.noerror}>
+          {type === 'int' && this.renderNumberInput()}
+          {!!(type === 'text' && line !== 1) && this.renderTextArea()}
+          {!!(type === 'text' && line === 1) && this.renderInput()}
+        </div>
       </FormItem>
     );
   }
 }
+
 TextItem.defaultProps = {
   onChange: () => {},
 };

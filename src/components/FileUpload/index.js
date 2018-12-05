@@ -3,6 +3,7 @@ import { Upload, Icon, Modal } from 'antd';
 import { connect } from 'dva';
 import request from '../../utils/request';
 import { rebackImg, reAgainImg, dealThumbImg } from '../../utils/convert';
+import { isImage } from '../../utils/utils';
 
 import style from './index.less';
 
@@ -10,9 +11,9 @@ import style from './index.less';
 class FileUpload extends PureComponent {
   constructor(props) {
     super(props);
-    const { defaultValue } = props;
+    const { value } = props;
     this.state = {
-      fileList: defaultValue,
+      fileList: value || [],
       previewVisible: false,
     };
   }
@@ -20,9 +21,9 @@ class FileUpload extends PureComponent {
   componentWillReceiveProps(props) {
     const { value } = props;
     if (JSON.stringify(value) !== JSON.stringify(this.props.value)) {
-      this.state = {
+      this.setState({
         fileList: value,
-      };
+      });
     }
   }
 
@@ -34,45 +35,42 @@ class FileUpload extends PureComponent {
     return newValue;
   };
 
-  isImage = src => {
-    let imgtype = '';
-    if (src.indexOf('.') > 0) {
-      // 如果包含有"/"号 从最后一个"/"号+1的位置开始截取字符串
-      imgtype = src.substring(src.lastIndexOf('.') + 1, src.length);
-    }
-    imgtype = imgtype.toLowerCase();
-    if (
-      imgtype === 'png' ||
-      imgtype === 'jpeg' ||
-      imgtype === 'bmp' ||
-      imgtype === 'jpg' ||
-      imgtype === 'gif'
-    ) {
-      return true;
-    }
-    return false;
-  };
-
   handleChange = info => {
+    const { onChange } = this.props;
     const { fileList } = info;
-    this.setState({ fileList });
+    this.setState({ fileList }, () => {
+      // const newImgs = newFileList.map(its => rebackImg(its.url, `${UPLOAD_PATH}`, '_thumb'));
+      onChange(fileList, false);
+    });
   };
 
   onSuccess = (res, uid) => {
     const { onChange } = this.props;
     const { fileList } = this.state;
-    const file = res.thumb_url;
     const newFileList = fileList.map(item => {
       const upFile = { ...item };
       if (item.uid === uid) {
         upFile.status = 'success';
-        upFile.url = file;
+        if (isImage(res.path)) {
+          upFile.url = res.thumb_url;
+        } else {
+          upFile.url = res.url;
+        }
       }
       return upFile;
     });
     this.setState({ fileList: newFileList }, () => {
       if (onChange) {
-        const newImgs = newFileList.map(its => rebackImg(its.url, `${UPLOAD_PATH}`, '_thumb'));
+        const newImgs = newFileList.map(its => {
+          let img = its.url;
+          const isPic = isImage(img);
+          if (isPic) {
+            img = rebackImg(its.url, `${UPLOAD_PATH}`, '_thumb');
+          } else {
+            img = rebackImg(img, `${UPLOAD_PATH}`, '.');
+          }
+          return img;
+        });
         onChange(newImgs);
       }
     });
@@ -80,9 +78,13 @@ class FileUpload extends PureComponent {
 
   handlePreview = file => {
     const previewSrc = file.url;
-    const isPic = this.isImage(previewSrc);
+    const isPic = isImage(previewSrc);
     if (!isPic) {
-      window.open(previewSrc);
+      const a = document.createElement('a');
+      a.href = previewSrc;
+      a.download = '';
+      a.target = '_blank';
+      a.click();
     } else {
       const bigImgs = reAgainImg(previewSrc, '_thumb');
       this.setState({
@@ -140,5 +142,7 @@ class FileUpload extends PureComponent {
     );
   }
 }
-
+FileUpload.defaultProps = {
+  onChange: () => {},
+};
 export default FileUpload;

@@ -1,0 +1,24 @@
+@import '../../../utils/utils.less';
+.tag {
+  padding: 5px 0 0 0;
+  :global {
+    .ant-form-item-control {
+      line-height: 40px;
+    }
+    .ant-select {
+      line-height: 40px;
+      height: 40px;
+      width: 100%;
+    }
+    .ant-select-selection {
+      height: 100%;
+    }
+    .ant-select-selection__rendered {
+      line-height: inherit;
+    }
+  }
+}
+
+.errorMsg {
+  border-color: @error-color;
+}

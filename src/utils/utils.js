@@ -567,3 +567,35 @@ export function scrollToAnchor(anchorName) {
     }
   }
 }
+
+export function isImage(src) {
+  let imgtype = '';
+  if (src.indexOf('.') > 0) {
+    // 如果包含有"/"号 从最后一个"/"号+1的位置开始截取字符串
+    imgtype = src.substring(src.lastIndexOf('.') + 1, src.length);
+  }
+  imgtype = imgtype.toLowerCase();
+  if (
+    imgtype === 'png' ||
+    imgtype === 'jpeg' ||
+    imgtype === 'bmp' ||
+    imgtype === 'jpg' ||
+    imgtype === 'gif'
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function isJSON(str) {
+  try {
+    const obj = JSON.parse(str);
+    if (typeof obj === 'object' && obj) {
+      return obj;
+    } else {
+      return '';
+    }
+  } catch (e) {
+    return '';
+  }
+}

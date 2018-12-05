@@ -60,15 +60,14 @@ export default class Address extends PureComponent {
 
   makeSelectOption = () => {
     const { value } = this.state;
-    const defaultOption = [{ name: <span style={{ color: '#bfbfbf' }}>请选择</span>, id: null }];
-    const province = defaultOption.concat(district.filter(item => item.parent_id === 0));
+    const province = district.filter(item => item.parent_id === 0);
     let city = [];
     if (value && value.province_id) {
-      city = defaultOption.concat(district.filter(item => item.parent_id === value.province_id));
+      city = district.filter(item => item.parent_id === value.province_id);
     }
     let county = [];
     if (value && value.city_id) {
-      county = defaultOption.concat(district.filter(item => item.parent_id === value.city_id));
+      county = district.filter(item => item.parent_id === value.city_id);
     }
     this.setState({
       province,
@@ -117,6 +116,7 @@ export default class Address extends PureComponent {
             style={{ width: '33.33%' }}
             value={value.province_id}
             onChange={this.makeCity}
+            allowClear
             placeholder="请选择"
           >
             {province.map(item => (
@@ -131,6 +131,7 @@ export default class Address extends PureComponent {
             style={{ width: '33.33%' }}
             value={value.city_id}
             onChange={this.makeCounty}
+            allowClear
             placeholder="请选择"
           >
             {city.map(item => (
@@ -143,6 +144,7 @@ export default class Address extends PureComponent {
             disabled={regionLevel < 3}
             key="countyId"
             style={{ width: '33.33%' }}
+            allowClear
             onChange={countyId => {
               this.setState(
                 {

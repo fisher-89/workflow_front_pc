@@ -1,0 +1,48 @@
+@import '../../utils/utils.less';
+.contain {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item {
+  height: 30px;
+  line-height: 30px;
+  min-width: 68px;
+  max-width: 150px;
+  padding: 0 35px 0 5px;
+  margin-right: 10px;
+  .form-content-text();
+  margin-bottom: 5px;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid rgb(199, 199, 199);
+  position: relative;
+  text-align: center;
+  &.readonly {
+    color: #ccc;
+    background: #f5f5f5;
+    border: 1px solid #d9d9d9;
+  }
+  span {
+    position: absolute;
+    right: 11px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    background: url(/delete.png) no-repeat right center;
+    background-size: 10px;
+  }
+}
+
+input.editInput {
+  width: 138px;
+  height: 28px;
+  border: 0;
+  outline: none;
+  &:focus {
+    width: 138px;
+    height: 28px;
+    outline: none;
+    border: 0;
+  }
+}
