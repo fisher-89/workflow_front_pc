@@ -52,7 +52,6 @@ class Picker extends PureComponent {
 
   makeNewProps = () => {
     const props = { ...this.props };
-    console.log(props.format);
     props.value = this.state.value;
     props.onChange = this.handleOnChange;
     props.disabledDate = this.disabledDate;

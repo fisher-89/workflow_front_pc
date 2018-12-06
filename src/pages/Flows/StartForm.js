@@ -9,6 +9,7 @@ import {
   SelectItem,
   ArrayItem,
   DateItem,
+  TimeItem,
 } from '../../components/Form/index';
 import style from './index.less';
 
@@ -370,6 +371,35 @@ const typeDateTime = {
     widgets: [],
   },
 };
+const typeTime = {
+  defaultValue: '12:00:00',
+  required: true,
+  field: {
+    id: 318,
+    key: 'time',
+    name: '时间',
+    description: '',
+    type: 'time',
+    is_checkbox: 0,
+    condition: null,
+    region_level: null,
+    min: '08:12:12',
+    max: '09:45:12',
+    scale: 0,
+    width: '400px',
+    height: '75px',
+    default_value: '2018-11-01',
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 14,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
 @connect()
 class StartForm extends PureComponent {
   state = {};
@@ -417,7 +447,9 @@ class StartForm extends PureComponent {
         <div className={style.edit_form} style={{ height: '200px' }}>
           <DateItem {...typeDateTime} />
         </div>
-
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <TimeItem {...typeTime} />
+        </div>
         <Button type="primary" onClick={this.handleSubmit}>
           提交
         </Button>

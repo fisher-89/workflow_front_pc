@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Tooltip } from 'antd';
+import classNames from 'classnames';
 import styles from './index.less';
 
 const formItemLayout = {
@@ -23,6 +24,9 @@ class FormItem extends PureComponent {
       left: `${x}px`,
     };
     const classnames = [styles.form_item, className].join(' ');
+    const cls = classNames(styles.right, {
+      [styles.has_error]: errorMsg,
+    });
     return (
       <div className={classnames} style={itemStyle}>
         <div className={styles.item}>
@@ -30,7 +34,7 @@ class FormItem extends PureComponent {
             {required && <span style={{ color: '#d9333f' }}>*</span>}
             {name}：
           </div>
-          <div className={styles.right}>{children}</div>
+          <div className={cls}>{children}</div>
         </div>
         <Tooltip placement="topLeft" title={errorMsg}>
           <div className={styles.error}>{errorMsg}</div>

@@ -88,6 +88,11 @@
   }
   .right {
     flex-grow: 1;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    &.has_error {
+      border-color: @error-color;
+    }
   }
 }
 
@@ -95,5 +100,6 @@
   margin-left: 120px;
   height: 20px;
   line-height: 20px;
+  flex-shrink: 0;
   .error-text();
 }
