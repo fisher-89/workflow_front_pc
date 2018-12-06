@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Button } from 'antd';
+import { Card, Button } from 'antd';
 import { connect } from 'dva';
-// import OAForm
-//   from '../../components/OAForm';
 import {
   TextItem,
   AddressItem,
@@ -10,6 +8,7 @@ import {
   InterfaceItem,
   SelectItem,
   ArrayItem,
+  DateItem,
 } from '../../components/Form/index';
 import style from './index.less';
 
@@ -313,6 +312,64 @@ const typeArray = {
     widgets: [],
   },
 };
+const typeDate = {
+  defaultValue: '',
+  required: true,
+  field: {
+    id: 317,
+    key: 'date',
+    name: '日期',
+    description: '',
+    type: 'date',
+    is_checkbox: 0,
+    condition: null,
+    region_level: null,
+    min: '2018-08-01',
+    max: '',
+    scale: 0,
+    width: '400px',
+    height: '75px',
+    default_value: '2018-11-01',
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 14,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
+const typeDateTime = {
+  defaultValue: '2018-12-01',
+  required: true,
+  field: {
+    id: 318,
+    key: 'datetime',
+    name: '日期时间',
+    description: '',
+    type: 'datetime',
+    is_checkbox: 0,
+    condition: null,
+    region_level: null,
+    min: '2018-09-01  08:12:12',
+    max: '',
+    scale: 0,
+    width: '400px',
+    height: '75px',
+    default_value: '2018-11-01',
+    options: [],
+    form_id: 20,
+    form_grid_id: null,
+    sort: 14,
+    field_api_configuration_id: null,
+    validator_id: [],
+    available_options: [],
+    validator: [],
+    widgets: [],
+  },
+};
 @connect()
 class StartForm extends PureComponent {
   state = {};
@@ -353,6 +410,12 @@ class StartForm extends PureComponent {
         </div>
         <div className={style.edit_form} style={{ height: '200px' }}>
           <ArrayItem {...typeArray} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <DateItem {...typeDate} />
+        </div>
+        <div className={style.edit_form} style={{ height: '200px' }}>
+          <DateItem {...typeDateTime} />
         </div>
 
         <Button type="primary" onClick={this.handleSubmit}>
