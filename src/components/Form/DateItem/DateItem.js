@@ -47,6 +47,7 @@ class SelectItem extends PureComponent {
             <DatePicker
               value={newValue}
               range={{ min, max }}
+              popupClassName={style.date_popup}
               format="YYYY-MM-DD HH:mm:ss"
               showTime
               onChange={this.handleOnChange}

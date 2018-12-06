@@ -294,7 +294,7 @@ const typeArray = {
     condition: null,
     region_level: null,
     min: '2',
-    max: '5',
+    max: '15',
     scale: 0,
     width: '700px',
     height: '75px',

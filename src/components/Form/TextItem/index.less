@@ -1,18 +1,22 @@
-// @import '../../../utils/utils.less';
+@import '../../../utils/utils.less';
 .errorMsg {
   height: 100%;
   :global {
     .ant-input {
-      // border: 1px solid #d9333f;
+      outline: none;
+      border: 0;
     }
     input.ant-input:focus {
-      outline: none;
+      box-shadow: 0 0 8px @error-color;
     }
     .ant-input-number {
-      // border: 1px solid transparent;
+      border: 0;
     }
     .ant-input-number.ant-input-number-focused {
-      border: none;
+      box-shadow: 0 0 8px @error-color;
+    }
+    textarea.ant-input:focus {
+      box-shadow: 0 0 8px @error-color;
     }
   }
 }

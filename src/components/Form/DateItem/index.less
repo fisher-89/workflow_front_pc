@@ -17,5 +17,35 @@
 }
 
 .time_popup {
-  margin-top: -3px;
+  margin-top: 4px;
+}
+
+.date_popup {
+  margin-top: 4px;
+}
+
+.errorMsg {
+  :global {
+    .ant-calendar-picker-input.ant-input {
+      border: 0;
+      box-shadow: 0 0 8px @error-color;
+    }
+    .ant-calendar-picker-input.ant-input:hover {
+      box-shadow: 0 0 8px @error-color;
+    }
+    .ant-calendar-picker-input.ant-input:focus {
+      box-shadow: 0 0 8px @error-color;
+    }
+    .ant-time-picker-input {
+      border: 0;
+      box-shadow: 0 0 8px @error-color;
+    }
+    .ant-time-picker-input:hover {
+      border: 0;
+      box-shadow: 0 0 8px @error-color;
+    }
+    .ant-time-picker-input:focus {
+      box-shadow: 0 0 8px @error-color;
+    }
+  }
 }

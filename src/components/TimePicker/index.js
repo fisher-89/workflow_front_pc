@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { TimePicker } from 'antd';
-import moment from 'moment';
 
 class Time extends PureComponent {
   constructor(props) {
