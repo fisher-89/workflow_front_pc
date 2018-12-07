@@ -106,12 +106,13 @@ export default class Address extends PureComponent {
 
   render() {
     const { province, city, county, value } = this.state;
+    const { disabled } = this.props;
     const regionLevel = this.props.region_level;
     return (
       <Fragment>
         <InputGroup compact>
           <Select
-            disabled={regionLevel < 1}
+            disabled={disabled || regionLevel < 1}
             key="province_id"
             style={{ width: '33.33%' }}
             value={value.province_id}
@@ -126,7 +127,7 @@ export default class Address extends PureComponent {
             ))}
           </Select>
           <Select
-            disabled={regionLevel < 2}
+            disabled={disabled || regionLevel < 2}
             key="city_id"
             style={{ width: '33.33%' }}
             value={value.city_id}
@@ -141,7 +142,7 @@ export default class Address extends PureComponent {
             ))}
           </Select>
           <Select
-            disabled={regionLevel < 3}
+            disabled={disabled || regionLevel < 3}
             key="countyId"
             style={{ width: '33.33%' }}
             allowClear
@@ -168,7 +169,7 @@ export default class Address extends PureComponent {
           </Select>
         </InputGroup>
         <Input.TextArea
-          disabled={regionLevel < 4}
+          disabled={disabled || regionLevel < 4}
           onChange={e => {
             const address = e.target.value;
             this.setState({ value: { ...value, address } }, this.setPropsValue);

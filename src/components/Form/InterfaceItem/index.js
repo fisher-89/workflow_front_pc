@@ -68,7 +68,7 @@ class UploadItem extends PureComponent {
   };
 
   render() {
-    const { field, required } = this.props;
+    const { field, required, disabled } = this.props;
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
     if (!field.is_checkbox) {
@@ -76,7 +76,12 @@ class UploadItem extends PureComponent {
       return (
         <FormItem {...field} errorMsg={errorMsg} required={required}>
           <div className={className}>
-            <Select options={options} value={value} onChange={this.onSingleChange} />
+            <Select
+              disabled={disabled}
+              options={options}
+              value={value}
+              onChange={this.onSingleChange}
+            />
           </div>
         </FormItem>
       );
@@ -85,7 +90,13 @@ class UploadItem extends PureComponent {
     return (
       <FormItem {...field} height="auto" errorMsg={errorMsg} required={required}>
         <div className={className}>
-          <Select options={options} value={value} mode="multiple" onChange={this.onMutiChange} />
+          <Select
+            disabled={disabled}
+            options={options}
+            value={value}
+            mode="multiple"
+            onChange={this.onMutiChange}
+          />
         </div>
       </FormItem>
     );

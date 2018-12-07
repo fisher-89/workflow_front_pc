@@ -1,17 +1,27 @@
-:global {
-  .ant-upload-select-picture-card .ant_upload_text {
+.upload {
+  :global {
+    .ant-upload-select-picture-card .ant_upload_text {
+      margin-top: 10px;
+      color: #666;
+    }
+    .ant-upload-select-picture-card i {
+      font-size: 32px;
+      color: #999;
+    }
+    .ant-upload-list-item-info > span {
+      height: 100%;
+    }
+  }
+  .ant_upload_text {
     margin-top: 10px;
     color: #666;
   }
-  .ant-upload-select-picture-card i {
-    font-size: 32px;
-    color: #999;
-  }
-  .ant-upload-list-item-info > span {
-    height: 100%;
-  }
 }
-.ant_upload_text {
-  margin-top: 10px;
-  color: #666;
+
+.disabled {
+  :global {
+    .anticon.anticon-delete {
+      display: none;
+    }
+  }
 }

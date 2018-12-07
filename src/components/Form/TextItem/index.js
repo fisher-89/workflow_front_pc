@@ -61,11 +61,13 @@ class TextItem extends PureComponent {
     const { value } = this.state;
     const {
       field: { max, min, scale },
+      disabled,
     } = this.props;
     return (
       <InputNumber
         max={max === '' ? Infinity : max - 0}
         min={min === '' ? -Infinity : min - 0}
+        disabled={disabled}
         precision={scale}
         value={value}
         onChange={this.numberInputChange}
@@ -75,12 +77,22 @@ class TextItem extends PureComponent {
 
   renderTextArea = () => {
     const { value } = this.state;
-    return <Input.TextArea value={value} autosize={false} onChange={this.inputOnChange} />;
+    const { disabled } = this.props;
+    return (
+      <Input.TextArea
+        value={value}
+        autosize={false}
+        disabled={disabled}
+        onChange={this.inputOnChange}
+      />
+    );
   };
 
   renderInput = () => {
     const { value } = this.state;
-    return <Input value={value} onChange={this.inputOnChange} />;
+    const { disabled } = this.props;
+
+    return <Input value={value} onChange={this.inputOnChange} disabled={disabled} />;
   };
 
   makeNewProps = () => {

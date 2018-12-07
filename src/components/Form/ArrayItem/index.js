@@ -58,6 +58,7 @@ class SelectItem extends PureComponent {
     const {
       field,
       required,
+      disabled,
       field: { max, min },
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -65,7 +66,12 @@ class SelectItem extends PureComponent {
     return (
       <FormItem {...field} height="auto" errorMsg={errorMsg} required={required}>
         <div className={className}>
-          <TagGroup value={value} range={{ max, min }} onChange={this.handleOnChange} />
+          <TagGroup
+            value={value}
+            range={{ max, min }}
+            disabled={disabled}
+            onChange={this.handleOnChange}
+          />
         </div>
       </FormItem>
     );

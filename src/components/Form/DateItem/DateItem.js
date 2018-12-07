@@ -35,6 +35,7 @@ class SelectItem extends PureComponent {
     const {
       field,
       required,
+      disabled,
       field: { max, min, type },
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -45,6 +46,7 @@ class SelectItem extends PureComponent {
         <FormItem {...field} errorMsg={errorMsg} required={required}>
           <div className={className}>
             <DatePicker
+              disabled={disabled}
               value={newValue}
               range={{ min, max }}
               popupClassName={style.date_popup}
@@ -60,6 +62,7 @@ class SelectItem extends PureComponent {
       <FormItem {...field} errorMsg={errorMsg} required={required}>
         <div className={className}>
           <DatePicker
+            disabled={disabled}
             value={newValue}
             range={{ min, max }}
             format="YYYY-MM-DD"

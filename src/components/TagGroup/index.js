@@ -119,13 +119,13 @@ export default class TagGroup extends React.Component {
   };
 
   makeTagProps = (value, index) => {
-    const { readonly, range } = this.props;
+    const { range, disabled } = this.props;
     const { tagEdit } = this.state;
     const props = {
+      disabled,
       index,
       range,
       value,
-      readonly,
       key: index,
       onEditing: tagEdit === index,
       handleClose: v => this.handleClose(v, index),
@@ -149,7 +149,7 @@ export default class TagGroup extends React.Component {
   render() {
     const { onEditing, inputValue, tags } = this.state;
     const {
-      readonly,
+      disabled,
       range: { max },
     } = this.props;
     const editStyle = onEditing
@@ -166,7 +166,7 @@ export default class TagGroup extends React.Component {
     return (
       <div className={style.contain}>
         {this.renderTag()}
-        {!readonly &&
+        {!disabled &&
           tags.length - max < 0 && (
             <div className={style.item} style={{ ...itemStyle }}>
               {onEditing && (

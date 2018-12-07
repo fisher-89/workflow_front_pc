@@ -35,6 +35,7 @@ class TimeItem extends PureComponent {
     const {
       field,
       required,
+      disabled,
       field: { max, min },
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -46,6 +47,7 @@ class TimeItem extends PureComponent {
           <TimePicker
             value={newValue}
             range={{ min, max }}
+            disabled={disabled}
             popupClassName={style.time_popup}
             format="HH:mm:ss"
             onChange={this.handleOnChange}

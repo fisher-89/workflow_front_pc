@@ -35,7 +35,7 @@ class AddressItem extends PureComponent {
   };
 
   render() {
-    const { field, required } = this.props;
+    const { field, required, disabled } = this.props;
     const { value, errorMsg } = this.state;
     return (
       <FormItem
@@ -50,6 +50,7 @@ class AddressItem extends PureComponent {
           <Address
             {...field}
             value={value}
+            disabled={disabled}
             onChange={this.onChange}
             name={{
               province_id: 'province',

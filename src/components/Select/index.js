@@ -42,7 +42,7 @@ class SelectComp extends PureComponent {
   render() {
     const { value } = this.state;
     return (
-      <Select value={value} {...this.props} onChange={this.handleOnChange}>
+      <Select {...this.props} value={value} onChange={this.handleOnChange}>
         {this.renderOptions()}
       </Select>
     );

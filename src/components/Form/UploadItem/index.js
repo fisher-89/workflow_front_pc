@@ -72,7 +72,7 @@ class UploadItem extends PureComponent {
   };
 
   render() {
-    const { field, required } = this.props;
+    const { field, required, disabled } = this.props;
     const { errorMsg, value } = this.state;
     const className = [errorMsg ? style.errorMsg : style.noerror, style.upfile].join(' ');
     return (
@@ -85,7 +85,7 @@ class UploadItem extends PureComponent {
         className="file"
       >
         <div className={className}>
-          <FileUpload url="/api/files" value={value} onChange={this.onChange} />
+          <FileUpload url="/api/files" value={value} onChange={this.onChange} disabled={disabled} />
         </div>
       </FormItem>
     );

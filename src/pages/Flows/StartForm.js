@@ -14,7 +14,7 @@ import {
 import style from './index.less';
 
 const typeInt = {
-  edit: true,
+  disabled: true,
   required: true,
   defaultValue: '1.0',
   field: {
@@ -47,7 +47,7 @@ const typeInt = {
   },
 };
 const typeText = {
-  edit: true,
+  disabled: true,
   required: true,
   defaultValue: '哈哈',
   field: {
@@ -81,7 +81,7 @@ const typeText = {
 };
 
 const typeTextarea = {
-  edit: true,
+  disabled: true,
   required: true,
   defaultValue: '好嗨呀',
   field: {
@@ -114,6 +114,7 @@ const typeTextarea = {
   },
 };
 const typeAddress = {
+  disabled: true,
   defaultValue: { province: 120000 },
   required: true,
   field: {
@@ -146,6 +147,7 @@ const typeAddress = {
   },
 };
 const typeFile = {
+  disabled: true,
   defaultValue: ['/storage/uploads/temporary/2018/12/03/120752_20181203154046_822531.jpg'],
   required: true,
   field: {
@@ -173,6 +175,7 @@ const typeFile = {
   },
 };
 const typeInterface = {
+  disabled: true,
   defaultValue: 1,
   required: true,
   field: {
@@ -200,6 +203,8 @@ const typeInterface = {
   },
 };
 const typeInterfaces = {
+  disabled: true,
+
   defaultValue: [1, 4],
   required: true,
   field: {
@@ -228,6 +233,8 @@ const typeInterfaces = {
   },
 };
 const typeSelect = {
+  disabled: true,
+
   defaultValue: 1,
   required: true,
   field: {
@@ -255,6 +262,8 @@ const typeSelect = {
   },
 };
 const typeMutiSelect = {
+  disabled: true,
+
   defaultValue: [1],
   required: true,
   field: {
@@ -282,6 +291,8 @@ const typeMutiSelect = {
   },
 };
 const typeArray = {
+  disabled: true,
+
   defaultValue: ['1'],
   required: true,
   field: {
@@ -314,6 +325,8 @@ const typeArray = {
   },
 };
 const typeDate = {
+  disabled: true,
+
   defaultValue: '',
   required: true,
   field: {
@@ -343,6 +356,8 @@ const typeDate = {
   },
 };
 const typeDateTime = {
+  disabled: true,
+
   defaultValue: '2018-12-01',
   required: true,
   field: {
@@ -372,6 +387,7 @@ const typeDateTime = {
   },
 };
 const typeTime = {
+  disabled: true,
   defaultValue: '12:00:00',
   required: true,
   field: {

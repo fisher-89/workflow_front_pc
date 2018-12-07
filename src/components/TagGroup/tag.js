@@ -42,9 +42,9 @@ class Tag extends React.Component {
 
   render() {
     const { onEditing, inputValue } = this.state;
-    const { handleClose, readonly } = this.props;
+    const { handleClose, disabled } = this.props;
     const cls = classNames(style.item, {
-      [style.readonly]: readonly,
+      [style.readonly]: disabled,
     });
     const editStyle = onEditing
       ? {
@@ -78,9 +78,9 @@ class Tag extends React.Component {
         {!onEditing && (
           <div className={cls}>
             <Tooltip placement="topLeft" title={inputValue}>
-              <p onClick={!readonly ? this.showInput : null}>{inputValue}</p>
+              <p onClick={!disabled ? this.showInput : null}>{inputValue}</p>
             </Tooltip>
-            {!readonly && <span onClick={() => handleClose(inputValue)} />}
+            {!disabled && <span onClick={() => handleClose(inputValue)} />}
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Upload, Icon, Modal } from 'antd';
 import { connect } from 'dva';
+import classNames from 'classnames';
 import request from '../../utils/request';
 import { rebackImg, reAgainImg, dealThumbImg } from '../../utils/convert';
 import { isImage } from '../../utils/utils';
@@ -111,21 +112,27 @@ class FileUpload extends PureComponent {
 
   render() {
     const { fileList, previewVisible, previewSrc } = this.state;
-    const uploadButton = (
+    const { disabled } = this.props;
+    const uploadButton = disabled ? null : (
       <div>
         <Icon type="plus" />
         <div className={style.ant_upload_text}>上传</div>
       </div>
     );
+    const className = classNames(style.upload, {
+      [style.disabled]: disabled,
+    });
     return (
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} className={className}>
         <Upload
+          {...this.props}
           listType="picture-card"
           fileList={fileList}
           onSuccess={this.onSuccess}
           onPreview={this.handlePreview}
           customRequest={this.customRequest}
           onChange={this.handleChange}
+          disabled={disabled}
         >
           {uploadButton}
         </Upload>
@@ -144,5 +151,6 @@ class FileUpload extends PureComponent {
 }
 FileUpload.defaultProps = {
   onChange: () => {},
+  listType: 'picture-card',
 };
 export default FileUpload;
