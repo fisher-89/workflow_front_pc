@@ -13,459 +13,244 @@ import {
 } from '../../components/Form/index';
 import style from './index.less';
 
-const typeInt = {
-  disabled: true,
-  required: true,
-  defaultValue: '1.0',
-  field: {
-    id: 303,
-    key: 'number',
-    name: '数字',
-    description: '',
-    type: 'int',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '-100',
-    max: '',
-    scale: 1,
-    default_value: '0',
-    width: '300px',
-    height: '75px',
-    x: 0,
-    y: 20,
-    line: 1,
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 1,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeText = {
-  disabled: true,
-  required: true,
-  defaultValue: '哈哈',
-  field: {
-    id: 317,
-    key: 'text',
-    name: '文本',
-    description: '',
-    type: 'text',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '1',
-    max: '9',
-    scale: 0,
-    default_value: '',
-    width: '350px',
-    height: '75px',
-    x: 50,
-    y: 10,
-    line: 1,
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 15,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-
-const typeTextarea = {
-  disabled: true,
-  required: true,
-  defaultValue: '好嗨呀',
-  field: {
-    id: 317,
-    key: 'textarea',
-    name: '多行文本',
-    description: '',
-    type: 'text',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '1',
-    max: '9',
-    scale: 0,
-    default_value: '',
-    width: '300px',
-    height: '150px',
-    x: 50,
-    y: 10,
-    line: 2,
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 15,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeAddress = {
-  disabled: true,
-  defaultValue: { province: 120000 },
-  required: true,
-  field: {
-    id: 304,
-    key: 'area',
-    name: '地点',
-    description: '',
-    type: 'region',
-    is_checkbox: 0,
-    condition: null,
-    region_level: 2,
-    min: '',
-    max: '',
-    scale: 0,
-    width: '700px',
-    height: '75px',
-    x: 50,
-    y: 10,
-    line: 1,
-    default_value: [],
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 2,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeFile = {
-  disabled: true,
-  defaultValue: ['/storage/uploads/temporary/2018/12/03/120752_20181203154046_822531.jpg'],
-  required: true,
-  field: {
-    id: 302,
-    key: 'file',
-    name: '文件',
-    description: '',
-    type: 'file',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '',
-    max: '',
-    scale: 0,
-    default_value: '',
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 0,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeInterface = {
-  disabled: true,
-  defaultValue: 1,
-  required: true,
-  field: {
-    id: 314,
-    key: 'interface',
-    name: '接口（单选）',
-    description: '',
-    type: 'api',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '',
-    max: '',
-    scale: 0,
-    default_value: '7',
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 12,
-    field_api_configuration_id: 1,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeInterfaces = {
-  disabled: true,
-
-  defaultValue: [1, 4],
-  required: true,
-  field: {
-    id: 315,
-    key: 'interfaces',
-    name: '接口（多选）',
-    description: '',
-    type: 'api',
-    is_checkbox: 1,
-    condition: null,
-    region_level: null,
-    min: '',
-    max: '',
-    scale: 0,
-    width: '600px',
-    default_value: '7',
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 12,
-    field_api_configuration_id: 1,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeSelect = {
-  disabled: true,
-
-  defaultValue: 1,
-  required: true,
-  field: {
-    id: 305,
-    key: 'single',
-    name: '单选',
-    description: '',
-    type: 'select',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '',
-    max: '',
-    scale: 0,
-    default_value: '给',
-    options: ['给', '我', '发'],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 3,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeMutiSelect = {
-  disabled: true,
-
-  defaultValue: [1],
-  required: true,
-  field: {
-    id: 306,
-    key: 'muti',
-    name: '多选',
-    description: '',
-    type: 'select',
-    is_checkbox: 1,
-    condition: null,
-    region_level: null,
-    min: '',
-    max: '',
-    scale: 0,
-    default_value: '给',
-    options: ['给', '我', '发'],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 3,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeArray = {
-  disabled: true,
-
-  defaultValue: ['1'],
-  required: true,
-  field: {
-    id: 307,
-    key: 'arra',
-    name: '数组',
-    description: '',
-    type: 'array',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '2',
-    max: '15',
-    scale: 0,
-    width: '700px',
-    height: '75px',
-    x: 50,
-    y: 10,
-    line: 1,
-    default_value: ['2', '5'],
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 5,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeDate = {
-  disabled: true,
-
-  defaultValue: '',
-  required: true,
-  field: {
-    id: 317,
-    key: 'date',
-    name: '日期',
-    description: '',
-    type: 'date',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '2018-08-01',
-    max: '',
-    scale: 0,
-    width: '400px',
-    height: '75px',
-    default_value: '2018-11-01',
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 14,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeDateTime = {
-  disabled: true,
-
-  defaultValue: '2018-12-01',
-  required: true,
-  field: {
-    id: 318,
-    key: 'datetime',
-    name: '日期时间',
-    description: '',
-    type: 'datetime',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '2018-09-01  08:12:12',
-    max: '',
-    scale: 0,
-    width: '400px',
-    height: '75px',
-    default_value: '2018-11-01',
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 14,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-const typeTime = {
-  disabled: true,
-  defaultValue: '12:00:00',
-  required: true,
-  field: {
-    id: 318,
-    key: 'time',
-    name: '时间',
-    description: '',
-    type: 'time',
-    is_checkbox: 0,
-    condition: null,
-    region_level: null,
-    min: '08:12:12',
-    max: '09:45:12',
-    scale: 0,
-    width: '400px',
-    height: '75px',
-    default_value: '2018-11-01',
-    options: [],
-    form_id: 20,
-    form_grid_id: null,
-    sort: 14,
-    field_api_configuration_id: null,
-    validator_id: [],
-    available_options: [],
-    validator: [],
-    widgets: [],
-  },
-};
-@connect()
+@connect(({ start }) => ({ startDetails: start.startDetails }))
 class StartForm extends PureComponent {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      formData: {},
+    };
+  }
+
+  componentWillMount() {
+    const {
+      match: {
+        params: { id },
+      },
+      startDetails,
+    } = this.props;
+    this.id = '6';
+    const startflow = startDetails[this.id];
+    this.startflow = startflow;
+    this.availableForm = startflow.fields.form.filter(
+      item => startflow.step.available_fields.indexOf(item.key) > -1
+    );
+    this.availableGrid = startflow.fields.grid.filter(
+      item => startflow.step.available_fields.indexOf(item.key) > -1
+    );
+    this.editForm = startflow.fields.form.filter(
+      item => startflow.step.editable_fields.indexOf(item.key) > -1
+    );
+    this.editGrid = startflow.fields.grid.filter(
+      item => startflow.step.editable_fields.indexOf(item.key) > -1
+    );
+    this.initFormData();
+  }
+
+  initFormData = () => {
+    const newForm = this.availableForm.concat(this.availableGrid);
+    const formData = {};
+    newForm.forEach(item => {
+      const { key, fields } = item;
+      const obj = {
+        key,
+        errorMsg: '',
+      };
+      const value = this.startflow.form_data[key];
+      if (fields) {
+        const gridValue = value.map(its => {
+          const gridformData = {};
+          Object.keys(its).forEach(it => {
+            const temp = {
+              key: it,
+              errorMsg: '',
+              value: its[it],
+            };
+            gridformData[it] = { ...temp };
+          });
+          return gridformData;
+        });
+        obj.value = [...gridValue];
+      } else {
+        obj.value = value;
+      }
+      formData[key] = { ...obj };
+    });
+
+    this.setState({
+      formData,
+    });
+  };
 
   handleSubmit = e => {
     e.preventDefault();
   };
 
+  handleText = (value, errorMsg) => {
+    console.log(value, errorMsg);
+  };
+
+  renderFormItem = (item, formInfo, key) => {
+    const { type } = item;
+    switch (type) {
+      case 'time':
+        return this.renderTimeItem(item, formInfo, key);
+      case 'datetime':
+      case 'date':
+        return this.renderDateItem(item, formInfo, key);
+      case 'array':
+        return this.renderArray(item, formInfo, key);
+      case 'text':
+      case 'int':
+        return this.renderTextItem(item, formInfo, key);
+      case 'select':
+        return this.renderSelectItem(item, formInfo, key);
+      case 'interface':
+        return this.renderItemfaceItem(item, formInfo, key);
+      case 'file':
+        return this.renderFileItem(item, formInfo, key);
+      case 'address':
+        return this.renderAddressItem(item, formInfo, key);
+      default:
+        return null;
+    }
+  };
+
+  renderDateTime = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} style={{ height: '200px' }} key={key}>
+        <TimeItem {...item} field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderArray = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <ArrayItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderFileItem = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <UploadItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderTextItem = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <TextItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderDateItem = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <DateItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderTimeItem = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <TimeItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderSelectItem = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <SelectItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderInterfaceItem = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <InterfaceItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderAddressItem = (item, formInfo, key) => {
+    const { value } = formInfo;
+    return (
+      <div className={style.edit_form} key={key} style={{ height: '200px' }}>
+        <AddressItem field={item} defaultValue={value} {...formInfo} />
+      </div>
+    );
+  };
+
+  renderGridItem = (grid, curValue) => {
+    const { fields, key } = grid;
+    const forms = fields.map(field => {
+      const formInfo = {
+        ...{
+          key: field.key,
+          errorMsg: curValue[field.key].errorMsg,
+          value: curValue[field.key].value,
+        },
+      };
+      const newKey = `${key}_${field.key}`;
+      return this.renderFormItem(field, formInfo, newKey);
+    });
+    return forms;
+  };
+
+  renderFormContent = () => {
+    const items = this.availableForm.concat(this.availableGrid);
+    const newForm = items.map(item => {
+      const { formData } = this.state;
+      const curValue = formData[item.key];
+      if (item.fields) {
+        // 如果是列表控件
+        return (
+          <div key={item.key}>
+            <div className={style.grid_name}>{item.name}</div>
+            <div>
+              {curValue.value.map((itemFormData, index) => {
+                const content = this.renderGridItem(item, { ...itemFormData }, i);
+                return (
+                  <div className={style.grid_content} key={itemFormData.key}>
+                    <span />
+                    {content}
+                  </div>
+                );
+              })}
+            </div>
+            <div className={style.grid_add}>
+              <p className={style.btn} />
+            </div>
+          </div>
+        );
+      }
+      return this.renderFormItem(item, curValue || {}, item.key);
+    });
+    return newForm;
+  };
+
   render() {
+    const newForm = this.renderFormContent();
+
     return (
       <Card bordered={false}>
-        <div className={style.edit_form} style={{ height: '100px' }}>
-          <TextItem {...typeText} />
-        </div>
-        <div className={style.edit_form} style={{ height: '100px' }}>
-          <TextItem {...typeInt} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <TextItem {...typeTextarea} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <AddressItem {...typeAddress} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <UploadItem {...typeFile} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <InterfaceItem {...typeInterface} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <InterfaceItem {...typeInterfaces} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <SelectItem {...typeSelect} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <SelectItem {...typeMutiSelect} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <ArrayItem {...typeArray} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <DateItem {...typeDate} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <DateItem {...typeDateTime} />
-        </div>
-        <div className={style.edit_form} style={{ height: '200px' }}>
-          <TimeItem {...typeTime} />
-        </div>
+        {newForm}
         <Button type="primary" onClick={this.handleSubmit}>
           提交
         </Button>

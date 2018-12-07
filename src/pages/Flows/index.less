@@ -1,3 +1,43 @@
+@import '../../utils/utils.less';
 .edit_form {
-  position: relative;
+  // position: relative;
+}
+
+.grid_name {
+  height: 40px;
+  line-height: 40px;
+  .grid-title-text();
+}
+
+.grid_content {
+  padding: 25px 0 10px;
+  border-bottom: 1px solid #ccc;
+  &:first-child {
+    border-top: 1px solid #ccc;
+  }
+  > span {
+    width: 25px;
+    height: 25px;
+    background: url('/delete.png') no-repeat center center;
+    background-size: 16px 16px;
+    top: 8px;
+    right: 20px;
+    float: right;
+    margin-top: -20px;
+  }
+}
+
+.grid_add {
+  height: 75px;
+  padding-top: 10px;
+  text-align: center;
+  .btn {
+    margin: 0 auto;
+    width: 150px;
+    height: 40px;
+    border: 1px solid #ccc;
+    line-height: 40px;
+    background: url('/add.png') no-repeat center center;
+    background-size: 16px;
+  }
 }
