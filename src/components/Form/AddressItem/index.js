@@ -15,6 +15,16 @@ class AddressItem extends PureComponent {
     };
   }
 
+  componentWillReceiveProps(props) {
+    const { value, errorMsg } = props;
+    if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
+      this.setState({
+        value,
+        errorMsg,
+      });
+    }
+  }
+
   onChange = value => {
     const {
       field: { name },

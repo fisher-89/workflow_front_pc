@@ -14,6 +14,16 @@ class TextItem extends PureComponent {
     };
   }
 
+  componentWillReceiveProps(props) {
+    const { value, errorMsg } = props;
+    if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
+      this.setState({
+        value,
+        errorMsg,
+      });
+    }
+  }
+
   inputOnChange = e => {
     const {
       field: { max, name },

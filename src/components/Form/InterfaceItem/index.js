@@ -27,6 +27,16 @@ class UploadItem extends PureComponent {
     });
   }
 
+  componentWillReceiveProps(props) {
+    const { value, errorMsg } = props;
+    if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
+      this.setState({
+        value,
+        errorMsg,
+      });
+    }
+  }
+
   onSingleChange = value => {
     let errorMsg = '';
     const {
@@ -45,14 +55,20 @@ class UploadItem extends PureComponent {
     let errorMsg = '';
     const {
       field: { name },
+      onChange,
     } = this.props;
     if (!value.length) {
       errorMsg = `请选择${name}`;
     }
-    this.setState({
-      value,
-      errorMsg,
-    });
+    this.setState(
+      {
+        value,
+        errorMsg,
+      },
+      () => {
+        onChange(value, errorMsg);
+      }
+    );
   };
 
   getOptions = () => {

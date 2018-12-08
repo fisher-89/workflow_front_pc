@@ -261,39 +261,10 @@ export default {
               key: 'grid',
               form_id: 20,
               field_default_value: {
-                dep: {
-                  value: 1,
-                  text: '未分配',
-                },
-                deps: [
-                  {
-                    value: 7,
-                    text: 'IT部',
-                  },
-                ],
-                staff: {
-                  value: 110001,
-                  text: '罗刚',
-                },
-                staffs: [
-                  {
-                    value: 110002,
-                    text: '代涛',
-                  },
-                  {
-                    value: 110001,
-                    text: '罗刚',
-                  },
-                ],
-                shop: {
-                  value: 'lsw2729',
-                  text: '河南C02.南阳市ODVS-400A1+C',
-                },
-                shops: '',
                 interface: '4',
                 interfaces: '',
-                files: [],
-                time: null,
+                files: ['/storage/uploads/temporary/2018/12/08/120752_20181208113704_754080.png'],
+                time: '08:55:55',
               },
               fields: [
                 {
