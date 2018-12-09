@@ -83,19 +83,21 @@ export default class GlobalHeaderRight extends PureComponent {
           <Icon type="setting" /> 设置
         </span>
         {currentUser.realname ? (
-          <span className={`${styles.action} ${styles.account}`}>
-            <Avatar
-              size="small"
-              alt="avatar"
-              className={styles.avatar}
-              style={{ width: 48, height: 48 }}
-              src={currentUser.avatar || '/default_avatar.png'}
-            />
-            <span className={styles.name} style={{ marginRight: 20 }}>
-              {currentUser.realname}
+          <Dropdown overlay={menu}>
+            <span className={`${styles.action} ${styles.account}`}>
+              <Avatar
+                size="small"
+                alt="avatar"
+                className={styles.avatar}
+                style={{ width: 48, height: 48 }}
+                src={currentUser.avatar || '/default_avatar.png'}
+              />
+              <span className={styles.name} style={{ marginRight: 20 }}>
+                {currentUser.realname}
+              </span>
+              <Icon type="down" />
             </span>
-            <Icon type="down" />
-          </span>
+          </Dropdown>
         ) : (
           <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
         )}

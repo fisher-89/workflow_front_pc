@@ -279,7 +279,7 @@ class EditForm extends PureComponent {
     const { value } = formInfo;
     const { domKey } = keyInfo;
     return (
-      <div className={style.edit_form} style={{ height: '200px' }} key={domKey}>
+      <div className={style.edit_form} key={domKey}>
         <TimeItem field={item} defaultValue={value} {...formInfo} onChange={this.handleOnChange} />
       </div>
     );
@@ -290,7 +290,7 @@ class EditForm extends PureComponent {
     const { domKey } = keyInfo;
 
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <ArrayItem
           field={item}
           defaultValue={value}
@@ -305,7 +305,7 @@ class EditForm extends PureComponent {
     const { value } = formInfo;
     const { domKey } = keyInfo;
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <UploadItem
           field={item}
           defaultValue={value}
@@ -320,7 +320,7 @@ class EditForm extends PureComponent {
     const { value } = formInfo;
     const { domKey } = keyInfo;
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <TextItem
           field={item}
           defaultValue={value}
@@ -335,7 +335,7 @@ class EditForm extends PureComponent {
     const { value } = formInfo;
     const { domKey } = keyInfo;
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <DateItem
           field={item}
           defaultValue={value}
@@ -350,7 +350,7 @@ class EditForm extends PureComponent {
     const { value } = formInfo;
     const { domKey } = keyInfo;
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <TimeItem
           field={item}
           defaultValue={value}
@@ -366,7 +366,7 @@ class EditForm extends PureComponent {
     const { domKey } = keyInfo;
 
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <SelectItem
           field={item}
           defaultValue={value}
@@ -381,7 +381,7 @@ class EditForm extends PureComponent {
     const { value } = formInfo;
     const { domKey } = keyInfo;
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <InterfaceItem
           field={item}
           defaultValue={value}
@@ -396,7 +396,7 @@ class EditForm extends PureComponent {
     const { value } = formInfo;
     const { domKey } = keyInfo;
     return (
-      <div className={style.edit_form} key={domKey} style={{ height: '200px' }}>
+      <div className={style.edit_form} key={domKey}>
         <AddressItem
           field={item}
           defaultValue={value}
