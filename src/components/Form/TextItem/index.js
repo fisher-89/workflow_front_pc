@@ -28,12 +28,13 @@ class TextItem extends PureComponent {
     const {
       field: { max, name },
       onChange,
+      required,
     } = this.props;
     const { value } = e.target;
     let errorMsg = '';
     if (max !== '' && value.length > max) {
       errorMsg = `长度需小于${max}`;
-    } else if (value === '') {
+    } else if (required && value === '') {
       errorMsg = `请输入${name}`;
     }
     this.setState(

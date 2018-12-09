@@ -31,9 +31,10 @@ class TimeItem extends PureComponent {
     let errorMsg = '';
     const {
       field: { name },
+      required,
       onChange,
     } = this.props;
-    if (!value.length) {
+    if (required && !value) {
       errorMsg = `请选择${name}`;
     }
     this.setState(

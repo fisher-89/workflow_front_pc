@@ -41,8 +41,9 @@ class UploadItem extends PureComponent {
     let errorMsg = '';
     const {
       field: { name },
+      required,
     } = this.props;
-    if (value === null || value === undefined) {
+    if (required && (value === null || value === undefined)) {
       errorMsg = `请选择${name}`;
     }
     this.setState({
@@ -87,6 +88,7 @@ class UploadItem extends PureComponent {
     const { field, required, disabled } = this.props;
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
+
     if (!field.is_checkbox) {
       const className = [style.inteface, errorMsg ? style.errorMsg : ''].join(' ');
       return (
@@ -104,7 +106,13 @@ class UploadItem extends PureComponent {
     }
     const className = [style.mutiinteface, errorMsg ? style.errorMsg : ''].join(' ');
     return (
-      <FormItem {...field} height="auto" errorMsg={errorMsg} required={required}>
+      <FormItem
+        {...field}
+        height="auto"
+        errorMsg={errorMsg}
+        required={required}
+        extraStyle={{ height: 'auto' }}
+      >
         <div className={className}>
           <Select
             disabled={disabled}

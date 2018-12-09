@@ -28,9 +28,10 @@ class AddressItem extends PureComponent {
   onChange = value => {
     const {
       field: { name },
+      required,
     } = this.props;
     let errorMsg = '';
-    if (!value || !value.province) {
+    if ((required && !value) || !value.province) {
       errorMsg = `请选择${name}`;
     }
     this.setState(
@@ -53,8 +54,8 @@ class AddressItem extends PureComponent {
         {...field}
         required={required}
         errorMsg={errorMsg}
-        width="675px"
-        height="150px"
+        width="675"
+        height="150"
       >
         <div className={errorMsg ? style.errorMsg : style.noerror}>
           <Address

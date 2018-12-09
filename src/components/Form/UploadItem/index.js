@@ -24,6 +24,7 @@ class UploadItem extends PureComponent {
   onChange = (value, deal = true) => {
     const {
       onChange,
+      required,
       field: { name },
     } = this.props;
     let files = [...value];
@@ -39,7 +40,7 @@ class UploadItem extends PureComponent {
       });
     }
     let errorMsg = '';
-    if (!value.length) {
+    if (required && !value.length) {
       errorMsg = `请上传${name}`;
     }
     this.setState(
@@ -81,8 +82,8 @@ class UploadItem extends PureComponent {
         required={required}
         errorMsg={errorMsg}
         width="900px"
-        height="auto"
         className="file"
+        extraStyle={{ height: 'auto' }}
       >
         <div className={className}>
           <FileUpload url="/api/files" value={value} onChange={this.onChange} disabled={disabled} />
