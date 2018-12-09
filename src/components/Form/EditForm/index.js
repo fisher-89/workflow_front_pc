@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import { Tooltip } from 'antd';
 import {
   TextItem,
   AddressItem,
@@ -11,6 +12,7 @@ import {
   TimeItem,
 } from '../index';
 import style from './index.less';
+import styles from '../index.less';
 
 @connect(({ start }) => ({ startDetails: start.startDetails }))
 class EditForm extends PureComponent {
@@ -151,8 +153,8 @@ class EditForm extends PureComponent {
     }
   };
 
-  gridOnChange = (value, errorMsg, keyInfo) => {
-    const { gridKey, index, childKey } = keyInfo;
+  gridOnChange = (value, errorMsg, keyInfo, item) => {
+    const { gridKey, index, childKey, gridName } = keyInfo;
     const { formData } = this.state;
     const gridValueInfo = formData[gridKey];
     const curGridInfo = { ...gridValueInfo.value[index] };
@@ -160,7 +162,7 @@ class EditForm extends PureComponent {
     newGridItem.value = value;
     newGridItem.errorMsg = errorMsg;
     curGridInfo[childKey] = { ...newGridItem };
-    gridValueInfo.value[index] = { ...curGridInfo };
+
     this.setState(
       {
         formData: {
@@ -210,8 +212,10 @@ class EditForm extends PureComponent {
         key: field.key,
       };
     });
+
     const newValueInfo = {
       ...valueInfo,
+      errorMsg: '',
       value: [...valueInfo.value, curValue],
     };
     this.setState(
@@ -229,11 +233,16 @@ class EditForm extends PureComponent {
 
   deleteGridItem = (item, valueInfo, index) => {
     const { formData } = this.state;
-    const { key } = item;
+    const { key, name } = item;
     const gridValueInfo = [...valueInfo.value];
     const newGridValueInfo = gridValueInfo.slice(0, index).concat(gridValueInfo.slice(index + 1));
+    let errorMsg = '';
+    if (item.required && newGridValueInfo.length === 0) {
+      errorMsg = `请添加${name}`;
+    }
     const newValueInfo = {
       ...valueInfo,
+      errorMsg,
       value: [...newGridValueInfo],
     };
     this.setState(
@@ -280,7 +289,12 @@ class EditForm extends PureComponent {
     const { domKey } = keyInfo;
     return (
       <div className={style.edit_form} key={domKey}>
-        <TimeItem field={item} defaultValue={value} {...formInfo} onChange={this.handleOnChange} />
+        <TimeItem
+          field={item}
+          defaultValue={value}
+          {...formInfo}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
+        />
       </div>
     );
   };
@@ -295,7 +309,7 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
@@ -310,7 +324,7 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
@@ -325,7 +339,7 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
@@ -340,7 +354,7 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
@@ -355,7 +369,7 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
@@ -371,7 +385,7 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
@@ -386,7 +400,7 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
@@ -401,14 +415,14 @@ class EditForm extends PureComponent {
           field={item}
           defaultValue={value}
           {...formInfo}
-          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo)}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
         />
       </div>
     );
   };
 
   renderGridItem = (grid, curValue, keyInfo) => {
-    const { visibleFields, key } = grid;
+    const { visibleFields, key, name } = grid;
     const forms = visibleFields.map(field => {
       const formInfo = {
         ...{
@@ -423,6 +437,7 @@ class EditForm extends PureComponent {
         ...keyInfo,
         childKey: field.key,
         isGrid: true,
+        gridName: name,
         domKey: `${key}${keyInfo.index}${field.key}`,
       };
       return this.renderFormItem(field, formInfo, newKeyInfo);
@@ -458,6 +473,9 @@ class EditForm extends PureComponent {
                 );
               })}
             </div>
+            <Tooltip placement="topLeft" title={curValue.errorMsg}>
+              <div className={styles.error}>{curValue.errorMsg}</div>
+            </Tooltip>
             <div className={style.grid_add}>
               <p className={style.btn} onClick={() => this.gridAdd(item, curValue)} />
             </div>
@@ -467,6 +485,7 @@ class EditForm extends PureComponent {
       const keyInfo = {
         formKey: item.key,
         domKey: item.key,
+        name: item.name,
       };
       return this.renderFormItem(item, curValue || {}, keyInfo);
     });

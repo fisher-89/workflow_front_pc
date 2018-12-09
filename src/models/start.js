@@ -37,7 +37,7 @@ export default {
             'grid.*.interface',
             'grid.*.files',
           ],
-          required_fields: ['grid.*.interface', 'file', 'area', 'single', 'multi', 'grid'],
+          required_fields: ['grid.*.interface', 'grid', 'file', 'area', 'single', 'multi', 'grid'],
         },
         form_data: {
           file: [],
