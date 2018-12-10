@@ -19,9 +19,9 @@ export default [
       // dashboard
       { path: '/', redirect: '/test' },
       {
-        path: '/test1',
+        path: '/available_flow',
         name: '发起流程',
-        component: './Test/test',
+        component: './Flows/AvailableFlows',
         // routes: [
         //   {
         //     path: '/test1/start_form',

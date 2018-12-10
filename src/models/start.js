@@ -1,10 +1,10 @@
-import getApiDataSource from '../services/interface';
+import { getFlowList, getFlowInfo } from '../services/start';
 // import * as defaultReducers from './reducers/default';
 
 export default {
   namespace: 'start',
   state: {
-    startDetails: {
+    flowDetails: {
       6: {
         step: {
           available_fields: [
@@ -352,24 +352,35 @@ export default {
         },
       },
     },
+    availableFlows: [],
   },
 
   subscriptions: {},
 
   effects: {
-    *fetchApi({ payload }, { call, put, select }) {
-      const { id, cb } = payload;
-      const { sourceDetails } = yield select(_ => _.interfaceApi);
-      if (sourceDetails[id] && sourceDetails[id].length) {
-        return;
-      }
-      const data = yield call(getApiDataSource, id);
+    *getFlows(_, { call, put }) {
+      const data = yield call(getFlowList);
       if (data && !data.error) {
         yield put({
           type: 'save',
           payload: {
-            store: 'source',
+            store: 'availableFlows',
+            data,
+          },
+        });
+      }
+    },
+
+    *getFlowInfo({ payload }, { call, put }) {
+      const { id, cb } = payload;
+      console.log(payload);
+      const data = yield call(getFlowInfo, id);
+      if (data && !data.error) {
+        yield put({
+          type: 'save',
+          payload: {
             id,
+            store: 'flow',
             data,
           },
         });

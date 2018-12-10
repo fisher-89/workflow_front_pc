@@ -599,3 +599,22 @@ export function isJSON(str) {
     return '';
   }
 }
+
+export function judgeIsNothing(value) {
+  let ableSubmit = true;
+  if (!value) {
+    ableSubmit = false;
+  } else if (isArray(value) && !value.length) {
+    ableSubmit = false;
+  } else if (isObject(value) && JSON.stringify(value) === '{}') {
+    ableSubmit = false;
+  }
+  return ableSubmit;
+}
+
+export function isArray(o) {
+  return Object.prototype.toString.call(o) === '[object Array]';
+}
+export function isObject(obj) {
+  return obj instanceof Object;
+}

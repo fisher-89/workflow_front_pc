@@ -1,16 +1,15 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
 import { Card } from 'antd';
+import { connect } from 'net';
 
-export default class Test extends PureComponent {
-  state = {
+// @connect(({ test }) => ({test }))
 
-  }
+class Test extends PureComponent {
+  state = {};
 
   render() {
-    return (
-      <Card bordered={false}>
-        测试题
-      </Card>
-    )
+    console.log(this.props);
+    return <Card bordered={false}>测试题</Card>;
   }
 }
+export default Test;

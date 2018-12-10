@@ -29,13 +29,18 @@ class EditForm extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    const { startflow } = props;
+    const { startflow, formData } = props;
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
-      const formData = startflow ? this.initFormData() : {};
+      const newFormData = startflow ? this.initFormData() : {};
+      this.setState({
+        formData: newFormData,
+        startflow,
+      });
+    }
+    if (formData && JSON.stringify(formData) !== JSON.stringify(this.props.formData)) {
       this.setState({
         formData,
-        startflow,
       });
     }
   }
@@ -77,35 +82,44 @@ class EditForm extends PureComponent {
         availableForm: [],
         availableFields: [],
       };
-      const availableGridForm = [];
-      const availableFields = [];
-      const visibleGirdForm = [];
-      const visibleFields = [];
-      fields.forEach(field => {
-        const str = `${key}.*.${field.key}`;
-        if (startflow.step.available_fields.indexOf(str) > -1) {
-          availableGridForm.push(field.key);
-          availableFields.push(field);
-        }
-      });
-      availableFields.forEach(field => {
-        const str = `${key}.*.${field.key}`;
-        const newField = { ...field };
-        if (startflow.step.hidden_fields.indexOf(str) === -1) {
-          visibleGirdForm.push(field.key);
-          const disabled = startflow.step.editable_fields.indexOf(str) === -1;
-          newField.disabled = disabled;
-          const required = startflow.step.required_fields.indexOf(str) > -1;
-          newField.required = required;
-          visibleFields.push(newField);
-        }
-      });
-      obj.availableForm = [...availableGridForm];
-      obj.availableFields = [...availableFields];
-      obj.visibleForm = [...visibleGirdForm];
-      obj.visibleFields = [...visibleFields];
+      const avilable = this.dealGridForm(fields, item, startflow, 1);
+      obj.availableForm = [...avilable.forms];
+      obj.availableFields = [...avilable.fields];
+      const visible = this.dealGridForm(avilable.fields, item, startflow, 2);
+      obj.visibleForm = [...visible.forms];
+      obj.visibleFields = [...visible.fields];
       return obj;
     });
+  };
+
+  dealGridForm = (source, item, startflow, type) => {
+    const forms = [];
+    const fields = [];
+    // const visibleGirdForm = [];
+    // const visibleFields = [];
+    source.forEach(field => {
+      const str = `${item.key}.*.${field.key}`;
+      const newField = { ...field };
+      if (
+        type === 1
+          ? startflow.step.available_fields.indexOf(str) > -1
+          : startflow.step.hidden_fields.indexOf(str) === -1
+      ) {
+        forms.push(field.key);
+
+        const disabled = startflow.step.editable_fields.indexOf(str) === -1;
+        newField.disabled = disabled;
+
+        const required = startflow.step.required_fields.indexOf(str) > -1;
+        newField.required = required;
+
+        fields.push(newField);
+      }
+    });
+    return {
+      forms,
+      fields,
+    };
   };
 
   initFormData = () => {
@@ -115,6 +129,7 @@ class EditForm extends PureComponent {
       const { key, availableFields } = item;
       const obj = {
         key,
+        name: item.name,
         errorMsg: '',
         required: item.required,
         disabled: item.disabled,
@@ -126,16 +141,18 @@ class EditForm extends PureComponent {
           availableFields.forEach(it => {
             const temp = {
               key: it.key,
+              name: it.name,
               errorMsg: '',
               value: its[it.key],
-              disabled: its[it.disabled],
-              required: its[it.required],
+              disabled: it.disabled,
+              required: it.required,
             };
             gridformData[it.key] = { ...temp };
           });
           return gridformData;
         });
         obj.value = [...gridValue];
+        obj.isGrid = true;
       } else {
         obj.value = value;
       }
@@ -153,8 +170,8 @@ class EditForm extends PureComponent {
     }
   };
 
-  gridOnChange = (value, errorMsg, keyInfo, item) => {
-    const { gridKey, index, childKey, gridName } = keyInfo;
+  gridOnChange = (value, errorMsg, keyInfo) => {
+    const { gridKey, index, childKey } = keyInfo;
     const { formData } = this.state;
     const gridValueInfo = formData[gridKey];
     const curGridInfo = { ...gridValueInfo.value[index] };
@@ -429,10 +446,11 @@ class EditForm extends PureComponent {
           key: field.key,
           errorMsg: curValue[field.key].errorMsg,
           value: curValue[field.key].value,
-          required: curValue[field.key].required,
-          disabled: curValue[field.key].disabled,
+          required: field.required,
+          disabled: field.disabled,
         },
       };
+
       const newKeyInfo = {
         ...keyInfo,
         childKey: field.key,

@@ -5,7 +5,7 @@ export function getFlowList() {
   return request('/api/list');
 }
 // 获取发起流程
-export function getStartFlow(id) {
+export function getFlowInfo(id) {
   return request(`/api/start/${id}`);
 }
 // 发起列表

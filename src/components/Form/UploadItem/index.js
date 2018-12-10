@@ -21,6 +21,15 @@ class UploadItem extends PureComponent {
     };
   }
 
+  componentWillReceiveProps(props) {
+    const { errorMsg } = props;
+    if (errorMsg !== this.props.errorMsg) {
+      this.setState({
+        errorMsg,
+      });
+    }
+  }
+
   onChange = (value, deal = true) => {
     const {
       onChange,
@@ -65,13 +74,6 @@ class UploadItem extends PureComponent {
     return file;
   };
 
-  validateFile = (rule, value, callback) => {
-    const { required } = this.props;
-    if (required && (!value || value.length === 0)) {
-      callback();
-    } else callback();
-  };
-
   render() {
     const { field, required, disabled } = this.props;
     const { errorMsg, value } = this.state;
@@ -81,7 +83,7 @@ class UploadItem extends PureComponent {
         {...field}
         required={required}
         errorMsg={errorMsg}
-        width="900px"
+        width="900"
         className="file"
         extraStyle={{ height: 'auto' }}
       >
