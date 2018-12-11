@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import FileUpload from '../../FileUpload';
 import FormItem from '../FormItem';
 import { dealThumbImg } from '../../../utils/convert';
-import { isImage } from '../../../utils/utils';
+import { isImage, uniq } from '../../../utils/utils';
 import style from './index.less';
 
 @connect()
@@ -74,10 +74,26 @@ class UploadItem extends PureComponent {
     return file;
   };
 
+  makeSuffix = validator => {
+    let params = [];
+    validator.forEach(item => {
+      params = [...params, ...item.params.split(',')];
+    });
+    const unique = uniq(params);
+    return unique;
+  };
+
   render() {
-    const { field, required, disabled } = this.props;
+    const {
+      field,
+      field: { validator },
+      required,
+      disabled,
+    } = this.props;
     const { errorMsg, value } = this.state;
     const className = [errorMsg ? style.errorMsg : style.noerror, style.upfile].join(' ');
+    const suffix = this.makeSuffix(validator);
+
     return (
       <FormItem
         {...field}
@@ -88,7 +104,14 @@ class UploadItem extends PureComponent {
         extraStyle={{ height: 'auto' }}
       >
         <div className={className}>
-          <FileUpload url="/api/files" value={value} onChange={this.onChange} disabled={disabled} />
+          <FileUpload
+            url="/api/files"
+            suffix={suffix}
+            id={field.id}
+            value={value}
+            onChange={this.onChange}
+            disabled={disabled}
+          />
         </div>
       </FormItem>
     );

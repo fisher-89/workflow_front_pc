@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon, Modal, notification } from 'antd';
 import { connect } from 'dva';
 import classNames from 'classnames';
 import request from '../../utils/request';
-import { rebackImg, reAgainImg, dealThumbImg } from '../../utils/convert';
+import { rebackImg, reAgainImg } from '../../utils/convert';
 import { isImage } from '../../utils/utils';
 
 import style from './index.less';
@@ -17,6 +17,7 @@ class FileUpload extends PureComponent {
       fileList: value || [],
       previewVisible: false,
     };
+    this.validate = true;
   }
 
   componentWillReceiveProps(props) {
@@ -37,12 +38,14 @@ class FileUpload extends PureComponent {
   };
 
   handleChange = info => {
-    const { onChange } = this.props;
-    const { fileList } = info;
-    this.setState({ fileList }, () => {
-      // const newImgs = newFileList.map(its => rebackImg(its.url, `${UPLOAD_PATH}`, '_thumb'));
-      onChange(fileList, false);
-    });
+    if (this.validate) {
+      const { onChange } = this.props;
+      const { fileList } = info;
+      this.setState({ fileList }, () => {
+        // const newImgs = newFileList.map(its => rebackImg(its.url, `${UPLOAD_PATH}`, '_thumb'));
+        onChange(fileList, false);
+      });
+    }
   };
 
   onSuccess = (res, uid) => {
@@ -77,6 +80,22 @@ class FileUpload extends PureComponent {
     });
   };
 
+  onError = uid => {
+    const { onChange } = this.props;
+    const { fileList } = this.state;
+    const newFileList = fileList.filter(item => item.uid !== uid);
+    this.setState(
+      {
+        fileList: newFileList,
+      },
+      () => {
+        if (onChange) {
+          onChange(newFileList, false);
+        }
+      }
+    );
+  };
+
   handlePreview = file => {
     const previewSrc = file.url;
     const isPic = isImage(previewSrc);
@@ -96,18 +115,41 @@ class FileUpload extends PureComponent {
   };
 
   customRequest = options => {
-    const { url } = this.props;
+    const { url, id } = this.props;
     const formData = new FormData();
     formData.append('upFile', options.file);
-    formData.append('field_id', 302);
+    formData.append('field_id', id);
     request(url, {
       method: 'POST',
       body: formData,
     })
       .then(res => {
-        this.onSuccess(res, options.file.uid);
+        if (res.status === 400) {
+          this.onError(options.file.uid);
+        } else {
+          this.onSuccess(res, options.file.uid);
+        }
       })
-      .catch(error => {});
+      .catch(error => {
+        this.onError(error, options.file.uid);
+      });
+  };
+
+  beforeUpload = file => {
+    const { name } = file;
+    const { suffix } = this.props;
+    const index = name.lastIndexOf('.');
+    const suffi = name.slice(index + 1);
+    this.validate = false;
+    if ((suffix.length && suffix.indexOf(suffi) !== -1) || !suffix.length) {
+      this.validate = true;
+      return true;
+    }
+    notification.open({
+      message: '错误提示',
+      description: `请上传${suffix.join(',')}格式的文件`,
+    });
+    return false;
   };
 
   render() {
@@ -131,6 +173,7 @@ class FileUpload extends PureComponent {
           onSuccess={this.onSuccess}
           onPreview={this.handlePreview}
           customRequest={this.customRequest}
+          // beforeUpload={this.beforeUpload}
           onChange={this.handleChange}
           disabled={disabled}
         >
@@ -152,5 +195,6 @@ class FileUpload extends PureComponent {
 FileUpload.defaultProps = {
   onChange: () => {},
   listType: 'picture-card',
+  suffix: [],
 };
 export default FileUpload;

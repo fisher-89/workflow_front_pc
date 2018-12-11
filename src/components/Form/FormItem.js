@@ -3,15 +3,6 @@ import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 2 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
 class FormItem extends PureComponent {
   state = {};
 

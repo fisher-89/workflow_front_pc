@@ -5,7 +5,7 @@ import Select from '../../Select';
 import style from './index.less';
 
 @connect(({ interfaceApi }) => ({ sourceDetails: interfaceApi.sourceDetails }))
-class UploadItem extends PureComponent {
+class InterfaceItem extends PureComponent {
   constructor(props) {
     super(props);
     const { defaultValue, field } = this.props;
@@ -117,7 +117,7 @@ class UploadItem extends PureComponent {
           <Select
             disabled={disabled}
             options={options}
-            value={value}
+            value={value || []}
             mode="multiple"
             onChange={this.onMutiChange}
           />
@@ -127,4 +127,4 @@ class UploadItem extends PureComponent {
   }
 }
 
-export default UploadItem;
+export default InterfaceItem;

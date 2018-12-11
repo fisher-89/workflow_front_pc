@@ -179,16 +179,26 @@ class EditForm extends PureComponent {
     newGridItem.value = value;
     newGridItem.errorMsg = errorMsg;
     curGridInfo[childKey] = { ...newGridItem };
+    const newGridValue = gridValueInfo.value.map((item, i) => {
+      let newItem = { ...item };
+      if (i === index) {
+        newItem = { ...curGridInfo };
+      }
+      return newItem;
+    });
+    const newFormData = {
+      ...formData,
+      [gridKey]: { ...gridValueInfo, value: newGridValue },
+    };
 
     this.setState(
       {
         formData: {
-          ...formData,
-          [gridKey]: gridValueInfo,
+          ...newFormData,
         },
       },
       () => {
-        this.props.onChange(this.state.formData);
+        this.props.onChange(newFormData);
       }
     );
   };
@@ -226,7 +236,10 @@ class EditForm extends PureComponent {
       curValue[field.key] = {
         value,
         errorMsg: '',
+        name: field.name,
         key: field.key,
+        required: field.required,
+        disabled: field.disabled,
       };
     });
 

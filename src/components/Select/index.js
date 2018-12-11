@@ -5,17 +5,18 @@ const { Option } = Select;
 class SelectComp extends PureComponent {
   constructor(props) {
     super(props);
-    const { value } = props;
+    const { value, mode } = props;
     this.state = {
-      value,
+      value: mode === 'multiple' ? value.map(item => `${item || ''}`) : `${value}`,
     };
   }
 
   componentWillReceiveProps(props) {
-    const { value } = props;
-    if (value !== this.props.value) {
+    const { value, mode } = props;
+
+    if (JSON.stringify(value) !== JSON.stringify(this.props.value)) {
       this.setState({
-        value,
+        value: mode === 'multiple' ? value.map(item => `${item || ''}`) : `${value}`,
       });
     }
   }
@@ -33,7 +34,7 @@ class SelectComp extends PureComponent {
       name: { value, text },
     } = this.props;
     return options.map(item => (
-      <Option value={item[value]} key={item[value]}>
+      <Option value={`${item[value]}`} key={item[value]}>
         {item[text]}
       </Option>
     ));

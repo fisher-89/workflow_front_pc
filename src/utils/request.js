@@ -47,22 +47,6 @@ const fetch = (url, options) => {
       return axo.get(url);
   }
 };
-const checkStatus = errors => {
-  // if (response.status >= 200 && response.status < 300) {
-  //   return response;
-  // }
-  console.log('checkStatus:', errors);
-  const { response } = errors;
-  const errortext = codeMessage[response.status] || response.statusText;
-  notification.error({
-    message: `请求错误 ${response.status}: ${response.url}`,
-    description: errortext,
-  });
-  const error = new Error(errortext);
-  error.name = response.status;
-  error.response = response;
-  throw error;
-};
 
 /**
  * Requests a URL, returning a promise.
@@ -125,33 +109,88 @@ export default function request(uri, params) {
         if (newOptions.method === 'DELETE' || response.status === 204) {
           // return response.text();
           const obj = { status: '204', message: '删除成功' };
-          return { ...obj };
+          return new Promise(resolve => {
+            resolve(obj);
+          });
         }
-        return response.data;
+        return new Promise(resolve => {
+          resolve(response.data);
+        });
       })
-      .catch(checkStatus)
       .catch(e => {
-        const status = e.name;
+        const {
+          response,
+          response: { status, message },
+        } = e;
+        if (status === 422) {
+          return new Promise(resolve => {
+            resolve({
+              status: 422,
+              error: true,
+              errors: response.data.errors,
+            });
+          });
+        }
         if (status === 401) {
           // @HACK
           /* eslint-disable no-underscore-dangle */
           window.g_app._store.dispatch({
             type: 'login/logout',
           });
-          return;
+
+          return new Promise(resolve => {
+            resolve({
+              error: true,
+            });
+          });
+        }
+        if (status === 400) {
+          notification.open({
+            message: '错误提示',
+            description: message,
+          });
+          return new Promise(resolve => {
+            resolve({
+              error: true,
+              status: 400,
+              message,
+            });
+          });
         }
         // environment should not be used
         if (status === 403) {
           router.push('/exception/403');
-          return;
+          return new Promise(resolve => {
+            resolve({
+              error: true,
+            });
+          });
         }
         if (status <= 504 && status >= 500) {
           router.push('/exception/500');
-          return;
+          return new Promise(resolve => {
+            resolve({
+              error: true,
+            });
+          });
         }
         if (status >= 404 && status < 422) {
           router.push('/exception/404');
+          return new Promise(resolve => {
+            resolve({
+              error: true,
+            });
+          });
         }
+        notification.open({
+          message: '错误提示',
+          description: codeMessage[status],
+        });
+        return new Promise(resolve => {
+          resolve({
+            error: true,
+          });
+        });
       })
   );
 }
