@@ -80,7 +80,15 @@ class FileUpload extends PureComponent {
     });
   };
 
-  onError = uid => {
+  onError = (uid, error) => {
+    if (error) {
+      const { errors } = error;
+      const msgs = errors[Object.keys(errors)[0]];
+      notification.open({
+        message: '错误提示',
+        description: `请上传${msgs.join(',')}格式的文件`,
+      });
+    }
     const { onChange } = this.props;
     const { fileList } = this.state;
     const newFileList = fileList.filter(item => item.uid !== uid);
@@ -124,8 +132,8 @@ class FileUpload extends PureComponent {
       body: formData,
     })
       .then(res => {
-        if (res.status === 400) {
-          this.onError(options.file.uid);
+        if (res.status === 422) {
+          this.onError(options.file.uid, res);
         } else {
           this.onSuccess(res, options.file.uid);
         }
