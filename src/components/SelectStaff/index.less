@@ -1,0 +1,137 @@
+@import '../../utils/utils.less';
+.result {
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  padding-left: 3px;
+  padding-bottom: 3px;
+}
+
+.tagItem {
+  padding-top: 3px;
+  display: inline-block;
+}
+
+.item_info {
+  float: left;
+  .clearfix();
+}
+
+.base_info {
+  &.active {
+    border: 1px solid #1890ff;
+  }
+  &.checked {
+    background: rgba(24, 144, 255, 0.1);
+  }
+  img {
+    width: 32px;
+    float: left;
+  }
+  float: left;
+  height: 52px;
+  border: 1px solid #eee;
+  padding: 7px 0 7px 10px;
+}
+
+.right {
+  margin-left: 8px;
+  padding-right: 6px;
+  float: left;
+  width: 120px;
+}
+
+.clearfix {
+  .clearfix();
+}
+
+.card,
+.name,
+.sno {
+  line-height: 18px;
+  height: 18px;
+  font-size: 12px;
+  float: left;
+}
+
+.sno {
+  color: #999;
+}
+
+.name {
+  width: 48px;
+  color: #333;
+  .textOverflow();
+}
+
+.card {
+  width: 16px;
+  background: url('/card.jpg') no-repeat center center;
+  background-size: 14px 11px;
+}
+
+.des {
+  width: 108px;
+  color: #666;
+  margin-top: 2px;
+  .textOverflow();
+}
+
+.extra {
+  float: right;
+  height: 52px;
+}
+
+.delete {
+  width: 21px;
+  height: 100%;
+  border: 1px solid #e7f3ff;
+  border-left: none;
+}
+
+.card_info {
+  width: 296px;
+}
+
+.card_header {
+  .clearfix();
+  height: 40px;
+  line-height: 40px;
+  padding: 10px 0;
+  // border-bottom: 1px solid #1890ff;
+  .staff_name {
+    float: left;
+    font-size: 14px;
+    line-height: 20px;
+    color: #1890ff;
+    > span {
+      color: #666;
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+  .status {
+    float: right;
+    font-size: 12px;
+    line-height: 18px;
+    color: #333;
+    > span {
+      width: 48px;
+      color: #666;
+    }
+  }
+}
+
+.card_list {
+  // padding: 10px;
+  > div {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #333;
+    span {
+      color: #666;
+    }
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}

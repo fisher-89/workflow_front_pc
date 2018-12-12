@@ -8,7 +8,6 @@ class AvailableFlows extends PureComponent {
 
   componentWillMount() {
     const { dispatch } = this.props;
-    console.log('componentWillMount', this.props);
     dispatch({
       type: 'start/getFlows',
     });

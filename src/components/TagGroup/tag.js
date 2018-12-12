@@ -87,5 +87,9 @@ class Tag extends React.Component {
     );
   }
 }
-
+Tag.defaultProps = {
+  handleBlur: () => {},
+  handleFocus: () => {},
+  handleClose: () => {},
+};
 export default Tag;

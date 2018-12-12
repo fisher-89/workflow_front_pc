@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import { connect } from 'dva';
 import { judgeIsNothing } from '../../utils/utils';
 import { EditForm } from '../../components/Form/index';
@@ -25,7 +25,11 @@ const tempformData = {
     },
   ],
 };
-@connect(({ start }) => ({ startDetails: start.flowDetails }))
+@connect(({ start, loading }) => ({
+  startDetails: start.flowDetails,
+  startLoading: loading.effects['start/getFlowInfo'],
+  presetSubmit: loading.effects['start/preSet'],
+}))
 class StartForm extends PureComponent {
   constructor(props) {
     super(props);
@@ -192,29 +196,31 @@ class StartForm extends PureComponent {
   };
 
   render() {
-    const { startDetails } = this.props;
+    const { startDetails, startLoading, presetSubmit } = this.props;
     const startflow = startDetails[this.id] || null;
     if (!startflow || !Object.keys(startflow).length) {
       return null;
     }
     return (
-      <div style={{ maxWidth: '900px', overflowX: 'scroll' }}>
-        <div className={style.clearfix}>
-          <span className={style.flow_title}>流程名称</span>
-          <span className={style.flow_des}>{startflow.flow.name}</span>
+      <Spin spinning={startLoading || presetSubmit === true}>
+        <div style={{ maxWidth: '900px', overflowX: 'scroll' }}>
+          <div className={style.clearfix}>
+            <span className={style.flow_title}>流程名称</span>
+            <span className={style.flow_des}>{startflow.flow.name}</span>
+          </div>
+          <EditForm
+            startflow={startflow}
+            ref={r => {
+              this.form = r;
+            }}
+            formData={this.state.formData}
+            onChange={data => this.setState({ formData: data })}
+          />
+          <Button type="primary" onClick={this.handleSubmit}>
+            提交
+          </Button>
         </div>
-        <EditForm
-          startflow={startflow}
-          ref={r => {
-            this.form = r;
-          }}
-          formData={this.state.formData}
-          onChange={data => this.setState({ formData: data })}
-        />
-        <Button type="primary" onClick={this.handleSubmit}>
-          提交
-        </Button>
-      </div>
+      </Spin>
     );
   }
 }

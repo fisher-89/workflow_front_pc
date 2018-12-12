@@ -17,7 +17,7 @@ export default [
     authority: ['token'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/test' },
+      { path: '/', redirect: '/available_flow' },
       {
         path: '/available_flow',
         name: '发起流程',
