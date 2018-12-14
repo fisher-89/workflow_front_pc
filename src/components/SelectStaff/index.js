@@ -1,17 +1,23 @@
 import React, { PureComponent } from 'react';
 import { Tag } from 'antd';
-import StaffItem from './staffItem';
+import StaffModal from './StaffModal';
 import style from './index.less';
 
 class SelectStaff extends PureComponent {
-  state = {};
+  state = {
+    visible: false,
+  };
 
   onClose = e => {
     e.preventDefault();
     console.log('ee');
   };
 
-  handleClick = () => {};
+  handleClick = () => {
+    this.setState({
+      visible: true,
+    });
+  };
 
   render() {
     return (
@@ -23,12 +29,7 @@ class SelectStaff extends PureComponent {
             </Tag>
           </div>
         </div>
-        <div>
-          <StaffItem />
-          <StaffItem />
-          <StaffItem />
-          <StaffItem />
-        </div>
+        <StaffModal visible={this.state.visible} />
       </div>
     );
   }

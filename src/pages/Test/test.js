@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card } from 'antd';
-import { connect } from 'net';
-
+import SelectStaff from '../../components/SelectStaff';
 // @connect(({ test }) => ({test }))
 
 class Test extends PureComponent {
@@ -9,7 +7,7 @@ class Test extends PureComponent {
 
   render() {
     console.log(this.props);
-    return <Card bordered={false}>测试题</Card>;
+    return <SelectStaff />;
   }
 }
 export default Test;

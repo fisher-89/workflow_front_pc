@@ -15,6 +15,16 @@ class SelectStaff extends PureComponent {
 
   renderPupContent = () => (
     <div className={style.card_info}>
+      <div className={style.card_header}>
+        <div className={style.staff_name}>
+          王丽丽
+          <span>(123456)</span>
+        </div>
+        <div className={style.status}>
+          状态：
+          <span>在职</span>
+        </div>
+      </div>
       <div className={style.card_list}>
         <div>
           职位：
@@ -33,11 +43,11 @@ class SelectStaff extends PureComponent {
   );
 
   render() {
-    const { extra } = this.props;
+    const { extra, itemStyle } = this.props;
     const cls = classnames(style.base_info, style.checked);
     const pupContent = this.renderPupContent();
     return (
-      <div className={style.item_info}>
+      <div className={style.item_info} style={{ ...itemStyle }}>
         <div style={{ float: 'left', padding: '' }} className={cls}>
           <img src="/default_avatar.png" alt="默认" />
           <div className={style.right}>
@@ -45,18 +55,7 @@ class SelectStaff extends PureComponent {
               <Popover
                 content={pupContent}
                 placement="rightBottom"
-                title={
-                  <div className={style.card_header}>
-                    <div className={style.staff_name}>
-                      王丽丽
-                      <span>(123456)</span>
-                    </div>
-                    <div className={style.status}>
-                      状态：
-                      <span>在职</span>
-                    </div>
-                  </div>
-                }
+                overlayClassName={style.overlay}
               >
                 <div className={style.card} />
               </Popover>
@@ -66,9 +65,11 @@ class SelectStaff extends PureComponent {
             <div className={style.des}>描述</div>
           </div>
         </div>
-        <div className={style.extra}>
-          <div className={style.delete}>x</div>
-        </div>
+        {extra ? (
+          <div className={style.extra}>
+            <div className={style.delete} />
+          </div>
+        ) : null}
       </div>
     );
   }
