@@ -456,6 +456,7 @@ class EditForm extends PureComponent {
 
   renderStaffItem = (item, formInfo, keyInfo) => {
     const { value } = formInfo;
+    console.log('renderStaffItem:', value);
     const { domKey } = keyInfo;
     return (
       <div className={style.edit_form} key={domKey}>

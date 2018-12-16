@@ -13,7 +13,7 @@ import style from './index.less';
 class StaffModal extends PureComponent {
   constructor(props) {
     super(props);
-    const { visible, fetchDataSource, checkedStaff } = this.props;
+    const { visible, fetchDataSource, checkedStaff, multiple } = this.props;
     this.state = {
       visible,
       searchType: [{ name: '员工', type: 1, checked: 1 }, { name: '部门', type: 2 }],
@@ -21,6 +21,7 @@ class StaffModal extends PureComponent {
       swicthVisible: false,
       value: '',
     };
+    this.multiple = multiple;
     this.fetchFiltersDataSource = debounce(params => {
       fetchDataSource(params);
     }, 500);
@@ -54,13 +55,14 @@ class StaffModal extends PureComponent {
         swicthVisible: false,
       },
       () => {
-        this.props.onChange(false, checkedStaff);
+        this.props.onChange(false, this.multiple ? checkedStaff : checkedStaff[0]);
       }
     );
   };
 
   onOk = () => {
     const { checkedStaff } = this.state;
+    console.log('onOk', checkedStaff[0]);
     this.setState(
       {
         visible: false,
@@ -68,7 +70,7 @@ class StaffModal extends PureComponent {
         swicthVisible: false,
       },
       () => {
-        this.props.onChange(false, checkedStaff);
+        this.props.onChange(false, this.multiple ? checkedStaff : checkedStaff[0]);
       }
     );
   };
@@ -116,14 +118,16 @@ class StaffModal extends PureComponent {
   handleOnChange = item => {
     const { checkedStaff } = this.state;
     this.setState({
-      checkedStaff: [...checkedStaff, item].unique('staff_sn'),
+      checkedStaff: this.multiple ? [...checkedStaff, item].unique('staff_sn') : [item],
     });
   };
 
   deleteItem = item => {
     const { checkedStaff } = this.state;
     this.setState({
-      checkedStaff: checkedStaff.filter(staff => staff.staff_sn !== item.staff_sn),
+      checkedStaff: this.multiple
+        ? checkedStaff.filter(staff => staff.staff_sn !== item.staff_sn)
+        : [],
     });
   };
 
@@ -133,7 +137,6 @@ class StaffModal extends PureComponent {
       source: { data, total, pagesize },
       fetchLoading,
     } = this.props;
-    console.log(fetchLoading);
     return (
       <div id="staff">
         <Modal

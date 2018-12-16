@@ -36,10 +36,19 @@ class SelectStaffItem extends PureComponent {
     if (required && (value === null || value === undefined)) {
       errorMsg = `请选择${name}`;
     }
-    this.setState({
-      value,
-      errorMsg,
-    });
+    console.log('onSingleChange:', value);
+    this.setState(
+      {
+        value,
+        errorMsg,
+      },
+      () => {
+        const newValue = value
+          ? makeFieldValue(value, { staff_sn: 'value', realname: 'text' }, false)
+          : '';
+        this.props.onChange(newValue, errorMsg);
+      }
+    );
   };
 
   onMutiChange = value => {
@@ -57,7 +66,7 @@ class SelectStaffItem extends PureComponent {
         errorMsg,
       },
       () => {
-        const newValue = makeFieldValue(value, { staff_an: 'value', realname: 'text' }, true);
+        const newValue = makeFieldValue(value, { staff_sn: 'value', realname: 'text' }, true);
         onChange(newValue, errorMsg);
       }
     );
@@ -82,7 +91,11 @@ class SelectStaffItem extends PureComponent {
   render() {
     const { field, required, disabled } = this.props;
     const { errorMsg, value } = this.state;
-    const newValue = makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, true);
+    const multiple = field.is_checkbox;
+    const newValue = value
+      ? makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, multiple)
+      : '';
+
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     return (
       <FormItem
@@ -94,11 +107,11 @@ class SelectStaffItem extends PureComponent {
       >
         <div className={className}>
           <SelectStaff
-            mode={field.is_checkbox ? 'multiple' : ''}
+            multiple={multiple}
             selfStyle={{ width: '780px' }}
             fetchDataSource={this.fetchDataSource}
             value={newValue}
-            onChange={this.onMutiChange}
+            onChange={multiple ? this.onMutiChange : this.onSingleChange}
             disabled={disabled}
           />
         </div>

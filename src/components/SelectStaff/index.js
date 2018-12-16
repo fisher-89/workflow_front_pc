@@ -8,11 +8,12 @@ import style from './index.less';
 class SelectStaff extends PureComponent {
   constructor(props) {
     super(props);
-    const { value } = this.props;
+    const { value, multiple } = this.props;
     this.state = {
       value,
       visible: false,
     };
+    this.multiple = multiple;
   }
 
   componentWillReceiveProps(props) {
@@ -26,19 +27,40 @@ class SelectStaff extends PureComponent {
 
   onClose = e => {
     e.preventDefault();
+    e.stopPropagation();
     // this.setState({
     //   visible: false
     // })
   };
 
-  onMaskChange = (visible, value) => {
-    this.setState({
-      visible,
-      value,
-    });
+  onDelete = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { value } = this.state;
+    const newValue = this.multiple ? value.filter(v => v.staff_sn !== item.staff_sn) : '';
+    this.setState(
+      {
+        value: newValue,
+      },
+      () => {
+        this.props.onChange(newValue);
+      }
+    );
   };
 
-  handleClick = () => {
+  onMaskChange = (visible, value) => {
+    this.setState(
+      {
+        visible,
+        value,
+      },
+      () => {
+        this.props.onChange(value);
+      }
+    );
+  };
+
+  handleClick = e => {
     this.setState({
       visible: true,
     });
@@ -52,14 +74,20 @@ class SelectStaff extends PureComponent {
   };
 
   render() {
-    const { selfStyle } = this.props;
+    const { selfStyle, multiple } = this.props;
     const { value } = this.state;
+    let newValue;
+    if (value) {
+      newValue = multiple ? value : [value];
+    } else {
+      newValue = [];
+    }
     return (
       <div>
         <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
           <div className={style.tagItem} onClick={this.onClose}>
-            {value.map(item => (
-              <Tag closable key={item.staff_sn} onClose={this.onClose}>
+            {newValue.map(item => (
+              <Tag closable key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
                 {item.realname}
               </Tag>
             ))}
@@ -68,7 +96,8 @@ class SelectStaff extends PureComponent {
         <StaffModal
           visible={this.state.visible}
           onChange={this.onMaskChange}
-          checkedStaff={value}
+          multiple={multiple}
+          checkedStaff={newValue}
           fetchDataSource={this.fetchDataSource}
         />
       </div>
@@ -76,6 +105,7 @@ class SelectStaff extends PureComponent {
   }
 }
 SelectStaff.defaultProps = {
-  name: { text: 'realname', value: 'staff_sn' },
+  name: { realnme: 'text', staff_sn: 'value' },
+  onChange: () => {},
 };
 export default SelectStaff;
