@@ -1,28 +1,24 @@
-import getApiDataSource from '../services/interface';
-// import * as defaultReducers from './reducers/default';
+import fetchStaffs from '../services/staff';
+import { makerFilters } from '../utils/utils';
 
 export default {
   namespace: 'staff',
   state: {
-    sourceDetails: {},
+    source: {},
   },
 
   subscriptions: {},
 
   effects: {
-    *fetchApi({ payload }, { call, put, select }) {
-      const { id, cb } = payload;
-      const { sourceDetails } = yield select(_ => _.interfaceApi);
-      if (sourceDetails[id] && sourceDetails[id].length) {
-        return;
-      }
-      const data = yield call(getApiDataSource, id);
+    *fetchStaffs({ payload }, { call, put }) {
+      const { params, cb } = payload;
+      const newParams = makerFilters(params);
+      const data = yield call(fetchStaffs, newParams);
       if (data && !data.error) {
         yield put({
           type: 'save',
           payload: {
             store: 'source',
-            id,
             data,
           },
         });

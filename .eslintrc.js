@@ -35,6 +35,7 @@ module.exports = {
     'no-unused-vars': 1,
     'react/no-access-state-in-setstate': 0,
     'no-undef': 0,
+    'import/no-named-as-default': 0,
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url'],

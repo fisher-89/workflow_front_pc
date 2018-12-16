@@ -34,10 +34,6 @@ export default [
         component: './Flows/StartForm',
       },
       {
-        path: '/select_staff',
-        component: './Test/test',
-      },
-      {
         path: '/test',
         name: '我发起的',
         component: './Test/test',

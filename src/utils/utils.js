@@ -628,3 +628,42 @@ export function uniq(array) {
   }
   return temp;
 }
+
+Array.prototype.unique = function(name = 'id') {
+  const result = this;
+  const newData = [];
+  const obj = {};
+  for (let i = 0; i < result.length; i += 1) {
+    if (!obj[result[i][name]]) {
+      // 如果能查找到，证明数组元素重复了
+      obj[result[i][name]] = 1;
+      newData.push(result[i]);
+    }
+  }
+  return newData;
+};
+
+export function makeFieldValue(value, name, multiple = false, include = false) {
+  const keys = Object.keys(name);
+  if (multiple) {
+    const newValue = value.map(item => {
+      return getFieldValue(item, keys, name, include);
+    });
+    return newValue;
+  }
+  const newValue = getFieldValue(value, keys, name, include);
+  return newValue;
+}
+
+export function getFieldValue(value, keys, name, include) {
+  let newValue = {};
+  if (include) {
+    newValue = { ...value };
+  }
+  keys.forEach(key => {
+    const newKey = name[key];
+    delete newValue[key];
+    newValue[newKey] = value[key];
+  });
+  return newValue;
+}

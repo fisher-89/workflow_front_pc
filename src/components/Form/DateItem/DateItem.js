@@ -1,12 +1,10 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'dva';
 import moment from 'moment';
 
 import FormItem from '../FormItem';
 import DatePicker from '../../DatePicker';
 import style from './index.less';
 
-@connect(({ interfaceApi }) => ({ sourceDetails: interfaceApi.sourceDetails }))
 class SelectItem extends PureComponent {
   constructor(props) {
     super(props);

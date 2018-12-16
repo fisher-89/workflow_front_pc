@@ -13,41 +13,44 @@ class SelectStaff extends PureComponent {
 
   handleClick = () => {};
 
-  renderPupContent = () => (
+  renderPupContent = item => (
     <div className={style.card_info}>
       <div className={style.card_header}>
         <div className={style.staff_name}>
-          王丽丽
-          <span>(123456)</span>
+          {item.realname}
+          <span>({item.staff_sn})</span>
         </div>
         <div className={style.status}>
           状态：
-          <span>在职</span>
+          <span>{item.status ? item.status.name : '暂无'}</span>
         </div>
       </div>
       <div className={style.card_list}>
         <div>
           职位：
-          <span>初级专员</span>
+          <span>{item.position ? item.position.name : '暂无'}</span>
         </div>
         <div>
           部门：
-          <span>初级专员</span>
+          <span>{item.department ? item.department.full_name : '暂无'}</span>
         </div>
         <div>
           品牌：
-          <span>初级专员</span>
+          <span>{item.brand ? item.brand.name : '暂无'}</span>
         </div>
       </div>
     </div>
   );
 
   render() {
-    const { extra, itemStyle } = this.props;
-    const cls = classnames(style.base_info, style.checked);
-    const pupContent = this.renderPupContent();
+    const { extra, itemStyle, detail, checked, handleClick } = this.props;
+    if (!detail) {
+      return null;
+    }
+    const cls = classnames(style.base_info, { [style.checked]: checked });
+    const pupContent = this.renderPupContent(detail);
     return (
-      <div className={style.item_info} style={{ ...itemStyle }}>
+      <div className={style.item_info} style={{ ...itemStyle }} onClick={handleClick}>
         <div style={{ float: 'left', padding: '' }} className={cls}>
           <img src="/default_avatar.png" alt="默认" />
           <div className={style.right}>
@@ -59,22 +62,19 @@ class SelectStaff extends PureComponent {
               >
                 <div className={style.card} />
               </Popover>
-              <div className={style.name}>姓名呢哈哈</div>
-              <div className={style.sno}>(123456)</div>
+              <div className={style.name}>{detail.realname}</div>
+              <div className={style.sno}>{detail.staff_sn}</div>
             </div>
-            <div className={style.des}>描述</div>
+            <div className={style.des}>{detail.department ? detail.department.full_name : ''}</div>
           </div>
         </div>
-        {extra ? (
-          <div className={style.extra}>
-            <div className={style.delete} />
-          </div>
-        ) : null}
+        {extra || null}
       </div>
     );
   }
 }
 SelectStaff.defaultProps = {
   extra: <div className={style.delete}>x</div>,
+  handleClick: () => {},
 };
 export default SelectStaff;

@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
-import Select from '../../Select';
+import SelectStaff from '../../SelectStaff';
+import { makeFieldValue } from '../../../utils/utils';
 import style from './index.less';
 
-class SelectItem extends PureComponent {
+@connect()
+class SelectStaffItem extends PureComponent {
   constructor(props) {
     super(props);
     const { defaultValue, field } = this.props;
@@ -54,40 +56,33 @@ class SelectItem extends PureComponent {
         value,
         errorMsg,
       },
-      () => onChange(value, errorMsg)
+      () => {
+        const newValue = makeFieldValue(value, { staff_an: 'value', realname: 'text' }, true);
+        onChange(newValue, errorMsg);
+      }
     );
   };
 
-  getOptions = () => {
+  fetchDataSource = params => {
     const {
-      field: { options },
+      dispatch,
+      field: { id },
     } = this.props;
-    const newOpts = (options || []).map(item => {
-      const opt = { value: item, text: item };
-      return opt;
+    dispatch({
+      type: 'staff/fetchStaffs',
+      payload: {
+        params: {
+          id,
+          ...params,
+        },
+      },
     });
-    return newOpts;
   };
 
   render() {
     const { field, required, disabled } = this.props;
     const { errorMsg, value } = this.state;
-    const options = this.getOptions();
-    if (!field.is_checkbox) {
-      const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
-      return (
-        <FormItem {...field} errorMsg={errorMsg} required={required}>
-          <div className={className}>
-            <Select
-              disabled={disabled}
-              options={options}
-              value={value}
-              onChange={this.onSingleChange}
-            />
-          </div>
-        </FormItem>
-      );
-    }
+    const newValue = makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, true);
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     return (
       <FormItem
@@ -98,10 +93,11 @@ class SelectItem extends PureComponent {
         extraStyle={{ height: 'auto' }}
       >
         <div className={className}>
-          <Select
-            options={options}
-            mode="multiple"
-            value={value}
+          <SelectStaff
+            mode={field.is_checkbox ? 'multiple' : ''}
+            selfStyle={{ width: '780px' }}
+            fetchDataSource={this.fetchDataSource}
+            value={newValue}
             onChange={this.onMutiChange}
             disabled={disabled}
           />
@@ -111,4 +107,4 @@ class SelectItem extends PureComponent {
   }
 }
 
-export default SelectItem;
+export default SelectStaffItem;

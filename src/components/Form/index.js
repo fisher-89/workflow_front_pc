@@ -6,6 +6,7 @@ import SelectItem from './SelectItem';
 import ArrayItem from './ArrayItem';
 import { DateItem, TimeItem } from './DateItem';
 import EditForm from './EditForm';
+import SelectStaffItem from './SelectStaffItem';
 
 export default TextItem;
 export {
@@ -18,4 +19,5 @@ export {
   DateItem,
   TimeItem,
   EditForm,
+  SelectStaffItem,
 };

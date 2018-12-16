@@ -83,24 +83,69 @@
   padding: 20px 20px 0;
 }
 
+.type_name {
+  height: 38px;
+  line-height: 38px;
+  width: 80px;
+}
+
+.switch_type {
+  position: relative;
+  float: left;
+  width: 80px;
+  padding-left: 15px;
+  border: 1px solid #eee;
+}
+
+.search {
+  float: left;
+  width: 437px;
+  height: 40px;
+  border: 1px solid #eee;
+  border-left: none;
+  > input {
+    width: 100%;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    height: 100%;
+    padding-left: 10px;
+  }
+}
+
+.type_list {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #eee;
+  border-top: none;
+  z-index: 9;
+  left: -1px;
+  top: 40px;
+  width: 80px;
+  padding-left: 15px;
+  > div {
+    height: 40px;
+    line-height: 40px;
+    &:hover {
+      background: #1890ff;
+      color: #fff;
+    }
+  }
+}
+
 .select_result {
   padding-left: 20px;
   padding-top: 20px;
   float: right;
-  width: 234px;
+  width: 217px;
   height: 100%;
-}
-
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-  background-color: #1890ff;
 }
 
 .item_info {
   float: left;
   margin-right: 5px;
   margin-bottom: 5px;
+  height: 52px;
   .clearfix();
 }
 
@@ -172,8 +217,15 @@
   overflow: auto;
 }
 
+.checked_list::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: #1890ff;
+}
+
 .delete {
   width: 20px;
+  float: left;
   height: 100%;
   border: 1px solid #e7f3ff;
   border-left: none;
@@ -248,7 +300,8 @@
 }
 
 .page {
-  width: 278px;
+  // width: 320px;
+  width: auto;
   height: 40px;
   float: right;
   padding-top: 10px;
