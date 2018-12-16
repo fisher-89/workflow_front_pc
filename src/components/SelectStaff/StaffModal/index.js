@@ -62,7 +62,6 @@ class StaffModal extends PureComponent {
 
   onOk = () => {
     const { checkedStaff } = this.state;
-    console.log('onOk', checkedStaff[0]);
     this.setState(
       {
         visible: false,

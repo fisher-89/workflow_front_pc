@@ -36,7 +36,6 @@ class SelectStaffItem extends PureComponent {
     if (required && (value === null || value === undefined)) {
       errorMsg = `请选择${name}`;
     }
-    console.log('onSingleChange:', value);
     this.setState(
       {
         value,
