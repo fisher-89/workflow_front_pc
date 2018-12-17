@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'dva';
 import FormItem from '../FormItem';
 import Select from '../../Select';
 import style from './index.less';

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import SelectStaff from '../../SelectStaff';
+import Select from '../../Select';
 import { makeFieldValue } from '../../../utils/utils';
 import style from './index.less';
 
@@ -11,11 +12,14 @@ class SelectStaffItem extends PureComponent {
     super(props);
     const { defaultValue, field } = this.props;
     const muti = field.is_checkbox;
+    const staffs = defaultValue || (muti ? [] : '');
     this.state = {
-      value: defaultValue || (muti ? [] : ''),
+      value: staffs,
       errorMsg: '',
     };
   }
+
+  componentWillMount() {}
 
   componentWillReceiveProps(props) {
     const { value, errorMsg } = props;
@@ -33,7 +37,7 @@ class SelectStaffItem extends PureComponent {
       field: { name },
       required,
     } = this.props;
-    if (required && (value === null || value === undefined)) {
+    if (required && !value) {
       errorMsg = `请选择${name}`;
     }
     this.setState(
@@ -42,10 +46,7 @@ class SelectStaffItem extends PureComponent {
         errorMsg,
       },
       () => {
-        const newValue = value
-          ? makeFieldValue(value, { staff_sn: 'value', realname: 'text' }, false)
-          : '';
-        this.props.onChange(newValue, errorMsg);
+        this.props.onChange(value, errorMsg);
       }
     );
   };
@@ -65,36 +66,61 @@ class SelectStaffItem extends PureComponent {
         errorMsg,
       },
       () => {
-        const newValue = makeFieldValue(value, { staff_sn: 'value', realname: 'text' }, true);
+        onChange(value, errorMsg);
+      }
+    );
+  };
+
+  onSelectChange = (value, muti) => {
+    let errorMsg = '';
+    const {
+      field: { name },
+      field,
+      onChange,
+    } = this.props;
+    const options = field.available_options;
+    if (!value.length) {
+      errorMsg = `请选择${name}`;
+    }
+    this.setState(
+      {
+        value,
+        errorMsg,
+      },
+      () => {
+        const newOptions = options.filter(item => value.indexOf(item.value) > -1);
+        let newValue = '';
+        if (newOptions.length) {
+          newValue = muti ? newOptions : newOptions[0];
+        }
         onChange(newValue, errorMsg);
       }
     );
   };
 
-  fetchDataSource = params => {
-    const {
-      dispatch,
-      field: { id },
-    } = this.props;
-    dispatch({
-      type: 'staff/fetchStaffs',
-      payload: {
-        params: {
-          id,
-          ...params,
-        },
-      },
-    });
-  };
-
-  render() {
+  renderSelect = options => {
     const { field, required, disabled } = this.props;
     const { errorMsg, value } = this.state;
-    const multiple = field.is_checkbox;
-    const newValue = value
-      ? makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, multiple)
-      : '';
-
+    const muti = field.is_checkbox;
+    let newValue = '';
+    if (value) {
+      newValue = muti ? value.map(item => item.value) : value.value;
+    }
+    if (!muti) {
+      const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
+      return (
+        <FormItem {...field} errorMsg={errorMsg} required={required}>
+          <div className={className}>
+            <Select
+              disabled={disabled}
+              options={options}
+              value={newValue}
+              onChange={this.onSelectChange}
+            />
+          </div>
+        </FormItem>
+      );
+    }
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     return (
       <FormItem
@@ -105,11 +131,46 @@ class SelectStaffItem extends PureComponent {
         extraStyle={{ height: 'auto' }}
       >
         <div className={className}>
+          <Select
+            options={options}
+            mode="multiple"
+            value={value}
+            onChange={v => this.onSelectChange(v, 1)}
+            disabled={disabled}
+          />
+        </div>
+      </FormItem>
+    );
+  };
+
+  render() {
+    const { field, required, disabled, defaultValue } = this.props;
+    const { errorMsg, value } = this.state;
+    const multiple = field.is_checkbox;
+    const options = field.available_options;
+
+    const newValue = value
+      ? makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, multiple)
+      : '';
+    const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
+    if (options.length) {
+      return this.renderSelect(options);
+    }
+    return (
+      <FormItem
+        {...field}
+        width="500"
+        height="auto"
+        errorMsg={errorMsg}
+        required={required}
+        extraStyle={{ height: 'auto', width: '700px' }}
+      >
+        <div className={className}>
           <SelectStaff
             multiple={multiple}
-            selfStyle={{ width: '780px' }}
-            fetchDataSource={this.fetchDataSource}
+            defaultValue={defaultValue}
             value={newValue}
+            effect="staff/fetchStaffs"
             onChange={multiple ? this.onMutiChange : this.onSingleChange}
             disabled={disabled}
           />

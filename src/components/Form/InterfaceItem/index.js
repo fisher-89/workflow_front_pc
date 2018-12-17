@@ -38,6 +38,7 @@ class InterfaceItem extends PureComponent {
   }
 
   onSingleChange = value => {
+    console.log('onSingleChange:', value);
     let errorMsg = '';
     const {
       field: { name },

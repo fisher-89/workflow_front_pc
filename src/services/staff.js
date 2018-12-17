@@ -1,7 +1,7 @@
 import request from '../utils/request';
 
 export async function fetchStaffs(params) {
-  return request('/api/staff', {
+  return request('/api/oa/staff', {
     method: 'GET',
     body: params,
   });

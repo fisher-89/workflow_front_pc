@@ -1,11 +1,22 @@
 .result {
   border-radius: 4px;
+  min-height: 40px;
   border: 1px solid #d9d9d9;
   padding-left: 3px;
-  padding-bottom: 3px;
+  // padding-bottom: 3px;
 }
 
 .tagItem {
   padding-top: 3px;
   display: inline-block;
+}
+
+.tag_container {
+  :global {
+    .ant-tag {
+      height: 32px;
+      line-height: 32px;
+      margin-bottom: 3px;
+    }
+  }
 }

@@ -86,13 +86,20 @@
 .type_name {
   height: 38px;
   line-height: 38px;
-  width: 80px;
+  span {
+    float: right;
+    width: 30px;
+    height: 40px;
+    background: url('/drop_down.png') no-repeat center center;
+    background-size: 16px 10px;
+  }
 }
 
 .switch_type {
   position: relative;
   float: left;
   width: 80px;
+  height: 40px;
   padding-left: 15px;
   border: 1px solid #eee;
 }
@@ -101,8 +108,8 @@
   float: left;
   width: 437px;
   height: 40px;
-  border: 1px solid #eee;
   border-left: none;
+  border: 1px solid #eee;
   > input {
     width: 100%;
     border: none;
@@ -110,6 +117,9 @@
     box-shadow: none;
     height: 100%;
     padding-left: 10px;
+    &:focus {
+      border: 1px solid #1890ff;
+    }
   }
 }
 
@@ -120,15 +130,14 @@
   border-top: none;
   z-index: 9;
   left: -1px;
-  top: 40px;
+  top: 41px;
   width: 80px;
-  padding-left: 15px;
   > div {
+    padding-left: 15px;
     height: 40px;
     line-height: 40px;
     &:hover {
-      background: #1890ff;
-      color: #fff;
+      color: #1890ff;
     }
   }
 }

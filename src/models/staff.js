@@ -1,10 +1,9 @@
 import fetchStaffs from '../services/staff';
-import { makerFilters } from '../utils/utils';
 
 export default {
   namespace: 'staff',
   state: {
-    source: {},
+    source: { data: [], total: 0, page: 1, pagesize: 12 },
   },
 
   subscriptions: {},
@@ -12,8 +11,8 @@ export default {
   effects: {
     *fetchStaffs({ payload }, { call, put }) {
       const { params, cb } = payload;
-      const newParams = makerFilters(params);
-      const data = yield call(fetchStaffs, newParams);
+      // const newParams = makerFilters(params);
+      const data = yield call(fetchStaffs, params);
       if (data && !data.error) {
         yield put({
           type: 'save',

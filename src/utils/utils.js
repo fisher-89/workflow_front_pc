@@ -349,6 +349,7 @@ export const whereConfig = {
   max: '<=',
   gt: '>',
   lt: '<',
+  or: '|',
 };
 
 export function dotWheresValue(fields) {

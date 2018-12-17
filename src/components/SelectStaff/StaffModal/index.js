@@ -47,7 +47,6 @@ class StaffModal extends PureComponent {
   }
 
   onCancel = () => {
-    const { checkedStaff } = this.state;
     this.setState(
       {
         visible: false,
@@ -55,7 +54,7 @@ class StaffModal extends PureComponent {
         swicthVisible: false,
       },
       () => {
-        this.props.onChange(false, this.multiple ? checkedStaff : checkedStaff[0]);
+        // this.props.onChange(false, '', false);
       }
     );
   };
@@ -82,13 +81,12 @@ class StaffModal extends PureComponent {
     this.fetchFiltersDataSource({
       page: 1,
       pagesize: 12,
-      filters: {
-        realname: { like: value },
-      },
+      filters: value ? `realname~${value}|staff_sn~${value}|department.name~${value}` : '',
     });
   };
 
-  switchSearchType = item => {
+  switchSearchType = (item, e) => {
+    e.stopPropagation();
     const { searchType } = this.state;
     const newSearchType = searchType.map(t => {
       const newItem = { ...t, checked: false };
@@ -133,9 +131,11 @@ class StaffModal extends PureComponent {
   render() {
     const { visible, searchType, swicthVisible, value, checkedStaff } = this.state;
     const {
-      source: { data, total, pagesize },
+      source: { data, total, page, pagesize },
       fetchLoading,
     } = this.props;
+    const realTotal = total || 1;
+
     return (
       <div id="staff">
         <Modal
@@ -149,22 +149,33 @@ class StaffModal extends PureComponent {
           cancelText="取消"
           getContainer={() => document.getElementById('staff')}
         >
-          <div className={style.global_modal}>
+          <div
+            className={style.global_modal}
+            onClick={() => this.setState({ swicthVisible: false })}
+          >
             <div className={style.modal_content}>
               <div className={style.left_content}>
                 <div className={style.content_search} style={{ height: '40px' }}>
-                  <div className={style.switch_type}>
+                  <div
+                    className={style.switch_type}
+                    style={{ border: swicthVisible ? '1px solid #1890ff' : '1px solid #eee' }}
+                  >
                     <div
                       className={style.type_name}
-                      onClick={() => this.setState({ swicthVisible: true })}
+                      onClick={e => {
+                        e.stopPropagation();
+                        this.setState({ swicthVisible: true });
+                      }}
                     >
                       {searchType.find(item => item.checked).name}
-                      <span>x</span>
+                      <span />
                     </div>
                     {swicthVisible && (
                       <div className={style.type_list}>
-                        {searchType.map(item => (
-                          <div onClick={() => this.switchSearchType}>{item.name}</div>
+                        {searchType.filter(type => !type.checked).map(item => (
+                          <div onClick={e => this.switchSearchType(item, e)} key={item.type}>
+                            {item.name}
+                          </div>
                         ))}
                       </div>
                     )}
@@ -200,8 +211,8 @@ class StaffModal extends PureComponent {
                   <div className={style.page}>
                     <Pagination
                       size="small"
-                      defaultCurrent={1}
-                      total={total || 10}
+                      current={page - 0 || 1}
+                      total={realTotal}
                       pageSize={pagesize - 0}
                       onChange={this.pageOnChange}
                       showQuickJumper

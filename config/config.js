@@ -52,14 +52,16 @@ const test = 'http://112.74.177.132:8006';
 const host = test;
 const proxy = {
   '/oauth': {
-    // changeOrigin: true,
     target: 'http://112.74.177.132:8002/oauth',
     pathRewrite: { '^/oauth': '' },
   },
   '/api/current-user': {
-    // changeOrigin: true,
     target: 'http://112.74.177.132:8002/api',
     pathRewrite: { '^/api': '' },
+  },
+  '/api/oa/': {
+    target: `http://112.74.177.132:8002/api`,
+    pathRewrite: { '^/api/oa': '' },
   },
   '/api': {
     target: `http://112.74.177.132:8006/api`,
