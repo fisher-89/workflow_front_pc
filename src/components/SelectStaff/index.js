@@ -79,7 +79,7 @@ class SelectStaff extends Component {
     );
   };
 
-  onMaskChange = (visible, value, valueChange = true) => {
+  onMaskChange = (visible, value) => {
     const { name } = this.props;
     const newValue = makeFieldValue(
       value,
@@ -99,11 +99,11 @@ class SelectStaff extends Component {
     );
   };
 
-  handleClick = e => {
+  handleClick = () => {
     this.setState({
       visible: true,
     });
-    this.fetchDataSource({ page: 1, pagesize: 12 });
+    // this.fetchDataSource({ page: 1, pagesize: 12 });
   };
 
   fetchDataSource = (params, cb) => {
@@ -148,6 +148,7 @@ class SelectStaff extends Component {
           visible={this.state.visible}
           onChange={this.onMaskChange}
           multiple={multiple}
+          fetchUrl="/api/oa/staff"
           checkedStaff={newValue}
           fetchDataSource={this.fetchDataSource}
         />

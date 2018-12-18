@@ -383,18 +383,21 @@ export function makerFilters(params) {
   };
 }
 
-/* selectTree */
-
-export function markTreeData(data = [], { value, lable, parentId }, pid = null) {
+export function markTreeData(
+  data = [],
+  { value = 'id', label = 'name', parentId = 'parent_id' },
+  pid = null
+) {
   const tree = [];
   data.forEach(item => {
     if (item[parentId] === pid) {
       const temp = {
-        value: item[value].toString(),
-        label: item[lable],
+        title: item[label],
         key: `${item[value]}`,
+        disabled: item.disabled,
+        value: `${item[value] || ''}`,
       };
-      const children = markTreeData(data, { value, lable, parentId }, item[value]);
+      const children = markTreeData(data, { value, label, parentId }, item[value]);
       if (children.length > 0) {
         temp.children = children;
       }
@@ -667,4 +670,10 @@ export function getFieldValue(value, keys, name, include) {
     newValue[newKey] = value[key];
   });
   return newValue;
+}
+
+export function userStorage(key) {
+  const info = localStorage[key];
+  const newInfo = JSON.parse(info === undefined ? '{}' : info);
+  return newInfo;
 }

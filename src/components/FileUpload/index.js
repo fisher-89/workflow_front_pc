@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Upload, Icon, Modal, notification } from 'antd';
+import { Upload, Icon, Modal, notification, Spin } from 'antd';
 import { connect } from 'dva';
 import classNames from 'classnames';
 import request from '../../utils/request';
@@ -8,7 +8,7 @@ import { isImage } from '../../utils/utils';
 
 import style from './index.less';
 
-@connect()
+@connect(({ loading }) => ({ loading }))
 class FileUpload extends PureComponent {
   constructor(props) {
     super(props);
@@ -162,7 +162,7 @@ class FileUpload extends PureComponent {
 
   render() {
     const { fileList, previewVisible, previewSrc } = this.state;
-    const { disabled } = this.props;
+    const { disabled, loading, url } = this.props;
     const uploadButton = disabled ? null : (
       <div>
         <Icon type="plus" />
@@ -172,21 +172,25 @@ class FileUpload extends PureComponent {
     const className = classNames(style.upload, {
       [style.disabled]: disabled,
     });
+    const fileLoading = loading.effects[url];
+
     return (
       <div style={{ position: 'relative' }} className={className}>
-        <Upload
-          {...this.props}
-          listType="picture-card"
-          fileList={fileList}
-          onSuccess={this.onSuccess}
-          onPreview={this.handlePreview}
-          customRequest={this.customRequest}
-          // beforeUpload={this.beforeUpload}
-          onChange={this.handleChange}
-          disabled={disabled}
-        >
-          {uploadButton}
-        </Upload>
+        <Spin spinning={fileLoading || false}>
+          <Upload
+            {...this.props}
+            listType="picture-card"
+            fileList={fileList}
+            onSuccess={this.onSuccess}
+            onPreview={this.handlePreview}
+            customRequest={this.customRequest}
+            // beforeUpload={this.beforeUpload}
+            onChange={this.handleChange}
+            disabled={disabled}
+          >
+            {uploadButton}
+          </Upload>
+        </Spin>
         <Modal
           visible={previewVisible}
           footer={null}

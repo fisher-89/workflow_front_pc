@@ -6,4 +6,9 @@ export async function fetchStaffs(params) {
     body: params,
   });
 }
-export default fetchStaffs;
+export async function fetchDepartment(params) {
+  return request('/api/oa/departments', {
+    method: 'GET',
+    body: params,
+  });
+}

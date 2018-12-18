@@ -122,6 +122,7 @@ export default function request(uri, params) {
           response,
           response: { status, message },
         } = e;
+        console.log(e);
         if (status === 422) {
           return new Promise(resolve => {
             resolve({
@@ -191,6 +192,9 @@ export default function request(uri, params) {
             error: true,
           });
         });
+      })
+      .catch(e => {
+        console.log(e);
       })
   );
 }
