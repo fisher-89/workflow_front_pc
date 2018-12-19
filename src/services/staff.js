@@ -12,3 +12,15 @@ export async function fetchDepartment(params) {
     body: params,
   });
 }
+export async function fetchBrands(params) {
+  return request('/api/oa/brands', {
+    method: 'GET',
+    body: params,
+  });
+}
+export async function fetchPositions(params) {
+  return request('/api/oa/positions', {
+    method: 'GET',
+    body: params,
+  });
+}

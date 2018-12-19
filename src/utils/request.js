@@ -122,7 +122,6 @@ export default function request(uri, params) {
           response,
           response: { status, message },
         } = e;
-        console.log(e);
         if (status === 422) {
           return new Promise(resolve => {
             resolve({

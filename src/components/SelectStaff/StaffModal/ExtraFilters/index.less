@@ -1,0 +1,34 @@
+.filter_content {
+  :global {
+    .ant-tree {
+      max-height: 277px;
+      overflow-y: auto;
+      width: 168px;
+    }
+    .ant-tree::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+      background-color: #1890ff;
+    }
+  }
+}
+
+.clear_filter {
+  height: 20px;
+  span {
+    float: right;
+    height: 20px;
+    line-height: 20px;
+    color: #666;
+    font-size: 12px;
+    padding-left: 15px;
+    margin-right: 6px;
+    cursor: pointer;
+    background: url(/clear.png) no-repeat left center;
+    background-size: 12px;
+    &:hover {
+      background: url(/hoverclear.png) no-repeat left center;
+      background-size: 12px;
+    }
+  }
+}

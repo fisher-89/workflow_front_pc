@@ -4,14 +4,18 @@ import { debounce } from 'lodash';
 import { connect } from 'dva';
 import request from '../../../utils/request';
 
-import { markTreeData } from '../../../utils/utils';
+import { markTreeData, makeFieldValue } from '../../../utils/utils';
 
 import StaffItem from './StaffItem';
+import ExtraFilters from './ExtraFilters/index';
 import style from './index.less';
 
 @connect(({ staff, loading, manager }) => ({
   source: staff.source,
   department: staff.department,
+  brands: staff.brands,
+  status: staff.status,
+  positions: staff.positions,
   fetchLoading: loading.effects['staff/fetchStaffs'],
   currentUser: manager.current,
 }))
@@ -29,6 +33,11 @@ class StaffModal extends PureComponent {
         staff: '',
         department: '',
         filter: '',
+      },
+      extraFilters: {
+        status_id: [],
+        position_is: [],
+        brand_id: [],
       },
       quickUsed: false,
       checkall: {
@@ -59,6 +68,8 @@ class StaffModal extends PureComponent {
 
   componentWillMount() {
     this.fetchDepatment();
+    this.fetchBrands();
+    this.fetchPositions();
   }
 
   componentWillReceiveProps(props) {
@@ -146,6 +157,7 @@ class StaffModal extends PureComponent {
       }).then(res => {
         this.allDataSource = res;
         newCheckedStaffs = res.concat(checkedStaff);
+
         this.setState({
           checkall: { ...this.state.checkall, all: value },
           checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
@@ -158,6 +170,20 @@ class StaffModal extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'staff/fetchDepartment',
+    });
+  };
+
+  fetchBrands = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'staff/fetchBrands',
+    });
+  };
+
+  fetchPositions = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'staff/fetchPositions',
     });
   };
 
@@ -251,6 +277,27 @@ class StaffModal extends PureComponent {
       filters,
     });
     this.fetchFiltersDataSource({ page: 1, filters: this.mapFilters(filters) });
+  };
+
+  filtersChange = value => {
+    this.setState(
+      {
+        extraFilters: value,
+        filters: {
+          ...this.filters,
+          department: '',
+          staff: '',
+        },
+      },
+      () => {
+        const extraFiltersStr = {};
+        Object.keys(value).forEach(item => {
+          extraFiltersStr[item] = value[item].length ? `${item}=[${value[item]}]` : '';
+        });
+        const filters = { ...this.state.filters, ...extraFiltersStr };
+        this.fetchFiltersDataSource({ page: 1, pagesize: 12, filters: this.mapFilters(filters) });
+      }
+    );
   };
 
   renderPageHeader = () => {
@@ -347,19 +394,57 @@ class StaffModal extends PureComponent {
     const {
       checkedStaff,
       checkall: { all, curpage },
+      extraFilters,
     } = this.state;
     const {
       source: { data, total, page, pagesize },
       fetchLoading,
       multiple,
+      status,
+      brands,
+      positions,
     } = this.props;
     const realTotal = total || 1;
-
+    const brandsOpt = brands.map(item => {
+      const obj = {
+        ...item,
+        title: item.name,
+        key: `brand_id-${item.id}`,
+      };
+      return obj;
+    });
+    const statusOpt = status.map(item => {
+      const obj = {
+        ...item,
+        title: item.text,
+        key: `status_id-${item.value}`,
+      };
+      return obj;
+    });
+    const positionsOpt = positions.map(item => {
+      const obj = {
+        ...item,
+        title: item.name,
+        key: `position_id-${item.id}`,
+      };
+      return obj;
+    });
+    const treeData = [
+      { title: '品牌', key: 'brand_id', children: brandsOpt },
+      { title: '职位', key: 'position_id', children: positionsOpt },
+      { title: '状态', key: 'status_id', children: statusOpt },
+    ];
     return (
       <div>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
           <span>搜索结果</span>
-          <span className={style.filter}>筛选</span>
+          <ExtraFilters
+            filterDataSource={treeData}
+            onChange={this.filtersChange}
+            filters={extraFilters}
+          >
+            <span className={style.filter}>筛选</span>
+          </ExtraFilters>
           {multiple ? (
             <React.Fragment>
               <span className={style.checkall}>

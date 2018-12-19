@@ -7,8 +7,9 @@ import { makeFieldValue } from '../../utils/utils';
 import StaffModal from './StaffModal';
 import style from './index.less';
 
-@connect(({ loading }) => ({
+@connect(({ loading, staff }) => ({
   loading,
+  staff,
 }))
 class SelectStaff extends Component {
   constructor(props) {
@@ -50,7 +51,8 @@ class SelectStaff extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value) ||
-      JSON.stringify(this.state) !== JSON.stringify(nextState)
+      JSON.stringify(this.state) !== JSON.stringify(nextState) ||
+      JSON.stringify(nextProps.staff) !== JSON.stringify(this.props.staff)
     );
   }
 
