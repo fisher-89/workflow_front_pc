@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { Pagination, Modal, Spin, TreeSelect, Checkbox } from 'antd';
 import { debounce } from 'lodash';
+import classNames from 'classnames';
 import { connect } from 'dva';
 import request from '../../../utils/request';
 
-import { markTreeData, makeFieldValue } from '../../../utils/utils';
+import { markTreeData, judgeIsNothing } from '../../../utils/utils';
 
 import StaffItem from './StaffItem';
 import ExtraFilters from './ExtraFilters/index';
@@ -266,7 +267,7 @@ class StaffModal extends PureComponent {
   mapFilters = filters =>
     Object.keys(filters)
       .map(key => filters[key])
-      .filter(item => item)
+      .filter(item => judgeIsNothing(item))
       .join(';');
 
   quickFetch = () => {
@@ -434,6 +435,10 @@ class StaffModal extends PureComponent {
       { title: '职位', key: 'position_id', children: positionsOpt },
       { title: '状态', key: 'status_id', children: statusOpt },
     ];
+    const cls = classNames(style.filter, {
+      [style.active]: this.mapFilters(extraFilters),
+    });
+    console.log(this.mapFilters(extraFilters));
     return (
       <div>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
@@ -443,7 +448,7 @@ class StaffModal extends PureComponent {
             onChange={this.filtersChange}
             filters={extraFilters}
           >
-            <span className={style.filter}>筛选</span>
+            <span className={cls}>筛选</span>
           </ExtraFilters>
           {multiple ? (
             <React.Fragment>
