@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Pagination, Modal, Spin, TreeSelect, Checkbox } from 'antd';
 import { debounce } from 'lodash';
 import classNames from 'classnames';
@@ -20,7 +20,7 @@ import style from './index.less';
   fetchLoading: loading.effects['staff/fetchStaffs'],
   currentUser: manager.current,
 }))
-class StaffModal extends PureComponent {
+class StaffModal extends Component {
   constructor(props) {
     super(props);
     const { visible, fetchDataSource, checkedStaff, multiple, currentUser } = this.props;
@@ -86,6 +86,13 @@ class StaffModal extends PureComponent {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      JSON.stringify(nextProps) !== JSON.stringify(this.props) ||
+      JSON.stringify(this.state) !== JSON.stringify(nextState)
+    );
+  }
+
   onCancel = () => {
     this.resetState(() => {
       this.props.onChange(
@@ -139,8 +146,7 @@ class StaffModal extends PureComponent {
     });
   };
 
-  checkAll = e => {
-    const value = e.target.checked;
+  checkAll = value => {
     const { fetchUrl } = this.props;
     const { checkedStaff } = this.state;
     const staffSns = this.allDataSource.map(item => item.staff_sn);
@@ -148,7 +154,6 @@ class StaffModal extends PureComponent {
     if (!value) {
       newCheckedStaffs = checkedStaff.filter(item => staffSns.indexOf(item.staff_sn) === -1);
       this.setState({
-        checkall: { ...this.state.checkall, all: value },
         checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
       });
     } else {
@@ -158,9 +163,7 @@ class StaffModal extends PureComponent {
       }).then(res => {
         this.allDataSource = res;
         newCheckedStaffs = res.concat(checkedStaff);
-
         this.setState({
-          checkall: { ...this.state.checkall, all: value },
           checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
         });
       });
@@ -392,11 +395,8 @@ class StaffModal extends PureComponent {
   );
 
   renderStaffList = () => {
-    const {
-      checkedStaff,
-      checkall: { all, curpage },
-      extraFilters,
-    } = this.state;
+    const { checkedStaff, extraFilters } = this.state;
+
     const {
       source: { data, total, page, pagesize },
       fetchLoading,
@@ -405,6 +405,9 @@ class StaffModal extends PureComponent {
       brands,
       positions,
     } = this.props;
+    const staffSns = checkedStaff.map(item => item.staff_sn);
+    const extra = data.find(item => staffSns.indexOf(item.staff_sn) === 0);
+    console.log(staffSns, data);
     const realTotal = total || 1;
     const brandsOpt = brands.map(item => {
       const obj = {
@@ -438,7 +441,11 @@ class StaffModal extends PureComponent {
     const cls = classNames(style.filter, {
       [style.active]: this.mapFilters(extraFilters),
     });
-    console.log(this.mapFilters(extraFilters));
+    // const ableCheckAll = (total + checkedStaff.length) > 50;
+    const ableCheckAll = total < 61;
+    const btnStyle = ableCheckAll
+      ? { color: '#333', background: '#fff', border: '1px solid #ccc' }
+      : { color: '#fff', background: '#ccc', border: '1px solid #ccc' };
     return (
       <div>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
@@ -453,18 +460,23 @@ class StaffModal extends PureComponent {
           {multiple ? (
             <React.Fragment>
               <span className={style.checkall}>
-                <Checkbox onClick={this.checkCurAll} checked={curpage}>
-                  当前页
+                <Checkbox onClick={this.checkCurAll} checked={!extra}>
+                  选择当前页
                 </Checkbox>
               </span>
-              <span className={style.checkall}>
-                <Checkbox
-                  onClick={this.checkAll}
-                  checked={all}
-                  disabled={total + checkedStaff.length > 50}
-                >
-                  全选
-                </Checkbox>
+              <span
+                className={style.checkall}
+                // style={btnStyle}
+                onClick={() => this.checkAll(false)}
+              >
+                清空全选
+              </span>
+              <span
+                className={style.checkall}
+                // style={btnStyle}
+                onClick={ableCheckAll ? () => this.checkAll(true) : () => {}}
+              >
+                全选
               </span>
             </React.Fragment>
           ) : null}
