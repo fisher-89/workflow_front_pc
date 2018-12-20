@@ -310,7 +310,7 @@ class StaffModal extends Component {
   mapFilters = filters =>
     Object.keys(filters)
       .map(key => filters[key])
-      .filter(item => judgeIsNothing(item))
+      .filter(item => !judgeIsNothing(item))
       .join(';');
 
   quickFetch = () => {

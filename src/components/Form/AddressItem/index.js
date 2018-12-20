@@ -54,8 +54,9 @@ class AddressItem extends PureComponent {
         {...field}
         required={required}
         errorMsg={errorMsg}
-        width="675"
+        // width="600"
         height="150"
+        extraStyle={{ minWidth: '600px' }}
       >
         <div className={errorMsg ? style.errorMsg : style.noerror}>
           <Address

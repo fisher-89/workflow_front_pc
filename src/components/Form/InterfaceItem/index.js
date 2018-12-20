@@ -1,11 +1,12 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import Select from '../../Select';
+import { judgeIsNothing } from '../../../utils/utils';
 import style from './index.less';
 
 @connect(({ interfaceApi }) => ({ sourceDetails: interfaceApi.sourceDetails }))
-class InterfaceItem extends PureComponent {
+class InterfaceItem extends Component {
   constructor(props) {
     super(props);
     const { defaultValue, field } = this.props;
@@ -37,14 +38,20 @@ class InterfaceItem extends PureComponent {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      JSON.stringify(nextProps) !== JSON.stringify(this.props) ||
+      JSON.stringify(this.state) !== JSON.stringify(nextState)
+    );
+  }
+
   onSingleChange = value => {
-    console.log('onSingleChange:', value);
     let errorMsg = '';
     const {
       field: { name },
       required,
     } = this.props;
-    if (required && (value === null || value === undefined)) {
+    if (required && !judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
     }
     this.setState({
@@ -56,10 +63,11 @@ class InterfaceItem extends PureComponent {
   onMutiChange = value => {
     let errorMsg = '';
     const {
+      required,
       field: { name },
       onChange,
     } = this.props;
-    if (!value.length) {
+    if (required && !judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
     }
     this.setState(
@@ -86,19 +94,25 @@ class InterfaceItem extends PureComponent {
   };
 
   render() {
-    const { field, required, disabled } = this.props;
+    const {
+      field,
+      field: { id },
+      required,
+      disabled,
+    } = this.props;
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
-
+    const newId = `${id}-select`;
     if (!field.is_checkbox) {
       const className = [style.inteface, errorMsg ? style.errorMsg : ''].join(' ');
       return (
         <FormItem {...field} errorMsg={errorMsg} required={required}>
-          <div className={className}>
+          <div className={className} id={newId}>
             <Select
               disabled={disabled}
               options={options}
               value={value}
+              getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSingleChange}
             />
           </div>
@@ -112,14 +126,15 @@ class InterfaceItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto' }}
+        extraStyle={{ height: 'auto', minWidth: '600px' }}
       >
-        <div className={className}>
+        <div className={className} id={newId}>
           <Select
             disabled={disabled}
             options={options}
             value={value || []}
             mode="multiple"
+            getPopupContainer={() => document.getElementById(newId)}
             onChange={this.onMutiChange}
           />
         </div>

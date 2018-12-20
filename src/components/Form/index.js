@@ -7,6 +7,7 @@ import ArrayItem from './ArrayItem';
 import { DateItem, TimeItem } from './DateItem';
 import EditForm from './EditForm';
 import SelectStaffItem from './SelectStaffItem';
+import SelectDepItem from './DepItem';
 
 export default TextItem;
 export {
@@ -20,4 +21,5 @@ export {
   TimeItem,
   EditForm,
   SelectStaffItem,
+  SelectDepItem,
 };

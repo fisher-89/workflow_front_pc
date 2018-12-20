@@ -41,6 +41,7 @@ class SelectStaff extends Component {
 
   componentWillReceiveProps(props) {
     const { value } = props;
+    console.log('componentWillReceiveProps:', value);
     if (JSON.stringify(value) !== JSON.stringify(this.props.value)) {
       this.setState({
         value,
@@ -50,9 +51,8 @@ class SelectStaff extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value) ||
       JSON.stringify(this.state) !== JSON.stringify(nextState) ||
-      JSON.stringify(nextProps.staff) !== JSON.stringify(this.props.staff)
+      JSON.stringify(nextProps) !== JSON.stringify(this.props)
     );
   }
 
@@ -68,8 +68,10 @@ class SelectStaff extends Component {
     e.preventDefault();
     e.stopPropagation();
     const { value, source } = this.state;
-    const newValue = this.multiple ? value.filter(v => v.staff_sn !== item.staff_sn) : '';
+    const { name } = this.props;
+    const newValue = this.multiple ? value.filter(v => v[name.staff_sn] !== item.staff_sn) : '';
     const newSource = this.multiple ? source.filter(v => v.staff_sn !== item.staff_sn) : '';
+
     this.setState(
       {
         value: newValue,
@@ -105,7 +107,6 @@ class SelectStaff extends Component {
     this.setState({
       visible: true,
     });
-    // this.fetchDataSource({ page: 1, pagesize: 12 });
   };
 
   fetchDataSource = (params, cb) => {
@@ -145,7 +146,6 @@ class SelectStaff extends Component {
             ))}
           </div>
         </div>
-
         <StaffModal
           visible={this.state.visible}
           onChange={this.onMaskChange}

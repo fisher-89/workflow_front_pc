@@ -7,7 +7,7 @@ class SelectComp extends PureComponent {
     super(props);
     const { value, mode } = props;
     this.state = {
-      value: mode === 'multiple' ? value.map(item => `${item || ''}`) : `${value}`,
+      value: mode === 'multiple' ? (value || []).map(item => `${item || ''}`) : `${value}`,
     };
   }
 
@@ -16,7 +16,7 @@ class SelectComp extends PureComponent {
 
     if (JSON.stringify(value) !== JSON.stringify(this.props.value)) {
       this.setState({
-        value: mode === 'multiple' ? value.map(item => `${item || ''}`) : `${value}`,
+        value: mode === 'multiple' ? (value || []).map(item => `${item || ''}`) : `${value}`,
       });
     }
   }

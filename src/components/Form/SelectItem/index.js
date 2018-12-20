@@ -69,19 +69,27 @@ class SelectItem extends PureComponent {
   };
 
   render() {
-    const { field, required, disabled } = this.props;
+    const {
+      field,
+      field: { id },
+      required,
+      disabled,
+    } = this.props;
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
+    const newId = `${id}-select`;
+
     if (!field.is_checkbox) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
         <FormItem {...field} errorMsg={errorMsg} required={required}>
-          <div className={className}>
+          <div className={className} id={newId}>
             <Select
               disabled={disabled}
               options={options}
               value={value}
               onChange={this.onSingleChange}
+              getPopupContainer={() => document.getElementById(newId)}
             />
           </div>
         </FormItem>
@@ -96,12 +104,13 @@ class SelectItem extends PureComponent {
         required={required}
         extraStyle={{ height: 'auto' }}
       >
-        <div className={className}>
+        <div className={className} id={newId}>
           <Select
             options={options}
             mode="multiple"
             value={value}
             onChange={this.onMutiChange}
+            getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}
           />
         </div>

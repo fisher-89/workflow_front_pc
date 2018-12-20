@@ -86,7 +86,12 @@ class SelectItem extends PureComponent {
     const { errorMsg, value } = this.state;
     const className = [style.tag, errorMsg ? style.errorMsg : ''].join(' ');
     return (
-      <FormItem {...field} errorMsg={errorMsg} required={required} extraStyle={{ height: 'auto' }}>
+      <FormItem
+        {...field}
+        errorMsg={errorMsg}
+        required={required}
+        extraStyle={{ height: 'auto', minWidth: '600px' }}
+      >
         <div className={className}>
           <TagGroup
             value={value}

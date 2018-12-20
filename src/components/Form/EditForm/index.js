@@ -11,6 +11,7 @@ import {
   DateItem,
   TimeItem,
   SelectStaffItem,
+  SelectDepItem,
 } from '../index';
 import style from './index.less';
 import styles from '../index.less';
@@ -312,6 +313,8 @@ class EditForm extends PureComponent {
         return this.renderAddressItem(item, formInfo, keyInfo);
       case 'staff':
         return this.renderStaffItem(item, formInfo, keyInfo);
+      case 'department':
+        return this.renderDepartItem(item, formInfo, keyInfo);
       default:
         return null;
     }
@@ -460,6 +463,21 @@ class EditForm extends PureComponent {
     return (
       <div className={style.edit_form} key={domKey}>
         <SelectStaffItem
+          field={item}
+          defaultValue={value}
+          {...formInfo}
+          onChange={(v, msg) => this.handleOnChange(v, msg, keyInfo, item)}
+        />
+      </div>
+    );
+  };
+
+  renderDepartItem = (item, formInfo, keyInfo) => {
+    const { value } = formInfo;
+    const { domKey } = keyInfo;
+    return (
+      <div className={style.edit_form} key={domKey}>
+        <SelectDepItem
           field={item}
           defaultValue={value}
           {...formInfo}

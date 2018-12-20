@@ -99,22 +99,30 @@ class SelectStaffItem extends PureComponent {
   };
 
   renderSelect = options => {
-    const { field, required, disabled } = this.props;
+    const {
+      field,
+      field: { id },
+      required,
+      disabled,
+    } = this.props;
     const { errorMsg, value } = this.state;
     const muti = field.is_checkbox;
     let newValue = '';
     if (value) {
       newValue = muti ? value.map(item => item.value) : value.value;
     }
+    const newId = `${id}-select`;
+
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
         <FormItem {...field} errorMsg={errorMsg} required={required}>
-          <div className={className}>
+          <div className={className} id={newId}>
             <Select
               disabled={disabled}
               options={options}
               value={newValue}
+              getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSelectChange}
             />
           </div>
@@ -128,14 +136,15 @@ class SelectStaffItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto' }}
+        extraStyle={{ height: 'auto', minWidth: '600px' }}
       >
-        <div className={className}>
+        <div className={className} id={newId}>
           <Select
             options={options}
             mode="multiple"
             value={value}
             onChange={v => this.onSelectChange(v, 1)}
+            getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}
           />
         </div>
@@ -149,9 +158,12 @@ class SelectStaffItem extends PureComponent {
     const multiple = field.is_checkbox;
     const options = field.available_options;
 
-    const newValue = value
-      ? makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, multiple)
-      : '';
+    // const newValue = value
+    //   ? makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, multiple)
+    //   : '';
+    // const newDefaultValue = defaultValue
+    //   ? makeFieldValue(defaultValue, { value: 'staff_sn', text: 'realname' }, multiple)
+    //   : '';
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     if (options.length) {
       return this.renderSelect(options);
@@ -163,13 +175,13 @@ class SelectStaffItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', width: '700px' }}
+        extraStyle={{ height: 'auto', minWidth: '600px' }}
       >
         <div className={className}>
           <SelectStaff
             multiple={multiple}
             defaultValue={defaultValue}
-            value={newValue}
+            value={value}
             effect="staff/fetchStaffs"
             onChange={multiple ? this.onMutiChange : this.onSingleChange}
             disabled={disabled}

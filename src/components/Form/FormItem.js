@@ -26,7 +26,7 @@ class FormItem extends PureComponent {
       left: `${x}px`,
       ...extraStyle,
     };
-    const minWidth = (width || 300) - 140;
+    // const minWidth = (width || 300) - 140;
     const classnames = [styles.form_item, className].join(' ');
     const cls = classNames(styles.right, {
       [styles.has_error]: errorMsg,
@@ -38,9 +38,7 @@ class FormItem extends PureComponent {
             {required && <span style={{ color: '#d9333f' }}>*</span>}
             {name}：
           </div>
-          <div className={cls} style={{ minWidth: `${minWidth}px` }}>
-            {children}
-          </div>
+          <div className={cls}>{children}</div>
         </div>
         <Tooltip placement="topLeft" title={errorMsg}>
           <div className={styles.error}>{errorMsg}</div>
