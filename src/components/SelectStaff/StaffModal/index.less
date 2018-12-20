@@ -154,8 +154,29 @@
   padding-left: 20px;
   padding-top: 20px;
   float: right;
-  width: 217px;
+  width: 234px;
   height: 100%;
+  .clearfix();
+}
+
+.checked_count {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+}
+
+.checked_clear {
+  float: right;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  padding-left: 16px;
+  background: url('/checkedclear.png') no-repeat left center;
+  background-size: 12px;
+  &:hover {
+    background: url('/toclear.png') no-repeat left center;
+    background-size: 12px;
+  }
 }
 
 .search_result_content {
@@ -167,6 +188,7 @@
     line-height: 20px;
     height: 20px;
     margin-left: 20px;
+    cursor: pointer;
   }
   .checkall {
     padding: 0 6px;
@@ -251,7 +273,7 @@
 
 .card {
   width: 16px;
-  background: url('/card.jpg') no-repeat center center;
+  background: url('/id_card.png') no-repeat center center;
   background-size: 14px 11px;
 }
 

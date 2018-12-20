@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Pagination, Modal, Spin, TreeSelect, Checkbox } from 'antd';
+import { Pagination, Modal, Spin, Checkbox, message, TreeSelect } from 'antd';
 import { debounce } from 'lodash';
 import classNames from 'classnames';
 import { connect } from 'dva';
+// import TreeSelect from '../../TreeSelect'
 import request from '../../../utils/request';
 
 import { markTreeData, judgeIsNothing } from '../../../utils/utils';
@@ -46,7 +47,7 @@ class StaffModal extends Component {
         curpage: false,
       },
     };
-    this.allDataSource = [];
+    this.allDataSource = { filters: '', data: [] };
     this.multiple = multiple;
     this.currentUser = currentUser;
     this.fetchFiltersDataSource = debounce(params => {
@@ -116,14 +117,22 @@ class StaffModal extends Component {
       },
     } = extra;
     const filters = { department: `department.full_name~${title}`, staff: '', filter: '' };
-    this.setState({
-      filters,
-    });
-    this.fetchDataSource({
-      page: 1,
-      pagesize: 12,
-      filters: this.mapFilters(filters),
-    });
+    this.setState(
+      {
+        filters,
+      },
+      () => {
+        this.fetchFiltersDataSource({
+          page: 1,
+          pagesize: 12,
+          filters: this.mapFilters(this.makeAllFilters()),
+        });
+      }
+    );
+  };
+
+  onTreeSearch = value => {
+    console.log(value);
   };
 
   checkCurAll = e => {
@@ -147,27 +156,51 @@ class StaffModal extends Component {
   };
 
   checkAll = value => {
-    const { fetchUrl } = this.props;
+    const {
+      fetchUrl,
+      source: { total },
+    } = this.props;
     const { checkedStaff } = this.state;
-    const staffSns = this.allDataSource.map(item => item.staff_sn);
+    const staffSns = this.allDataSource.data.map(item => item.staff_sn);
     let newCheckedStaffs = '';
+
     if (!value) {
       newCheckedStaffs = checkedStaff.filter(item => staffSns.indexOf(item.staff_sn) === -1);
       this.setState({
         checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
       });
     } else {
+      if (total > 60) {
+        message.warning('超出最大限制，最多选择60人!', 2);
+        return;
+      }
+      const filters = this.mapFilters(this.makeAllFilters());
+      const sn = checkedStaff.map(item => item.staff_sn);
+      const extra = this.allDataSource.data.length
+        ? this.allDataSource.data.find(item => sn.indexOf(item.staff_sn) === -1)
+        : [];
+      if (!extra) {
+        message.warning('该条件下已经全部选择', 2);
+        return;
+      }
       request(fetchUrl, {
         method: 'GET',
-        body: { filters: this.mapFilters(this.state.filters) },
+        body: { filters: this.mapFilters(this.makeAllFilters()) },
       }).then(res => {
-        this.allDataSource = res;
+        this.allDataSource = { filters, data: res };
         newCheckedStaffs = res.concat(checkedStaff);
         this.setState({
           checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
         });
       });
     }
+  };
+
+  makeAllFilters = () => {
+    const { extraFilters } = this.state;
+    const extraFiltersStr = this.makeExtraFilter(extraFilters);
+    const newFilters = { ...this.state.filters, ...extraFiltersStr };
+    return newFilters;
   };
 
   fetchDepatment = () => {
@@ -212,15 +245,19 @@ class StaffModal extends Component {
     const { value } = e.target;
     const staffFilter = value ? `department.name~${value}|realname~${value}|staff_sn~${value}` : '';
     const filters = { ...this.state.filters, staff: staffFilter, department: '' };
-    this.setState({
-      searchValue: value,
-      filters,
-    });
-    this.fetchFiltersDataSource({
-      page: 1,
-      pagesize: 12,
-      filters: this.mapFilters(filters),
-    });
+    this.setState(
+      {
+        searchValue: value,
+        filters,
+      },
+      () => {
+        this.fetchFiltersDataSource({
+          page: 1,
+          pagesize: 12,
+          filters: this.mapFilters(this.makeAllFilters()),
+        });
+      }
+    );
   };
 
   switchSearchType = (item, e) => {
@@ -240,21 +277,24 @@ class StaffModal extends Component {
   };
 
   pageOnChange = page => {
-    const { filters } = this.state;
-    this.setState({
-      checkall: { all: false, curpage: false },
-    });
     this.fetchDataSource({
       page,
       pagesize: 12,
-      filters: this.mapFilters(filters),
+      filters: this.mapFilters(this.makeAllFilters()),
     });
   };
 
   handleOnChange = item => {
     const { checkedStaff } = this.state;
+    const isChecked = checkedStaff.find(staff => staff.staff_sn === item.staff_sn);
+    let newCheckedStaff = '';
+    if (isChecked) {
+      newCheckedStaff = checkedStaff.filter(staff => staff.staff_sn !== item.staff_sn);
+    } else {
+      newCheckedStaff = checkedStaff.concat(item);
+    }
     this.setState({
-      checkedStaff: this.multiple ? [...checkedStaff, item].unique('staff_sn') : [item],
+      checkedStaff: newCheckedStaff,
     });
   };
 
@@ -287,21 +327,23 @@ class StaffModal extends Component {
     this.setState(
       {
         extraFilters: value,
-        filters: {
-          ...this.filters,
-          department: '',
-          staff: '',
-        },
       },
       () => {
-        const extraFiltersStr = {};
-        Object.keys(value).forEach(item => {
-          extraFiltersStr[item] = value[item].length ? `${item}=[${value[item]}]` : '';
+        this.fetchFiltersDataSource({
+          page: 1,
+          pagesize: 12,
+          filters: this.mapFilters(this.makeAllFilters()),
         });
-        const filters = { ...this.state.filters, ...extraFiltersStr };
-        this.fetchFiltersDataSource({ page: 1, pagesize: 12, filters: this.mapFilters(filters) });
       }
     );
+  };
+
+  makeExtraFilter = filter => {
+    const extraFiltersStr = {};
+    Object.keys(filter).forEach(item => {
+      extraFiltersStr[item] = filter[item].length ? `${item}=[${filter[item]}]` : '';
+    });
+    return extraFiltersStr;
   };
 
   renderPageHeader = () => {
@@ -348,8 +390,10 @@ class StaffModal extends Component {
               maxTagCount={10}
               showSearch
               treeData={newTreeData}
-              // onSearch={this.onTreeSearch}
               onSelect={this.onTreeSelect}
+              filterTreeNode={(inputValue, treeNode) =>
+                treeNode.props.title.indexOf(inputValue) !== -1
+              }
             />
           )}
         </div>
@@ -362,9 +406,30 @@ class StaffModal extends Component {
 
     return (
       <div className={style.select_result}>
-        <div style={{ height: '40px', lineHeight: '40px', color: '#333', fontSize: '14px' }}>
-          已选：
-          {checkedStaff.length}/<span style={{ color: '#999' }}>{this.multiple ? '50' : '1'}</span>
+        <div
+          style={{
+            height: '40px',
+            lineHeight: '40px',
+            color: '#333',
+            fontSize: '14px',
+            paddingRight: '24px',
+          }}
+        >
+          <div className={style.checked_count}>
+            已选：
+            {checkedStaff.length}/
+            <span style={{ color: '#999' }}>{this.multiple ? '50' : '1'}</span>
+          </div>
+          <div
+            className={style.checked_clear}
+            onClick={() => {
+              this.setState({
+                checkedStaff: [],
+              });
+            }}
+          >
+            清空
+          </div>
         </div>
         <div className={style.checked_list}>
           {checkedStaff.map(item => (
@@ -396,7 +461,6 @@ class StaffModal extends Component {
 
   renderStaffList = () => {
     const { checkedStaff, extraFilters } = this.state;
-
     const {
       source: { data, total, page, pagesize },
       fetchLoading,
@@ -406,8 +470,7 @@ class StaffModal extends Component {
       positions,
     } = this.props;
     const staffSns = checkedStaff.map(item => item.staff_sn);
-    const extra = data.find(item => staffSns.indexOf(item.staff_sn) === 0);
-    console.log(staffSns, data);
+    const extra = data.find(item => staffSns.indexOf(item.staff_sn) === -1);
     const realTotal = total || 1;
     const brandsOpt = brands.map(item => {
       const obj = {
@@ -441,11 +504,7 @@ class StaffModal extends Component {
     const cls = classNames(style.filter, {
       [style.active]: this.mapFilters(extraFilters),
     });
-    // const ableCheckAll = (total + checkedStaff.length) > 50;
-    const ableCheckAll = total < 61;
-    const btnStyle = ableCheckAll
-      ? { color: '#333', background: '#fff', border: '1px solid #ccc' }
-      : { color: '#fff', background: '#ccc', border: '1px solid #ccc' };
+    const btnStyle = { color: '#333', background: '#fff', border: '1px solid #ccc' };
     return (
       <div>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
@@ -466,16 +525,12 @@ class StaffModal extends Component {
               </span>
               <span
                 className={style.checkall}
-                // style={btnStyle}
+                style={btnStyle}
                 onClick={() => this.checkAll(false)}
               >
                 清空全选
               </span>
-              <span
-                className={style.checkall}
-                // style={btnStyle}
-                onClick={ableCheckAll ? () => this.checkAll(true) : () => {}}
-              >
+              <span className={style.checkall} style={btnStyle} onClick={() => this.checkAll(true)}>
                 全选
               </span>
             </React.Fragment>
@@ -501,6 +556,7 @@ class StaffModal extends Component {
           <Pagination
             size="small"
             current={page - 0 || 1}
+            showTotal={t => `总共 ${t} 条`}
             total={realTotal}
             pageSize={pagesize - 0}
             onChange={this.pageOnChange}
@@ -512,7 +568,7 @@ class StaffModal extends Component {
   };
 
   render() {
-    const { visible, quickUsed } = this.state;
+    const { visible, quickUsed, checkedStaff } = this.state;
     return (
       <div id="staff">
         <Modal
@@ -523,6 +579,7 @@ class StaffModal extends Component {
           bodyStyle={{ padding: 0 }}
           title="选择员工"
           okText="确认"
+          okButtonProps={{ disabled: checkedStaff.length > 49 }}
           cancelText="取消"
           getContainer={() => document.getElementById('staff')}
         >
