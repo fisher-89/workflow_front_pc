@@ -140,10 +140,11 @@ class StartForm extends PureComponent {
     const submitFormData = {};
     Object.keys(formData).forEach(key => {
       const curData = formData[key];
+      const oldErrorMsg = curData.errorMsg;
       const formItem = { ...curData };
       const { isGrid } = curData;
       if (isGrid) {
-        const errorMsg = this.doValidator(curData);
+        const errorMsg = oldErrorMsg || this.doValidator(curData);
         hasError = hasError || errorMsg;
         formItem.errorMsg = errorMsg;
         const { value } = formItem;
@@ -155,7 +156,7 @@ class StartForm extends PureComponent {
             const curGridItemValue = item[itemKey];
             submitValue[itemKey] = curGridItemValue.value;
 
-            const msg = this.doValidator(curGridItemValue);
+            const msg = oldErrorMsg || this.doValidator(curGridItemValue);
             hasError = hasError || msg;
             newValueItem[itemKey] = { ...curGridItemValue, errorMsg: msg };
           });
@@ -169,7 +170,7 @@ class StartForm extends PureComponent {
         submitFormData[key] = gridValue;
         // submitFormData[key] = []
       } else {
-        const msg = this.doValidator(curData);
+        const msg = oldErrorMsg || this.doValidator(curData);
         hasError = hasError || msg;
         newFormData[key] = {
           ...formItem,

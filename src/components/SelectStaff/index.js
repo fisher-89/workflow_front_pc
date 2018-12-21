@@ -41,7 +41,6 @@ class SelectStaff extends Component {
 
   componentWillReceiveProps(props) {
     const { value } = props;
-    console.log('componentWillReceiveProps:', value);
     if (JSON.stringify(value) !== JSON.stringify(this.props.value)) {
       this.setState({
         value,
@@ -123,7 +122,7 @@ class SelectStaff extends Component {
   };
 
   render() {
-    const { selfStyle, multiple } = this.props;
+    const { selfStyle, multiple, range } = this.props;
 
     if (!this.state) {
       return null;
@@ -151,6 +150,7 @@ class SelectStaff extends Component {
           onChange={this.onMaskChange}
           multiple={multiple}
           fetchUrl="/api/oa/staff"
+          range={range}
           checkedStaff={newValue}
           fetchDataSource={this.fetchDataSource}
         />

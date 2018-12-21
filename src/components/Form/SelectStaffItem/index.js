@@ -101,7 +101,7 @@ class SelectStaffItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id },
+      field: { id, max, min },
       required,
       disabled,
     } = this.props;
@@ -153,17 +153,16 @@ class SelectStaffItem extends PureComponent {
   };
 
   render() {
-    const { field, required, disabled, defaultValue } = this.props;
+    const {
+      field,
+      field: { max, min },
+      required,
+      disabled,
+      defaultValue,
+    } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
     const options = field.available_options;
-
-    // const newValue = value
-    //   ? makeFieldValue(value, { value: 'staff_sn', text: 'realname' }, multiple)
-    //   : '';
-    // const newDefaultValue = defaultValue
-    //   ? makeFieldValue(defaultValue, { value: 'staff_sn', text: 'realname' }, multiple)
-    //   : '';
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     if (options.length) {
       return this.renderSelect(options);
@@ -182,6 +181,7 @@ class SelectStaffItem extends PureComponent {
             multiple={multiple}
             defaultValue={defaultValue}
             value={value}
+            range={{ max, min }}
             effect="staff/fetchStaffs"
             onChange={multiple ? this.onMutiChange : this.onSingleChange}
             disabled={disabled}

@@ -38,7 +38,7 @@ class StaffModal extends Component {
       },
       extraFilters: {
         status_id: [],
-        position_is: [],
+        position_id: [],
         brand_id: [],
       },
       quickUsed: false,
@@ -116,7 +116,11 @@ class StaffModal extends Component {
         props: { title },
       },
     } = extra;
-    const filters = { department: `department.full_name~${title}`, staff: '', filter: '' };
+    const filters = {
+      department: value !== 'all' ? `department.full_name~${title}` : '',
+      staff: '',
+      filter: '',
+    };
     this.setState(
       {
         filters,
@@ -310,7 +314,7 @@ class StaffModal extends Component {
   mapFilters = filters =>
     Object.keys(filters)
       .map(key => filters[key])
-      .filter(item => !judgeIsNothing(item))
+      .filter(item => judgeIsNothing(item))
       .join(';');
 
   quickFetch = () => {
@@ -352,7 +356,7 @@ class StaffModal extends Component {
     const curTab = searchType.find(item => item.checked);
     const newTreeData = markTreeData(
       department,
-      { value: 'id', label: 'name', parentId: 'parent_id' },
+      { value: 'id', title: 'name', parentId: 'parent_id' },
       0
     );
     return (
@@ -389,7 +393,7 @@ class StaffModal extends Component {
               dropdownClassName={style.dropdown}
               maxTagCount={10}
               showSearch
-              treeData={newTreeData}
+              treeData={[{ value: 'all', title: '全部', children: newTreeData }]}
               onSelect={this.onTreeSelect}
               filterTreeNode={(inputValue, treeNode) =>
                 treeNode.props.title.indexOf(inputValue) !== -1
@@ -403,7 +407,7 @@ class StaffModal extends Component {
 
   renderCheckResult = () => {
     const { checkedStaff } = this.state;
-
+    const { range } = this.props;
     return (
       <div className={style.select_result}>
         <div
@@ -418,7 +422,7 @@ class StaffModal extends Component {
           <div className={style.checked_count}>
             已选：
             {checkedStaff.length}/
-            <span style={{ color: '#999' }}>{this.multiple ? '50' : '1'}</span>
+            <span style={{ color: '#999' }}>{this.multiple ? range.max || '50' : '1'}</span>
           </div>
           <div
             className={style.checked_clear}
@@ -607,5 +611,6 @@ StaffModal.defaultProps = {
   extra: <div className={style.delete} />,
   checkedStaff: [],
   fetchUrl: '/api/oa/staff',
+  range: { max: 50, min: 1 },
 };
 export default StaffModal;
