@@ -8,6 +8,7 @@ import { DateItem, TimeItem } from './DateItem';
 import EditForm from './EditForm';
 import SelectStaffItem from './SelectStaffItem';
 import SelectDepItem from './DepItem';
+import ShopSelectItem from './ShopSelectItem';
 
 export default TextItem;
 export {
@@ -22,4 +23,5 @@ export {
   EditForm,
   SelectStaffItem,
   SelectDepItem,
+  ShopSelectItem,
 };

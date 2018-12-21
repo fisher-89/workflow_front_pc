@@ -76,7 +76,7 @@
 }
 
 .left_content {
-  width: 566px;
+  width: 506px;
   float: left;
   height: 100%;
   border-right: 1px solid #eee;
@@ -106,7 +106,7 @@
 
 .search {
   float: left;
-  width: 437px;
+  width: 384px;
   height: 40px;
   border-left: none;
   border: 1px solid #eee;
@@ -154,7 +154,7 @@
   padding-left: 20px;
   padding-top: 20px;
   float: right;
-  width: 234px;
+  width: 294px;
   height: 100%;
   .clearfix();
 }
@@ -224,6 +224,9 @@
   margin-right: 5px;
   margin-bottom: 5px;
   height: 52px;
+  &:nth-child(2n) {
+    margin-right: 0;
+  }
   .clearfix();
 }
 
@@ -241,14 +244,13 @@
   float: left;
   height: 52px;
   border: 1px solid #eee;
-  padding: 7px 0 7px 8px;
+  padding: 7px 0 7px 6px;
 }
 
 .right {
-  margin-left: 8px;
   padding-right: 6px;
   float: left;
-  width: 120px;
+  width: 222px;
 }
 
 .card,
@@ -265,9 +267,9 @@
 }
 
 .name {
-  width: 48px;
+  width: 198px;
   color: #333;
-  margin-left: 3px;
+  margin-left: 2px;
   .textOverflow();
 }
 
@@ -278,7 +280,7 @@
 }
 
 .des {
-  width: 108px;
+  width: 200px;
   color: #666;
   margin-top: 2px;
   .textOverflow();
@@ -326,6 +328,8 @@
     font-size: 14px;
     line-height: 20px;
     color: #1890ff;
+    width: 250px;
+    .textOverflow();
     > span {
       color: #666;
       font-size: 12px;
@@ -388,7 +392,7 @@
   width: auto;
   height: 40px;
   float: right;
-  padding-top: 10px;
+  padding-top: 15px;
   :global(.ant-pagination-item-active) {
     border-color: transparent;
   }

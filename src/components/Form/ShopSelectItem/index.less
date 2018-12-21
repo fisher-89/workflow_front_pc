@@ -1,0 +1,55 @@
+@import '../../../utils/utils.less';
+.select {
+  :global {
+    .ant-form-item-control {
+      line-height: 38px;
+    }
+    .ant-select {
+      line-height: 38px;
+      height: 38px;
+      width: 100%;
+    }
+    .ant-select-selection {
+      height: 100%;
+    }
+    .ant-select-selection__rendered {
+      line-height: inherit;
+    }
+  }
+}
+
+.mutiselect {
+  :global {
+    .ant-select-selection--multiple {
+      min-height: 38px;
+    }
+    .ant-select {
+      width: 100%;
+    }
+    .ant-select-selection--multiple .ant-select-selection__rendered > ul > li {
+      height: 32px;
+      line-height: 32px;
+    }
+  }
+}
+
+.errorMsg {
+  :global {
+    .ant-select {
+      border-color: #fff;
+      outline: none;
+    }
+    .ant-select-selection:hover {
+      border-color: #fff;
+      box-shadow: 0 0 8px @error-color;
+    }
+    .ant-select-selection:focus {
+      border-color: #fff;
+      box-shadow: 0 0 8px @error-color;
+    }
+    .ant-select-open .ant-select-selection {
+      border-color: #fff;
+      box-shadow: 0 0 8px @error-color;
+    }
+  }
+}

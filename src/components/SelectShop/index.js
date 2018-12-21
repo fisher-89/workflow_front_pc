@@ -4,28 +4,35 @@ import { connect } from 'dva';
 import request from '../../utils/request';
 import { makeFieldValue, judgeIsNothing } from '../../utils/utils';
 
-import StaffModal from './StaffModal';
+import ShopModal from './ShopModal';
 import style from './index.less';
 
 @connect(({ loading, staff }) => ({
   loading,
   staff,
 }))
-class SelectStaff extends Component {
+class SelectShop extends Component {
   constructor(props) {
     super(props);
     const { value, multiple, defaultValue, name } = this.props;
     if (judgeIsNothing(defaultValue)) {
       const sNo = multiple
-        ? defaultValue.map(item => item[name.staff_sn])
-        : defaultValue[name.staff_sn];
-      request('/api/oa/staff', {
+        ? defaultValue.map(item => item[name.shop_sn])
+        : defaultValue[name.shop_sn];
+      request('/api/oa/shops', {
         method: 'GET',
-        body: { filters: `staff_sn=[${sNo}]` },
+        body: { filters: `shop_sn=[${sNo}]` },
       }).then(res => {
         this.setState({
-          value: defaultValue,
           source: res,
+          value: res.length
+            ? makeFieldValue(
+                multiple ? res : res[0],
+                { shop_sn: 'value', name: 'text' },
+                multiple,
+                false
+              )
+            : '',
           visible: false,
         });
       });
@@ -68,8 +75,8 @@ class SelectStaff extends Component {
     e.stopPropagation();
     const { value, source } = this.state;
     const { name } = this.props;
-    const newValue = this.multiple ? value.filter(v => v[name.staff_sn] !== item.staff_sn) : '';
-    const newSource = this.multiple ? source.filter(v => v.staff_sn !== item.staff_sn) : '';
+    const newValue = this.multiple ? value.filter(v => v[name.shop_sn] !== item.shop_sn) : '';
+    const newSource = this.multiple ? source.filter(v => v.shop_sn !== item.shop_sn) : '';
 
     this.setState(
       {
@@ -84,12 +91,9 @@ class SelectStaff extends Component {
 
   onMaskChange = (visible, value) => {
     const { name } = this.props;
-    const newValue = makeFieldValue(
-      value,
-      { staff_sn: name.staff_sn, realname: name.realname },
-      this.multiple,
-      false
-    );
+    const newValue = judgeIsNothing(value)
+      ? makeFieldValue(value, { shop_sn: name.shop_sn, name: name.name }, this.multiple, false)
+      : '';
     this.setState(
       {
         visible,
@@ -111,7 +115,7 @@ class SelectStaff extends Component {
   fetchDataSource = (params, cb) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'staff/fetchStaffs',
+      type: 'staff/fetchShops',
       payload: {
         params: {
           ...params,
@@ -134,28 +138,28 @@ class SelectStaff extends Component {
         <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
           <div className={style.tagItem}>
             {source.map(item => (
-              <Tag closable key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
-                {item.realname}
+              <Tag closable key={item.shop_sn} onClose={e => this.onDelete(e, item)}>
+                {item.name}
               </Tag>
             ))}
           </div>
         </div>
-        <StaffModal
+        <ShopModal
           visible={this.state.visible}
           onChange={this.onMaskChange}
           multiple={multiple}
-          fetchUrl="/api/oa/staff"
+          fetchUrl="/api/oa/shops"
           range={range}
-          checkedStaff={source}
+          checkedShop={source}
           fetchDataSource={this.fetchDataSource}
         />
       </div>
     );
   }
 }
-SelectStaff.defaultProps = {
-  name: { realname: 'text', staff_sn: 'value' },
+SelectShop.defaultProps = {
+  name: { name: 'text', shop_sn: 'value' },
   onChange: () => {},
-  effect: 'staff/fetchStaffs',
+  effect: 'staff/fetchShops',
 };
-export default SelectStaff;
+export default SelectShop;

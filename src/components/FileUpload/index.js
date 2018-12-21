@@ -139,7 +139,7 @@ class FileUpload extends PureComponent {
         }
       })
       .catch(error => {
-        this.onError(error, options.file.uid);
+        this.onError(options.file.uid);
       });
   };
 

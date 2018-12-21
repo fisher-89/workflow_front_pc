@@ -1,26 +1,21 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { TreeSelect } from 'antd';
 import FormItem from '../FormItem';
-
+import SelectShop from '../../SelectShop';
 import Select from '../../Select';
-import { makeFieldValue, markTreeData, judgeIsNothing } from '../../../utils/utils';
+import { judgeIsNothing } from '../../../utils/utils';
 import style from './index.less';
 
-@connect(({ staff }) => ({ department: staff.department }))
-class SelectDepItem extends PureComponent {
+@connect()
+class ShopSelectItem extends PureComponent {
   constructor(props) {
     super(props);
     const { defaultValue } = this.props;
-    const deps = judgeIsNothing(defaultValue) ? defaultValue : '';
+    const shops = judgeIsNothing(defaultValue) ? defaultValue : '';
     this.state = {
-      value: deps,
+      value: shops,
       errorMsg: '',
     };
-  }
-
-  componentWillMount() {
-    this.fetchDepatment();
   }
 
   componentWillReceiveProps(props) {
@@ -33,19 +28,44 @@ class SelectDepItem extends PureComponent {
     }
   }
 
-  onTreeChange = (v, muti) => {
-    const { department } = this.props;
-    const tempDeps = department.map(item => ({ ...item, id: `${item.id}` }));
-    let selected = '';
-    if (muti) {
-      selected = tempDeps.filter(item => (`${v}` || '').indexOf(item.id) > -1);
-    } else {
-      selected = tempDeps.filter(item => `${v}` === item.id);
+  onSingleChange = value => {
+    let errorMsg = '';
+    const {
+      field: { name },
+      required,
+    } = this.props;
+    if (required && !value) {
+      errorMsg = `请选择${name}`;
     }
-    const newValue = selected.length
-      ? makeFieldValue(muti ? selected : selected[0], { id: 'value', name: 'text' }, muti)
-      : '';
-    this.dealValueOnChange(newValue);
+    this.setState(
+      {
+        value,
+        errorMsg,
+      },
+      () => {
+        this.props.onChange(value, errorMsg);
+      }
+    );
+  };
+
+  onMutiChange = value => {
+    let errorMsg = '';
+    const {
+      field: { name },
+      onChange,
+    } = this.props;
+    if (!value.length) {
+      errorMsg = `请选择${name}`;
+    }
+    this.setState(
+      {
+        value,
+        errorMsg,
+      },
+      () => {
+        onChange(value, errorMsg);
+      }
+    );
   };
 
   onSelectChange = (value, muti) => {
@@ -82,13 +102,6 @@ class SelectDepItem extends PureComponent {
     );
   };
 
-  fetchDepatment = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'staff/fetchDepartment',
-    });
-  };
-
   renderSelect = options => {
     const {
       field,
@@ -99,11 +112,10 @@ class SelectDepItem extends PureComponent {
     const { errorMsg, value } = this.state;
     const muti = field.is_checkbox;
     let newValue = '';
-    if (judgeIsNothing(value)) {
-      newValue = muti ? (value || []).map(item => item.value) : value.value;
+    if (value) {
+      newValue = muti ? value.map(item => item.value) : value.value;
     }
     const newId = `${id}-select`;
-
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
@@ -114,7 +126,7 @@ class SelectDepItem extends PureComponent {
               options={options}
               value={newValue}
               getPopupContainer={() => document.getElementById(newId)}
-              onChange={this.onSelectChange}
+              onChange={v => this.onSelectChange(v, 0)}
             />
           </div>
         </FormItem>
@@ -144,64 +156,38 @@ class SelectDepItem extends PureComponent {
   };
 
   render() {
-    const { field, required, department } = this.props;
+    const {
+      field,
+      field: { max, min },
+      required,
+      disabled,
+      defaultValue,
+    } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
     const options = field.available_options;
+    const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     if (options.length) {
       return this.renderSelect(options);
     }
-    const newTreeData = markTreeData(
-      department,
-      { value: 'id', label: 'name', parentId: 'parent_id' },
-      0
-    );
-    if (multiple) {
-      const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
-      const newValue = (value || []).map(item => item.value);
-      return (
-        <FormItem
-          {...field}
-          width="500"
-          height="auto"
-          errorMsg={errorMsg}
-          required={required}
-          extraStyle={{ height: 'auto', minWidth: '600px' }}
-        >
-          <div className={className}>
-            <TreeSelect
-              dropdownClassName={style.dropdown}
-              maxTagCount={10}
-              showSearch
-              multiple
-              value={newValue}
-              allowClear
-              treeData={newTreeData}
-              onChange={v => this.onTreeChange(v, 1)}
-              filterTreeNode={(inputValue, treeNode) =>
-                treeNode.props.title.indexOf(inputValue) !== -1
-              }
-            />
-          </div>
-        </FormItem>
-      );
-    }
-    const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
-    const newValue = value ? value.value : undefined;
     return (
-      <FormItem {...field} height="auto" errorMsg={errorMsg} required={required}>
+      <FormItem
+        {...field}
+        width="500"
+        height="auto"
+        errorMsg={errorMsg}
+        required={required}
+        extraStyle={{ height: 'auto', minWidth: '600px' }}
+      >
         <div className={className}>
-          <TreeSelect
-            dropdownClassName={style.dropdown}
-            maxTagCount={10}
-            showSearch
-            allowClear
-            value={newValue}
-            treeData={newTreeData}
-            onChange={v => this.onTreeChange(v, 0)}
-            filterTreeNode={(inputValue, treeNode) =>
-              treeNode.props.title.indexOf(inputValue) !== -1
-            }
+          <SelectShop
+            multiple={multiple}
+            defaultValue={defaultValue}
+            value={value}
+            range={{ max, min }}
+            effect="staff/fetchShops"
+            onChange={multiple ? this.onMutiChange : this.onSingleChange}
+            disabled={disabled}
           />
         </div>
       </FormItem>
@@ -209,4 +195,4 @@ class SelectDepItem extends PureComponent {
   }
 }
 
-export default SelectDepItem;
+export default ShopSelectItem;

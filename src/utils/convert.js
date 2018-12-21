@@ -18,3 +18,25 @@ export function rebackImg(url, prefix, str) {
 
   return newImg;
 }
+
+export const shopStatus = [
+  { value: 1, text: '未营业' },
+  { value: 2, text: '营业中' },
+  { value: 3, text: '闭店' },
+  { value: 4, text: '结束' },
+];
+
+export function convertShopStatus(id) {
+  switch (id) {
+    case 1:
+      return '未营业';
+    case 2:
+      return '营业中';
+    case 3:
+      return '闭店';
+    case 4:
+      return '结束';
+    default:
+      return '';
+  }
+}

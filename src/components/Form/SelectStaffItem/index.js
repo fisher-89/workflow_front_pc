@@ -3,16 +3,17 @@ import { connect } from 'dva';
 import FormItem from '../FormItem';
 import SelectStaff from '../../SelectStaff';
 import Select from '../../Select';
-import { makeFieldValue } from '../../../utils/utils';
+import { judgeIsNothing } from '../../../utils/utils';
+
 import style from './index.less';
 
 @connect()
 class SelectStaffItem extends PureComponent {
   constructor(props) {
     super(props);
-    const { defaultValue, field } = this.props;
-    const muti = field.is_checkbox;
-    const staffs = defaultValue || (muti ? [] : '');
+    const { defaultValue } = this.props;
+    const staffs = judgeIsNothing(defaultValue) ? defaultValue : '';
+
     this.state = {
       value: staffs,
       errorMsg: '',
@@ -72,14 +73,26 @@ class SelectStaffItem extends PureComponent {
   };
 
   onSelectChange = (value, muti) => {
-    let errorMsg = '';
+    const { field } = this.props;
+    const options = field.available_options;
+    let newValue = '';
+    if (muti) {
+      newValue = options.filter(item => value.indexOf(item.value) > -1);
+    } else {
+      newValue = options.find(item => value === item.value);
+    }
+    this.dealValueOnChange(newValue || (muti ? [] : ''));
+  };
+
+  dealValueOnChange = value => {
     const {
       field: { name },
-      field,
+      required,
       onChange,
     } = this.props;
-    const options = field.available_options;
-    if (!value.length) {
+
+    let errorMsg = '';
+    if (required && !judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
     }
     this.setState(
@@ -88,12 +101,7 @@ class SelectStaffItem extends PureComponent {
         errorMsg,
       },
       () => {
-        const newOptions = options.filter(item => value.indexOf(item.value) > -1);
-        let newValue = '';
-        if (newOptions.length) {
-          newValue = muti ? newOptions : newOptions[0];
-        }
-        onChange(newValue, errorMsg);
+        onChange(value, errorMsg);
       }
     );
   };
@@ -101,7 +109,7 @@ class SelectStaffItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id, max, min },
+      field: { id },
       required,
       disabled,
     } = this.props;
@@ -142,7 +150,7 @@ class SelectStaffItem extends PureComponent {
           <Select
             options={options}
             mode="multiple"
-            value={value}
+            value={newValue}
             onChange={v => this.onSelectChange(v, 1)}
             getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}

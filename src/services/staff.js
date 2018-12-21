@@ -24,3 +24,9 @@ export async function fetchPositions(params) {
     body: params,
   });
 }
+export async function fetchShops(params) {
+  return request('/api/oa/shops', {
+    method: 'GET',
+    body: params,
+  });
+}

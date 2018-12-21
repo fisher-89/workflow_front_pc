@@ -1,6 +1,6 @@
 import * as staffServer from '../services/staff';
 
-const { fetchDepartment, fetchStaffs, fetchBrands, fetchPositions } = staffServer;
+const { fetchDepartment, fetchStaffs, fetchBrands, fetchPositions, fetchShops } = staffServer;
 export default {
   namespace: 'staff',
   state: {
@@ -18,6 +18,13 @@ export default {
       { value: -4, text: '劝退' },
     ],
     positions: [],
+    shopSource: { data: [], total: 0, page: 1, pagesize: 12 },
+    shopStatus: [
+      { value: 1, text: '未营业' },
+      { value: 2, text: '营业中' },
+      { value: 3, text: '闭店' },
+      { value: 4, text: '结束' },
+    ],
   },
 
   subscriptions: {},
@@ -93,6 +100,30 @@ export default {
             type: 'save',
             payload: {
               store: 'positions',
+              data,
+            },
+          });
+          if (cb) {
+            cb(data);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    *fetchShops({ payload }, { call, put, select }) {
+      const { params, cb } = payload || {};
+      const { shopSource } = yield select(model => model.staff);
+      if (shopSource.length) {
+        return;
+      }
+      try {
+        const data = yield call(fetchShops, params);
+        if (data && !data.error) {
+          yield put({
+            type: 'save',
+            payload: {
+              store: 'shopSource',
               data,
             },
           });

@@ -8,35 +8,37 @@ import request from '../../../utils/request';
 
 import { markTreeData, judgeIsNothing } from '../../../utils/utils';
 
-import StaffItem from './StaffItem';
+import ShopItem from './ShopItem';
 import ExtraFilters from './ExtraFilters/index';
 import style from './index.less';
 
-const pagesize = 12;
+const pagesize = 8;
 const defSearchType = [
+  { name: '名称', type: 1, checked: 1, pl: '请输入店铺名称/店铺代码' },
   { name: '部门', type: 2, pl: '请选择部门' },
-  { name: '员工', type: 1, pl: '请输入员工姓名/员工编号', checked: 1 },
+  { name: '员工', type: 3, pl: '请输入员工姓名/员工编号' },
 ];
 @connect(({ staff, loading, manager }) => ({
-  source: staff.source,
+  source: staff.shopSource,
   department: staff.department,
   brands: staff.brands,
-  status: staff.status,
+  status: staff.shopStatus,
   positions: staff.positions,
-  fetchLoading: loading.effects['staff/fetchStaffs'],
+  fetchLoading: loading.effects['staff/fetchShops'],
   currentUser: manager.current,
 }))
-class StaffModal extends Component {
+class ShopModal extends Component {
   constructor(props) {
     super(props);
-    const { visible, fetchDataSource, checkedStaff, multiple, currentUser } = this.props;
+    const { visible, fetchDataSource, checkedShop, multiple, currentUser } = this.props;
     this.state = {
       visible,
       searchType: defSearchType,
-      checkedStaff,
+      checkedShop,
       swicthVisible: false,
       searchValue: '',
       filters: {
+        shop: '',
         staff: '',
         department: '',
         filter: '',
@@ -46,48 +48,33 @@ class StaffModal extends Component {
         position_id: [],
         brand_id: [],
       },
-      quickUsed: false,
-      checkall: {
-        all: false,
-        curpage: false,
-      },
     };
     this.allDataSource = { filters: '', data: [] };
     this.multiple = multiple;
     this.currentUser = currentUser;
     this.fetchFiltersDataSource = debounce(params => {
-      if (!this.state.quickUsed) {
-        this.setState({
-          quickUsed: true,
-        });
-      }
       fetchDataSource(params);
     }, 500);
     this.fetchDataSource = params => {
-      if (!this.state.quickUsed) {
-        this.setState({
-          quickUsed: true,
-        });
-      }
       fetchDataSource(params);
     };
   }
 
   componentWillMount() {
     this.fetchDepatment();
-    this.fetchBrands();
-    this.fetchPositions();
+    // this.fetchBrands();
+    // this.fetchPositions();
   }
 
   componentWillReceiveProps(props) {
-    const { visible, checkedStaff } = props;
+    const { visible, checkedShop } = props;
     if (
       visible !== this.props.visible ||
-      JSON.stringify(checkedStaff) !== JSON.stringify(this.props.checkedStaff)
+      JSON.stringify(checkedShop) !== JSON.stringify(this.props.checkedShop)
     ) {
       this.setState({
         visible,
-        checkedStaff,
+        checkedShop,
       });
     }
   }
@@ -103,15 +90,15 @@ class StaffModal extends Component {
     this.resetState(() => {
       this.props.onChange(
         false,
-        this.multiple ? this.props.checkedStaff : this.props.checkedStaff[0] || ''
+        this.multiple ? this.props.checkedShop : this.props.checkedShop[0] || ''
       );
     });
   };
 
   onOk = () => {
-    const { checkedStaff } = this.state;
+    const { checkedShop } = this.state;
     this.resetState(() => {
-      this.props.onChange(false, this.multiple ? checkedStaff : checkedStaff[0] || '');
+      this.props.onChange(false, this.multiple ? checkedShop : checkedShop[0] || '');
     });
   };
 
@@ -121,23 +108,28 @@ class StaffModal extends Component {
         props: { title },
       },
     } = extra;
-    const filters = {
-      department: value !== 'all' ? `department.full_name~${title}` : '',
-      staff: '',
-      filter: '',
-    };
+    const filters = this.resetObject(this.state.filters);
     this.setState(
       {
-        filters,
+        searchValue: '',
+        filters: { ...filters, department: value !== 'all' ? `department.full_name~${title}` : '' },
       },
       () => {
         this.fetchFiltersDataSource({
           page: 1,
-          pagesize: 12,
+          pagesize,
           filters: this.mapFilters(this.makeAllFilters()),
         });
       }
     );
+  };
+
+  resetObject = obj => {
+    const temp = {};
+    Object.keys(obj).forEach(key => {
+      temp[key] = '';
+    });
+    return temp;
   };
 
   checkCurAll = e => {
@@ -145,17 +137,16 @@ class StaffModal extends Component {
     const {
       source: { data },
     } = this.props;
-    const { checkedStaff } = this.state;
-    const staffSns = data.map(item => item.staff_sn);
+    const { checkedShop } = this.state;
+    const staffSns = data.map(item => item.shop_sn);
     let newCheckedStaffs;
     if (!value) {
-      newCheckedStaffs = checkedStaff.filter(item => staffSns.indexOf(item.staff_sn) === -1);
+      newCheckedStaffs = checkedShop.filter(item => staffSns.indexOf(item.shop_sn) === -1);
     } else {
-      newCheckedStaffs = data.concat(checkedStaff);
+      newCheckedStaffs = data.concat(checkedShop);
     }
     this.setState({
-      checkall: { ...this.state.checkall, curpage: value },
-      checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
+      checkedShop: [...newCheckedStaffs].unique('shop_sn'),
     });
   };
 
@@ -164,14 +155,14 @@ class StaffModal extends Component {
       fetchUrl,
       source: { total },
     } = this.props;
-    const { checkedStaff } = this.state;
-    const staffSns = this.allDataSource.data.map(item => item.staff_sn);
+    const { checkedShop } = this.state;
+    const staffSns = this.allDataSource.data.map(item => item.shop_sn);
     let newCheckedStaffs = '';
 
     if (!value) {
-      newCheckedStaffs = checkedStaff.filter(item => staffSns.indexOf(item.staff_sn) === -1);
+      newCheckedStaffs = checkedShop.filter(item => staffSns.indexOf(item.shop_sn) === -1);
       this.setState({
-        checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
+        checkedShop: [...newCheckedStaffs].unique('shop_sn'),
       });
     } else {
       if (total > 60) {
@@ -179,9 +170,9 @@ class StaffModal extends Component {
         return;
       }
       const filters = this.mapFilters(this.makeAllFilters());
-      const sn = checkedStaff.map(item => item.staff_sn);
+      const sn = checkedShop.map(item => item.shop_sn);
       const extra = this.allDataSource.data.length
-        ? this.allDataSource.data.find(item => sn.indexOf(item.staff_sn) === -1)
+        ? this.allDataSource.data.find(item => sn.indexOf(item.shop_sn) === -1)
         : [];
       if (!extra) {
         message.warning('该条件下已经全部选择', 2);
@@ -192,9 +183,9 @@ class StaffModal extends Component {
         body: { filters: this.mapFilters(this.makeAllFilters()) },
       }).then(res => {
         this.allDataSource = { filters, data: res };
-        newCheckedStaffs = res.concat(checkedStaff);
+        newCheckedStaffs = res.concat(checkedShop);
         this.setState({
-          checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
+          checkedShop: [...newCheckedStaffs].unique('shop_sn'),
         });
       });
     }
@@ -245,31 +236,30 @@ class StaffModal extends Component {
     );
   };
 
-  inputOnChange = e => {
+  inputOnChange = (e, type) => {
     const { value } = e.target;
-    const staffFilter = value ? `realname~${value}|staff_sn~${value}` : '';
-    const filters = this.resetObject();
+    const filter = this.resetObject(this.state.filters);
+    if (value) {
+      if (type === 1) {
+        filter.shop = `name~${value}|shop_sn~${value}`;
+      } else {
+        filter.staff = `staff.realname~${value}|staff.staff_sn~${value}`;
+      }
+    }
+    const filters = { ...filter };
     this.setState(
       {
         searchValue: value,
-        filters: { ...filters, staff: staffFilter },
+        filters,
       },
       () => {
         this.fetchFiltersDataSource({
           page: 1,
-          pagesize: 12,
+          pagesize,
           filters: this.mapFilters(this.makeAllFilters()),
         });
       }
     );
-  };
-
-  resetObject = obj => {
-    const temp = {};
-    Object.keys(obj).forEach(key => {
-      temp[key] = '';
-    });
-    return temp;
   };
 
   switchSearchType = (item, e) => {
@@ -291,38 +281,35 @@ class StaffModal extends Component {
   pageOnChange = page => {
     this.fetchDataSource({
       page,
-      pagesize: 12,
+      pagesize,
       filters: this.mapFilters(this.makeAllFilters()),
     });
   };
 
   handleOnChange = item => {
-    const { checkedStaff } = this.state;
-    const isChecked = checkedStaff.find(staff => staff.staff_sn === item.staff_sn);
-    let newCheckedStaff = '';
-
+    const { checkedShop } = this.state;
+    const isChecked = checkedShop.find(shop => shop.shop_sn === item.shop_sn);
+    let newCheckedShop = '';
     if (this.multiple) {
       if (isChecked) {
-        newCheckedStaff = checkedStaff.filter(staff => staff.staff_sn !== item.staff_sn);
+        newCheckedShop = checkedShop.filter(shop => shop.shop_sn !== item.shop_sn);
       } else {
-        newCheckedStaff = checkedStaff.concat(item);
+        newCheckedShop = checkedShop.concat(item);
       }
     } else if (isChecked) {
-      newCheckedStaff = [];
+      newCheckedShop = [];
     } else {
-      newCheckedStaff = [item];
+      newCheckedShop = [item];
     }
     this.setState({
-      checkedStaff: newCheckedStaff,
+      checkedShop: newCheckedShop,
     });
   };
 
   deleteItem = item => {
-    const { checkedStaff } = this.state;
+    const { checkedShop } = this.state;
     this.setState({
-      checkedStaff: this.multiple
-        ? checkedStaff.filter(staff => staff.staff_sn !== item.staff_sn)
-        : [],
+      checkedShop: this.multiple ? checkedShop.filter(staff => staff.shop_sn !== item.shop_sn) : [],
     });
   };
 
@@ -343,6 +330,7 @@ class StaffModal extends Component {
   };
 
   filtersChange = value => {
+    console.log(value);
     this.setState(
       {
         extraFilters: value,
@@ -350,7 +338,7 @@ class StaffModal extends Component {
       () => {
         this.fetchFiltersDataSource({
           page: 1,
-          pagesize: 12,
+          pagesize,
           filters: this.mapFilters(this.makeAllFilters()),
         });
       }
@@ -401,8 +389,12 @@ class StaffModal extends Component {
           )}
         </div>
         <div className={style.search}>
-          {curTab.type === 1 ? (
-            <input value={searchValue} onChange={this.inputOnChange} placeholder={curTab.pl} />
+          {curTab.type === 1 || curTab.type === 3 ? (
+            <input
+              value={searchValue}
+              placeholder={curTab.pl}
+              onChange={e => this.inputOnChange(e, curTab.type)}
+            />
           ) : (
             <TreeSelect
               dropdownClassName={style.dropdown}
@@ -421,7 +413,7 @@ class StaffModal extends Component {
   };
 
   renderCheckResult = () => {
-    const { checkedStaff } = this.state;
+    const { checkedShop } = this.state;
     const { range } = this.props;
     return (
       <div className={style.select_result}>
@@ -436,14 +428,14 @@ class StaffModal extends Component {
         >
           <div className={style.checked_count}>
             已选：
-            {checkedStaff.length}/
+            {checkedShop.length}/
             <span style={{ color: '#999' }}>{this.multiple ? range.max || '50' : '1'}</span>
           </div>
           <div
             className={style.checked_clear}
             onClick={() => {
               this.setState({
-                checkedStaff: [],
+                checkedShop: [],
               });
             }}
           >
@@ -451,12 +443,12 @@ class StaffModal extends Component {
           </div>
         </div>
         <div className={style.checked_list}>
-          {checkedStaff.map(item => (
-            <StaffItem
+          {checkedShop.map(item => (
+            <ShopItem
               itemStyle={{ marginRight: '0' }}
               detail={item}
               checked
-              key={item.staff_sn}
+              key={item.shop_sn}
               extra={<div className={style.delete} onClick={() => this.deleteItem(item)} />}
             />
           ))}
@@ -465,42 +457,17 @@ class StaffModal extends Component {
     );
   };
 
-  renderQuickSearch = () => (
-    <div>
-      <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
-        <span>快捷搜索</span>
-      </div>
-      <div className={style.search_result} style={{ height: 'auto' }}>
-        <div className={style.quick_item} onClick={this.quickFetch}>
-          {this.currentUser && this.currentUser.department
-            ? this.currentUser.department.full_name
-            : ''}
-        </div>
-      </div>
-    </div>
-  );
-
   renderStaffList = () => {
-    const { checkedStaff, extraFilters } = this.state;
+    const { checkedShop, extraFilters } = this.state;
     const {
       source: { data, total, page },
       fetchLoading,
       multiple,
       status,
-      brands,
-      positions,
     } = this.props;
-    const staffSns = checkedStaff.map(item => item.staff_sn);
-    const extra = data.find(item => staffSns.indexOf(item.staff_sn) === -1);
+    const shopSns = checkedShop.map(item => item.shop_sn);
+    const extra = data.find(item => shopSns.indexOf(item.shop_sn) === -1);
     const realTotal = total || 1;
-    const brandsOpt = brands.map(item => {
-      const obj = {
-        ...item,
-        title: item.name,
-        key: `brand_id-${item.id}`,
-      };
-      return obj;
-    });
     const statusOpt = status.map(item => {
       const obj = {
         ...item,
@@ -509,19 +476,7 @@ class StaffModal extends Component {
       };
       return obj;
     });
-    const positionsOpt = positions.map(item => {
-      const obj = {
-        ...item,
-        title: item.name,
-        key: `position_id-${item.id}`,
-      };
-      return obj;
-    });
-    const treeData = [
-      { title: '品牌', key: 'brand_id', children: brandsOpt },
-      { title: '职位', key: 'position_id', children: positionsOpt },
-      { title: '状态', key: 'status_id', children: statusOpt },
-    ];
+    const treeData = [{ title: '状态', key: 'status_id', children: statusOpt }];
     const cls = classNames(style.filter, {
       [style.active]: this.mapFilters(extraFilters),
     });
@@ -560,14 +515,14 @@ class StaffModal extends Component {
         <Spin spinning={fetchLoading || false}>
           <div className={style.search_result}>
             {(data || []).map(item => {
-              const checked = checkedStaff.map(staff => staff.staff_sn).indexOf(item.staff_sn) > -1;
+              const checked = checkedShop.map(staff => staff.shop_sn).indexOf(item.shop_sn) > -1;
               return (
-                <StaffItem
+                <ShopItem
                   extra={null}
                   detail={item}
                   checked={checked}
                   handleClick={() => this.handleOnChange(item)}
-                  key={item.staff_sn}
+                  key={item.shop_sn}
                 />
               );
             })}
@@ -589,20 +544,20 @@ class StaffModal extends Component {
   };
 
   render() {
-    const { visible, quickUsed, checkedStaff } = this.state;
+    const { visible, checkedShop } = this.state;
     return (
-      <div id="staff">
+      <div id="shop">
         <Modal
           visible={visible}
           onCancel={this.onCancel}
           onOk={this.onOk}
           width="800px"
           bodyStyle={{ padding: 0 }}
-          title="选择员工"
+          title="选择店铺"
           okText="确认"
-          okButtonProps={{ disabled: checkedStaff.length > 49 }}
+          okButtonProps={{ disabled: checkedShop.length > 49 }}
           cancelText="取消"
-          getContainer={() => document.getElementById('staff')}
+          getContainer={() => document.getElementById('shop')}
         >
           <div
             className={style.global_modal}
@@ -613,7 +568,7 @@ class StaffModal extends Component {
                 {this.renderPageHeader()}
                 <div className={style.search_result_content}>
                   <div style={{ height: '44px' }} />
-                  {quickUsed ? this.renderStaffList() : this.renderQuickSearch()}
+                  {this.renderStaffList()}
                 </div>
               </div>
               {this.renderCheckResult()}
@@ -624,10 +579,10 @@ class StaffModal extends Component {
     );
   }
 }
-StaffModal.defaultProps = {
+ShopModal.defaultProps = {
   extra: <div className={style.delete} />,
-  checkedStaff: [],
+  checkedShop: [],
   fetchUrl: '/api/oa/staff',
   range: { max: 50, min: 1 },
 };
-export default StaffModal;
+export default ShopModal;
