@@ -36,7 +36,13 @@ class SelectDepItem extends PureComponent {
 
   onTreeChange = (v, muti) => {
     const { department } = this.props;
-    const selected = department.filter(item => (v || '').indexOf(item.id) > -1);
+    const tempDeps = department.map(item => ({ ...item, id: `${item.id}` }));
+    let selected = '';
+    if (muti) {
+      selected = tempDeps.filter(item => (`${v}` || '').indexOf(item.id) > -1);
+    } else {
+      selected = tempDeps.filter(item => `${v}` === item.id);
+    }
     const newValue = selected.length
       ? makeFieldValue(muti ? selected : selected[0], { id: 'value', name: 'text' }, muti)
       : '';
