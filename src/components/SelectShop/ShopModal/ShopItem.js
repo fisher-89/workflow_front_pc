@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import classnames from 'classnames';
 import { Popover } from 'antd';
+import reactStringReplace from 'react-string-replace';
+
 import { convertShopStatus } from '../../../utils/convert';
 import style from './index.less';
 
@@ -39,7 +41,7 @@ class SelectStaff extends PureComponent {
   );
 
   render() {
-    const { extra, itemStyle, detail, checked, handleClick } = this.props;
+    const { extra, itemStyle, detail, checked, handleClick, keywords } = this.props;
     if (!detail) {
       return null;
     }
@@ -57,11 +59,21 @@ class SelectStaff extends PureComponent {
               >
                 <div className={style.card} />
               </Popover>
-              <div className={style.name}>{detail.name}</div>
+              <div className={style.name}>
+                {reactStringReplace(detail.name, keywords, (match, i) => (
+                  <span key={i} style={{ color: 'red' }}>
+                    {match}
+                  </span>
+                ))}
+              </div>
             </div>
             <div className={style.des}>
               店铺编码：
-              {detail.shop_sn}
+              {reactStringReplace(`${detail.shop_sn}`, keywords, (match, i) => (
+                <span key={i} style={{ color: 'red' }}>
+                  {match}
+                </span>
+              ))}
             </div>
           </div>
         </div>
@@ -73,5 +85,6 @@ class SelectStaff extends PureComponent {
 SelectStaff.defaultProps = {
   extra: <div className={style.delete}>x</div>,
   handleClick: () => {},
+  keywords: '',
 };
 export default SelectStaff;

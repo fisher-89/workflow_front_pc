@@ -458,7 +458,7 @@ class ShopModal extends Component {
   };
 
   renderStaffList = () => {
-    const { checkedShop, extraFilters } = this.state;
+    const { checkedShop, extraFilters, searchValue } = this.state;
     const {
       source: { data, total, page },
       fetchLoading,
@@ -521,6 +521,7 @@ class ShopModal extends Component {
                   extra={null}
                   detail={item}
                   checked={checked}
+                  keywords={searchValue}
                   handleClick={() => this.handleOnChange(item)}
                   key={item.shop_sn}
                 />

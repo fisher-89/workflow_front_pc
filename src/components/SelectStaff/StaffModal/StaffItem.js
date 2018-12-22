@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import classnames from 'classnames';
+import reactStringReplace from 'react-string-replace';
 import { Popover } from 'antd';
 import style from './index.less';
 
@@ -11,6 +12,11 @@ class SelectStaff extends PureComponent {
   };
 
   handleClick = () => {};
+
+  renderKeyWords = str => {
+    const { keywords } = this.props;
+    return <React.Fragment>{str.replace(keywords, <span>{keywords}</span>)}</React.Fragment>;
+  };
 
   renderPupContent = item => (
     <div className={style.card_info}>
@@ -42,7 +48,7 @@ class SelectStaff extends PureComponent {
   );
 
   render() {
-    const { extra, itemStyle, detail, checked, handleClick } = this.props;
+    const { extra, itemStyle, detail, checked, handleClick, keywords } = this.props;
     if (!detail) {
       return null;
     }
@@ -61,8 +67,22 @@ class SelectStaff extends PureComponent {
               >
                 <div className={style.card} />
               </Popover>
-              <div className={style.name}>{detail.realname}</div>
-              <div className={style.sno}>({detail.staff_sn})</div>
+              <div className={style.name}>
+                {reactStringReplace(detail.realname, keywords, (match, i) => (
+                  <span key={i} style={{ color: 'red' }}>
+                    {match}
+                  </span>
+                ))}
+              </div>
+              <div className={style.sno}>
+                (
+                {reactStringReplace(`${detail.staff_sn}`, keywords, (match, i) => (
+                  <span key={i} style={{ color: 'red' }}>
+                    {match}
+                  </span>
+                ))}
+                )
+              </div>
             </div>
             <div className={style.des}>{detail.department ? detail.department.full_name : ''}</div>
           </div>
@@ -74,6 +94,7 @@ class SelectStaff extends PureComponent {
 }
 SelectStaff.defaultProps = {
   extra: <div className={style.delete}>x</div>,
+  keywords: '',
   handleClick: () => {},
 };
 export default SelectStaff;

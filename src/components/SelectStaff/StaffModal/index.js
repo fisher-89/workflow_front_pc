@@ -481,7 +481,7 @@ class StaffModal extends Component {
   );
 
   renderStaffList = () => {
-    const { checkedStaff, extraFilters } = this.state;
+    const { checkedStaff, extraFilters, searchValue, filters } = this.state;
     const {
       source: { data, total, page },
       fetchLoading,
@@ -565,6 +565,7 @@ class StaffModal extends Component {
                 <StaffItem
                   extra={null}
                   detail={item}
+                  keywords={searchValue}
                   checked={checked}
                   handleClick={() => this.handleOnChange(item)}
                   key={item.staff_sn}
