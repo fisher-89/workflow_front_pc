@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import FormItem from '../FormItem';
 import SelectShop from '../../SelectShop';
 import Select from '../../Select';
-import { judgeIsNothing } from '../../../utils/utils';
+import { judgeIsNothing, validValue } from '../../../utils/utils';
 import style from './index.less';
 
 @connect()
@@ -29,43 +29,11 @@ class ShopSelectItem extends PureComponent {
   }
 
   onSingleChange = value => {
-    let errorMsg = '';
-    const {
-      field: { name },
-      required,
-    } = this.props;
-    if (required && !value) {
-      errorMsg = `请选择${name}`;
-    }
-    this.setState(
-      {
-        value,
-        errorMsg,
-      },
-      () => {
-        this.props.onChange(value, errorMsg);
-      }
-    );
+    this.dealValueOnChange(value);
   };
 
   onMutiChange = value => {
-    let errorMsg = '';
-    const {
-      field: { name },
-      onChange,
-    } = this.props;
-    if (!value.length) {
-      errorMsg = `请选择${name}`;
-    }
-    this.setState(
-      {
-        value,
-        errorMsg,
-      },
-      () => {
-        onChange(value, errorMsg);
-      }
-    );
+    this.dealValueOnChange(value);
   };
 
   onSelectChange = (value, muti) => {
@@ -81,16 +49,8 @@ class ShopSelectItem extends PureComponent {
   };
 
   dealValueOnChange = value => {
-    const {
-      field: { name },
-      required,
-      onChange,
-    } = this.props;
-
-    let errorMsg = '';
-    if (required && !judgeIsNothing(value)) {
-      errorMsg = `请选择${name}`;
-    }
+    const { onChange } = this.props;
+    const errorMsg = validValue(value, this.props);
     this.setState(
       {
         value,

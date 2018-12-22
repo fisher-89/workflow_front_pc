@@ -248,7 +248,7 @@ class StaffModal extends Component {
   inputOnChange = e => {
     const { value } = e.target;
     const staffFilter = value ? `realname~${value}|staff_sn~${value}` : '';
-    const filters = this.resetObject();
+    const filters = this.resetObject(this.state.filters);
     this.setState(
       {
         searchValue: value,

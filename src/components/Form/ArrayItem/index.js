@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import TagGroup from '../../TagGroup';
+import { judgeIsNothing } from '../../../utils/utils';
+
 import style from './index.less';
 
 @connect(({ interfaceApi }) => ({ sourceDetails: interfaceApi.sourceDetails }))
@@ -31,27 +33,7 @@ class SelectItem extends PureComponent {
       field: { name },
       onChange,
     } = this.props;
-    if (!value.length) {
-      errorMsg = `请选择${name}`;
-    }
-    this.setState(
-      {
-        value,
-        errorMsg,
-      },
-      () => {
-        onChange(value, errorMsg);
-      }
-    );
-  };
-
-  onMutiChange = value => {
-    let errorMsg = '';
-    const {
-      field: { name },
-      onChange,
-    } = this.props;
-    if (!value.length) {
+    if (!judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
     }
     this.setState(

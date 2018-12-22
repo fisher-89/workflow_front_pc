@@ -676,3 +676,33 @@ export function userStorage(key) {
   const newInfo = JSON.parse(info === undefined ? '{}' : info);
   return newInfo;
 }
+
+export function dealValueOnChange(value, props) {
+  const {
+    field: { name },
+    required,
+    onChange,
+  } = props;
+
+  let errorMsg = '';
+  if (required && !judgeIsNothing(value)) {
+    errorMsg = `请选择${name}`;
+  }
+  errorMsg = `${errorMsg}${this.validValue(value)}`;
+  return errorMsg;
+}
+
+export function validValue(value, props) {
+  const {
+    field: { name, max },
+    required,
+  } = props;
+  let errorMsg = '';
+  if (required && !judgeIsNothing(value)) {
+    errorMsg = `请选择${name}`;
+  }
+  if (!errorMsg && max && value.length > max) {
+    errorMsg = `请最多选择${max}个${name}`;
+  }
+  return errorMsg;
+}

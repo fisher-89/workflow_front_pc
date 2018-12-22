@@ -84,17 +84,26 @@ class SelectStaff extends Component {
 
   onMaskChange = (visible, value) => {
     const { name } = this.props;
-    const newValue = makeFieldValue(
-      value,
-      { staff_sn: name.staff_sn, realname: name.realname },
-      this.multiple,
-      false
-    );
+    const isNothing = !judgeIsNothing(value);
+    const newValue = !isNothing
+      ? makeFieldValue(
+          value,
+          { staff_sn: name.staff_sn, realname: name.realname },
+          this.multiple,
+          false
+        )
+      : '';
+    let source = '';
+    if (isNothing) {
+      source = [];
+    } else {
+      source = this.multiple ? value : [value];
+    }
     this.setState(
       {
         visible,
         value: newValue,
-        source: this.multiple ? value : [value],
+        source,
       },
       () => {
         this.props.onChange(newValue);

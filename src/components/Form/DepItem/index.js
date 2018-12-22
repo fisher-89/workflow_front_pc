@@ -4,7 +4,7 @@ import { TreeSelect } from 'antd';
 import FormItem from '../FormItem';
 
 import Select from '../../Select';
-import { makeFieldValue, markTreeData, judgeIsNothing } from '../../../utils/utils';
+import { makeFieldValue, markTreeData, judgeIsNothing, validValue } from '../../../utils/utils';
 import style from './index.less';
 
 @connect(({ staff }) => ({ department: staff.department }))
@@ -61,16 +61,9 @@ class SelectDepItem extends PureComponent {
   };
 
   dealValueOnChange = value => {
-    const {
-      field: { name },
-      required,
-      onChange,
-    } = this.props;
+    const { onChange } = this.props;
 
-    let errorMsg = '';
-    if (required && !judgeIsNothing(value)) {
-      errorMsg = `请选择${name}`;
-    }
+    const errorMsg = validValue(value, this.props);
     this.setState(
       {
         value,

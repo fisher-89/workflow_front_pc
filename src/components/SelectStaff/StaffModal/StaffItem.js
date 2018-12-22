@@ -8,7 +8,6 @@ class SelectStaff extends PureComponent {
 
   onClose = e => {
     e.preventDefault();
-    console.log('ee');
   };
 
   handleClick = () => {};
@@ -18,7 +17,7 @@ class SelectStaff extends PureComponent {
       <div className={style.card_header}>
         <div className={style.staff_name}>
           {item.realname}
-          <span>{item.staff_sn})</span>
+          <span>({item.staff_sn})</span>
         </div>
         <div className={style.status}>
           状态：
@@ -63,7 +62,7 @@ class SelectStaff extends PureComponent {
                 <div className={style.card} />
               </Popover>
               <div className={style.name}>{detail.realname}</div>
-              <div className={style.sno}>{detail.staff_sn}</div>
+              <div className={style.sno}>({detail.staff_sn})</div>
             </div>
             <div className={style.des}>{detail.department ? detail.department.full_name : ''}</div>
           </div>

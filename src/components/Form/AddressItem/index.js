@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import Address from '../../Address';
+import { judgeIsNothing } from '../../../utils/utils';
 import style from './index.less';
 
 @connect()
@@ -31,7 +32,7 @@ class AddressItem extends PureComponent {
       required,
     } = this.props;
     let errorMsg = '';
-    if ((required && !value) || !value.province) {
+    if (required && (!judgeIsNothing(value) || !value.province)) {
       errorMsg = `请选择${name}`;
     }
     this.setState(

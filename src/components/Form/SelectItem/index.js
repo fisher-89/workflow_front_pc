@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import FormItem from '../FormItem';
 import Select from '../../Select';
+import { validValue } from '../../../utils/utils';
 import style from './index.less';
 
 class SelectItem extends PureComponent {
@@ -25,35 +26,25 @@ class SelectItem extends PureComponent {
   }
 
   onSingleChange = value => {
-    let errorMsg = '';
-    const {
-      field: { name },
-      required,
-    } = this.props;
-    if (required && (value === null || value === undefined)) {
-      errorMsg = `请选择${name}`;
-    }
-    this.setState({
-      value,
-      errorMsg,
-    });
+    this.dealValueOnChange(value);
   };
 
   onMutiChange = value => {
-    let errorMsg = '';
-    const {
-      field: { name },
-      onChange,
-    } = this.props;
-    if (!value.length) {
-      errorMsg = `请选择${name}`;
-    }
+    this.dealValueOnChange(value);
+  };
+
+  dealValueOnChange = value => {
+    const { onChange } = this.props;
+
+    const errorMsg = validValue(value, this.props);
     this.setState(
       {
         value,
         errorMsg,
       },
-      () => onChange(value, errorMsg)
+      () => {
+        onChange(value, errorMsg);
+      }
     );
   };
 
@@ -102,7 +93,7 @@ class SelectItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto' }}
+        extraStyle={{ height: 'auto', minWidth: '600px' }}
       >
         <div className={className} id={newId}>
           <Select

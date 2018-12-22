@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import Select from '../../Select';
-import { judgeIsNothing } from '../../../utils/utils';
+import { validValue } from '../../../utils/utils';
 import style from './index.less';
 
 @connect(({ interfaceApi }) => ({ sourceDetails: interfaceApi.sourceDetails }))
@@ -46,30 +46,17 @@ class InterfaceItem extends Component {
   }
 
   onSingleChange = value => {
-    let errorMsg = '';
-    const {
-      field: { name },
-      required,
-    } = this.props;
-    if (required && !judgeIsNothing(value)) {
-      errorMsg = `请选择${name}`;
-    }
-    this.setState({
-      value,
-      errorMsg,
-    });
+    this.dealValueOnChange(value);
   };
 
   onMutiChange = value => {
-    let errorMsg = '';
-    const {
-      required,
-      field: { name },
-      onChange,
-    } = this.props;
-    if (required && !judgeIsNothing(value)) {
-      errorMsg = `请选择${name}`;
-    }
+    this.dealValueOnChange(value);
+  };
+
+  dealValueOnChange = value => {
+    const { onChange } = this.props;
+
+    const errorMsg = validValue(value, this.props);
     this.setState(
       {
         value,

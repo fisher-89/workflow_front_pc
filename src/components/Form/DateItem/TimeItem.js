@@ -3,6 +3,8 @@ import moment from 'moment';
 
 import FormItem from '../FormItem';
 import TimePicker from '../../TimePicker';
+import { judgeIsNothing } from '../../../utils/utils';
+
 import style from './index.less';
 
 class TimeItem extends PureComponent {
@@ -32,7 +34,7 @@ class TimeItem extends PureComponent {
       required,
       onChange,
     } = this.props;
-    if (required && !value) {
+    if (required && !judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
     }
     this.setState(

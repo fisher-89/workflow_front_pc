@@ -91,14 +91,21 @@ class SelectShop extends Component {
 
   onMaskChange = (visible, value) => {
     const { name } = this.props;
-    const newValue = judgeIsNothing(value)
+    const isNothing = !judgeIsNothing(value);
+    const newValue = !isNothing
       ? makeFieldValue(value, { shop_sn: name.shop_sn, name: name.name }, this.multiple, false)
       : '';
+    let source = '';
+    if (isNothing) {
+      source = [];
+    } else {
+      source = this.multiple ? value : [value];
+    }
     this.setState(
       {
         visible,
         value: newValue,
-        source: this.multiple ? value : [value],
+        source,
       },
       () => {
         this.props.onChange(newValue);
