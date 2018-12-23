@@ -1,0 +1,128 @@
+@import '~antd/lib/style/themes/default.less';
+@import '~antd/lib/table/style/index.less';
+.columnsMenu {
+  position: relative;
+  top: -5px;
+  left: 14px;
+  padding-right: 10px;
+  margin-left: -20px;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.filterTable {
+  .filterTableOperator {
+    margin-bottom: 10px;
+    > * {
+      margin-right: 8px;
+    }
+  }
+  .filterTableContent {
+    :global {
+      // .ant-table-filter-dropdown {
+      //   position: fixed;
+      // }
+      .ant-table-filter-dropdown .ant-dropdown-menu-without-submenu {
+        max-height: 250px;
+      }
+      .@{table-prefix-cls}-small {
+        border: none;
+        &.@{table-prefix-cls}-bordered {
+          border: @border-width-base @border-style-base @border-color-split;
+          border-right: 0;
+        }
+      }
+      .@{table-prefix-cls},
+      .@{table-prefix-cls}-small {
+        &-search-highlight {
+          color: #f50;
+        }
+        th {
+          white-space: nowrap;
+        }
+        > .@{table-prefix-cls}-content {
+          > .@{table-prefix-cls}-header > table,
+          > .@{table-prefix-cls}-body > table,
+          > .@{table-prefix-cls}-scroll > .@{table-prefix-cls}-header > table,
+          > .@{table-prefix-cls}-scroll > .@{table-prefix-cls}-body > table,
+          > .@{table-prefix-cls}-fixed-left > .@{table-prefix-cls}-header > table,
+          > .@{table-prefix-cls}-fixed-right > .@{table-prefix-cls}-header > table,
+          > .@{table-prefix-cls}-fixed-left
+            > .@{table-prefix-cls}-body-outer
+            > .@{table-prefix-cls}-body-inner
+            > table,
+          > .@{table-prefix-cls}-fixed-right
+            > .@{table-prefix-cls}-body-outer
+            > .@{table-prefix-cls}-body-inner
+            > table {
+            > .@{table-prefix-cls}-thead > tr > th {
+              background: @table-header-bg;
+            }
+          }
+          .@{table-prefix-cls}-header {
+            background: @table-header-bg;
+          }
+        }
+        &.@{table-prefix-cls}-bordered {
+          > .@{table-prefix-cls}-content {
+            > .@{table-prefix-cls}-header > table,
+            > .@{table-prefix-cls}-body > table,
+            > .@{table-prefix-cls}-scroll > .@{table-prefix-cls}-header > table,
+            > .@{table-prefix-cls}-scroll > .@{table-prefix-cls}-body > table,
+            > .@{table-prefix-cls}-fixed-left > .@{table-prefix-cls}-header > table,
+            > .@{table-prefix-cls}-fixed-right > .@{table-prefix-cls}-header > table,
+            > .@{table-prefix-cls}-fixed-left
+              > .@{table-prefix-cls}-body-outer
+              > .@{table-prefix-cls}-body-inner
+              > table,
+            > .@{table-prefix-cls}-fixed-right
+              > .@{table-prefix-cls}-body-outer
+              > .@{table-prefix-cls}-body-inner
+              > table {
+              > .@{table-prefix-cls}-thead > tr > th {
+                background: @component-background;
+              }
+              > .@{table-prefix-cls}-tbody {
+                > tr:nth-of-type(odd) {
+                  background-color: @table-header-bg;
+                }
+                > tr:nth-of-type(even) {
+                  background-color: @component-background;
+                }
+                > tr:first-child > td {
+                  box-shadow: inset 0 1px 0 0 #d9d9d9;
+                }
+              }
+            }
+            .@{table-prefix-cls}-header {
+              background: @component-background;
+            }
+          }
+        }
+      }
+      .ant-table-footer {
+        text-align: right;
+      }
+      .ant-table-tree-filter {
+        .scroll-bar {
+          max-height: 300px;
+          overflow-y: scroll;
+        }
+        .table-filter-title {
+          border-bottom: 1px solid #ccc;
+          text-align: center;
+          min-height: 30px;
+          line-height: 30px;
+          span {
+            margin-top: -4px;
+            padding: 3px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.table-filter-active {
+  color: @primary-color !important;
+}

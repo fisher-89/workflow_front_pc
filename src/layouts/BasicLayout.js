@@ -110,6 +110,7 @@ class BasicLayout extends React.PureComponent {
         rendering: false,
       });
     });
+    this.setClientHeight();
     this.enquireHandler = enquireScreen(mobile => {
       const { isMobile } = this.state;
       if (isMobile !== mobile) {
@@ -169,6 +170,18 @@ class BasicLayout extends React.PureComponent {
     mergeMenuAndRouter(this.getMenuData());
     return routerMap;
   }
+
+  setClientHeight = () => {
+    clearInterval(this.resizeInterval);
+    const rightContent = document.getElementById('rightContent');
+    this.props.dispatch({
+      type: 'table/save',
+      payload: {
+        bodyHeight: document.body.clientHeight,
+        contentHeight: rightContent.clientHeight,
+      },
+    });
+  };
 
   matchParamsPath = pathname => {
     const pathKey = Object.keys(this.breadcrumbNameMap).find(key =>
@@ -268,12 +281,14 @@ class BasicLayout extends React.PureComponent {
             {...this.props}
           />
           <Content style={this.getContentStyle()}>
-            <Authorized
-              authority={routerConfig && routerConfig.authority}
-              noMatch={<Exception403 />}
-            >
-              {children}
-            </Authorized>
+            <div id="rightContent">
+              <Authorized
+                authority={routerConfig && routerConfig.authority}
+                noMatch={<Exception403 />}
+              >
+                {children}
+              </Authorized>
+            </div>
           </Content>
           <Footer />
         </Layout>

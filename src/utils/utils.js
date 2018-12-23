@@ -706,3 +706,46 @@ export function validValue(value, props) {
   }
   return errorMsg;
 }
+
+/**
+ *  解析单个键
+ */
+export function findRenderKey(dataSource, key = '', index = 'id') {
+  return (dataSource || []).find(item => `${item[index]}` === `${key}`) || {};
+}
+
+/**
+ *
+ * @param {替换数据源} dataSource
+ * @param {替换的数组} key
+ * @param {替换数组的键默认id，可以是对象或者一维数组} index
+ * @param {返回对象的key}   amen
+ * @param {数据源的下标和替换数组作对比默认id} dataSourceIndex
+ */
+export function analysisData(dataSource, key, keyIndex, name, dataSourceIndex) {
+  const keysValue = (key || []).map(
+    item => (keyIndex && item[keyIndex] !== undefined ? item[keyIndex] : item)
+  );
+  return getDataSourceIndex(dataSource, keysValue, name, dataSourceIndex);
+}
+
+// 转换时间差为天小时分钟
+export function convertTimeDis(t1, t2) {
+  const minutes = moment(t1).diff(moment(t2), 'minutes');
+  const days = minutes / (24 * 60);
+  const day = parseInt(days);
+  const hours = (days % 1) * 24;
+  const hour = parseInt(hours);
+  const minute = parseInt((hours % 1) * 60);
+  let str = '';
+  if (day) {
+    str = `${str}${day}天`;
+  }
+  if (hour) {
+    str = `${str}${hour}小时`;
+  }
+  if (minute) {
+    str = `${str}${minute}分钟`;
+  }
+  return str;
+}

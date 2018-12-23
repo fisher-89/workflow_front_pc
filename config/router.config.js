@@ -34,6 +34,11 @@ export default [
         component: './Flows/StartForm',
       },
       {
+        path: '/start_list',
+        name: '我发起的',
+        component: './Flows/Table',
+      },
+      {
         path: '/test',
         name: '我发起的',
         component: './Test/test',
