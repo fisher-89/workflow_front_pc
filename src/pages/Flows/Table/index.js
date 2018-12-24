@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { Tabs } from 'antd';
 import { connect } from 'dva';
 import ProcessingTable from './processing';
+import FinishedTable from './finished';
 
-// export default function Container() {
 @connect()
 class Index extends PureComponent {
   componentWillMount() {
@@ -22,6 +22,9 @@ class Index extends PureComponent {
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane key="processing" tab="处理中">
           <ProcessingTable />
+        </Tabs.TabPane>
+        <Tabs.TabPane key="finished" tab="已完成">
+          <FinishedTable />
         </Tabs.TabPane>
       </Tabs>
     );
