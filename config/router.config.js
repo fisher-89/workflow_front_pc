@@ -39,19 +39,14 @@ export default [
         component: './Flows/Table',
       },
       {
-        path: '/test',
-        name: '我发起的',
-        component: './Test/test',
+        path: '/approvelist',
+        name: '我审批的',
+        component: './Approve/Table',
       },
       {
-        path: '/test2',
-        name: '审批列表',
-        component: './Test/test',
-      },
-      {
-        path: '/test3',
+        path: '/cclist',
         name: '抄送人列表',
-        component: './Test/test',
+        component: './CC/Table',
       },
       {
         path: '/exception/404',

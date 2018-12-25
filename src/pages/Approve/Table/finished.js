@@ -1,23 +1,31 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
+import { convertTimeDis } from '../../../utils/utils';
+import { getApprState, approConverSta } from '../../../utils/convert';
 import OATable from '../../../components/OATable';
 
-const type = 'withdraw';
-@connect(({ loading, start }) => ({
-  listLoading: loading.effects['start/fetchStartList'],
-  startListDetails: start.startListDetails,
+const type = 'approved';
+
+const approveState = [
+  { label: '已驳回', value: -1 },
+  { label: '已通过', value: 2 },
+  { label: '已转交', value: 3 },
+];
+@connect(({ loading, start, approve }) => ({
+  listLoading: loading.effects['approve/fetchApproveList'],
+  approveListDetails: approve.approveListDetails,
   availableFlows: start.availableFlows,
 }))
-class StartList extends Component {
+class Approved extends Component {
   componentWillMount() {
-    this.fetchStartList({ page: 1, pagesize: 10 });
+    this.fetchApproveList({ page: 1, pagesize: 10 });
   }
 
-  fetchStartList = params => {
+  fetchApproveList = params => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'start/fetchStartList',
+      type: 'approve/fetchApproveList',
       payload: {
         params: { ...(params || {}), type },
       },
@@ -39,7 +47,6 @@ class StartList extends Component {
         dataIndex: 'flow_type_id',
         key: 'flow_type_id',
         filters: availableFlows.map(item => ({ text: item.name, value: item.id })),
-
         render: a => {
           const flow = (availableFlows || []).find(item => item.id === a);
           return flow ? flow.name : '';
@@ -47,23 +54,23 @@ class StartList extends Component {
       },
       {
         title: '流程名称',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'flow_name',
+        key: 'flow_name',
         searcher: true,
       },
       {
-        title: '撤回时间',
-        dataIndex: 'end_at',
-        key: 'end_at',
+        title: '审批时间',
+        dataIndex: 'acted_at',
+        key: 'acted_at',
         dateFilters: true,
         sorter: true,
       },
       {
-        title: '备注',
-        searcher: true,
-        render: () => '备注',
+        title: '审批结果',
+        dataIndex: 'action_type',
+        filters: approveState.map(item => ({ text: item.label, value: item.value })),
+        render: r => (r ? getApprState(r) : ''),
       },
-
       {
         title: '操作',
         render: ({ id }) => (
@@ -76,38 +83,10 @@ class StartList extends Component {
     return columns;
   };
 
-  makeDetailButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="detail"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        查看
-      </span>
-    );
-  };
-
-  makeWithDrawButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="withdraw"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        撤回
-      </span>
-    );
-  };
-
   render() {
     const { listLoading } = this.props;
-    const { startListDetails } = this.props;
-    const list = startListDetails[type] || {};
+    const { approveListDetails } = this.props;
+    const list = approveListDetails[type] || {};
     const { data, total } = list;
     return (
       <div>
@@ -116,7 +95,7 @@ class StartList extends Component {
           loading={listLoading}
           columns={this.makeColums()}
           data={data}
-          fetchDataSource={this.fetchStartList}
+          fetchDataSource={this.fetchApproveList}
           total={total || 0}
         />
       </div>
@@ -124,4 +103,4 @@ class StartList extends Component {
   }
 }
 
-export default StartList;
+export default Approved;

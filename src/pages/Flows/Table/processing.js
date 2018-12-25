@@ -32,19 +32,22 @@ class StartList extends Component {
   widthDraw = id => {};
 
   makeColums = () => {
+    const { availableFlows } = this.props;
+
     const columns = [
       {
         title: '序号',
         dataIndex: 'id',
         key: 'id',
+        sorter: true,
       },
       {
         title: '流程类型',
         dataIndex: 'flow_type_id',
         key: 'flow_type_id',
-        searcher: true,
+        filters: availableFlows.map(item => ({ text: item.name, value: item.id })),
         render: a => {
-          const { availableFlows } = this.props;
+          // const { availableFlows } = this.props;
           const flow = (availableFlows || []).find(item => item.id === a);
           return flow ? flow.name : '';
         },

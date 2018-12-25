@@ -40,3 +40,58 @@ export function convertShopStatus(id) {
       return '';
   }
 }
+
+// 发起状态
+export const startState = [
+  { title: '处理中', type: 'processing' },
+  { title: '已完成', type: 'finished' },
+  { title: '被驳回', type: 'rejected' },
+  { title: '撤回', type: 'withdraw' },
+];
+export const startConverSta = [
+  { title: '已撤回', value: -2 },
+  { title: '被驳回', value: -1 },
+  { title: '进行中', value: 0 },
+  { title: '已完成', value: 1 },
+];
+export const getStartState = state => {
+  switch (state) {
+    case -2:
+      return '已撤回';
+    case -1:
+      return '被驳回';
+    case 0:
+      return '进行中';
+    case 1:
+      return '已完成';
+    default:
+      return '其他';
+  }
+};
+// 审批状态
+export const approvalState = [
+  { title: '待审批', type: 'processing' },
+  { title: '已审批', type: 'approved' },
+];
+
+export const approConverSta = [
+  { title: '已驳回', value: -1 },
+  { title: '待审批', value: 0 },
+  { title: '已通过', value: 2 },
+  { title: '已转交', value: 3 },
+];
+
+export const getApprState = state => {
+  switch (state) {
+    case -1:
+      return '已驳回';
+    case 0:
+      return '待审批';
+    case 2:
+      return '已通过';
+    case 3:
+      return '已转交';
+    default:
+      return '其他';
+  }
+};

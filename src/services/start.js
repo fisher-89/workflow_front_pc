@@ -46,3 +46,19 @@ export function doWithdraw(data) {
 export async function getUserInfo() {
   return request('/api/oa/current-user');
 }
+
+// 抄送列表
+export function getCCList(data) {
+  return request('/api/cc', {
+    method: 'GET',
+    body: data,
+  });
+}
+
+// 抄送列表
+export function fetchApproveList(data) {
+  return request('/api/approval', {
+    method: 'GET',
+    body: data,
+  });
+}

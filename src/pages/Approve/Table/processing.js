@@ -1,32 +1,34 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
+import { Popconfirm, Divider } from 'antd';
 import { Link } from 'dva/router';
 import moment from 'moment';
 
-import { last } from 'lodash';
 import { convertTimeDis } from '../../../utils/utils';
 import OATable from '../../../components/OATable';
 
-const type = 'finished';
-@connect(({ loading, start }) => ({
-  listLoading: loading.effects['start/fetchStartList'],
-  startListDetails: start.startListDetails,
+const type = 'processing';
+@connect(({ loading, start, approve }) => ({
+  listLoading: loading.effects['approve/fetchApproveList'],
+  approveListDetails: approve.approveListDetails,
   availableFlows: start.availableFlows,
 }))
-class StartList extends Component {
+class Processing extends Component {
   componentWillMount() {
-    this.fetchStartList({ page: 1, pagesize: 10 });
+    this.fetchApproveList({ page: 1, pagesize: 10 });
   }
 
-  fetchStartList = params => {
+  fetchApproveList = params => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'start/fetchStartList',
+      type: 'approve/fetchApproveList',
       payload: {
-        params: { ...(params || {}), type },
+        params: { ...(params || {}), type: 'processing' },
       },
     });
   };
+
+  widthDraw = id => {};
 
   makeColums = () => {
     const { availableFlows } = this.props;
@@ -50,8 +52,8 @@ class StartList extends Component {
       },
       {
         title: '流程名称',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'flow_name',
+        key: 'flow_name',
         searcher: true,
       },
       {
@@ -62,34 +64,11 @@ class StartList extends Component {
         sorter: true,
       },
       {
-        title: '审批人',
-        dateFilters: true,
-        searcher: true,
-        render: a => {
-          const stepRun = a.step_run;
-          return last(stepRun).approver_name;
-        },
-      },
-      {
-        title: '备注',
-        dateFilters: true,
-        searcher: true,
-        render: a => {
-          const stepRun = a.step_run;
-          return last(stepRun).remark;
-        },
-      },
-      {
-        title: '审批时间',
-        dataIndex: 'end_at',
-        key: 'end_at',
-        dateFilters: true,
-        sorter: true,
-      },
-      {
         title: '历时',
         render: a => {
-          const disTime = a.end_at ? convertTimeDis(a.end_at, a.created_at) : '';
+          const disTime = a.created_at
+            ? convertTimeDis(moment().format('YYYY-MM-DD h:mm:ss'), a.created_at)
+            : '';
           return disTime;
         },
       },
@@ -98,6 +77,18 @@ class StartList extends Component {
         render: ({ id }) => (
           <Fragment>
             <Link to={`/start_detail/${id}`}>查看</Link>
+            <Divider type="vertical" />
+            <Popconfirm onConfirm={() => this.widthDraw(id)} title="确定要撤回该流程吗？">
+              <a>通过</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <Popconfirm onConfirm={() => this.widthDraw(id)} title="确定要撤回该流程吗？">
+              <a>驳回</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <Popconfirm onConfirm={() => this.widthDraw(id)} title="确定要撤回该流程吗？">
+              <a>转交</a>
+            </Popconfirm>
           </Fragment>
         ),
       },
@@ -105,38 +96,10 @@ class StartList extends Component {
     return columns;
   };
 
-  makeDetailButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="detail"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        查看
-      </span>
-    );
-  };
-
-  makeWithDrawButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="withdraw"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        撤回
-      </span>
-    );
-  };
-
   render() {
     const { listLoading } = this.props;
-    const { startListDetails } = this.props;
-    const list = startListDetails[type] || {};
+    const { approveListDetails } = this.props;
+    const list = approveListDetails[type] || {};
     const { data, total } = list;
     return (
       <div>
@@ -145,7 +108,7 @@ class StartList extends Component {
           loading={listLoading}
           columns={this.makeColums()}
           data={data}
-          fetchDataSource={this.fetchStartList}
+          fetchDataSource={this.fetchApproveList}
           total={total || 0}
         />
       </div>
@@ -153,4 +116,4 @@ class StartList extends Component {
   }
 }
 
-export default StartList;
+export default Processing;

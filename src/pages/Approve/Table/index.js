@@ -2,9 +2,7 @@ import React, { PureComponent } from 'react';
 import { Tabs } from 'antd';
 import { connect } from 'dva';
 import ProcessingTable from './processing';
-import FinishedTable from './finished';
-import RejectedTable from './rejected';
-import WithDrawTablw from './withdraw';
+import ApprovedTable from './finished';
 
 @connect()
 class Index extends PureComponent {
@@ -22,17 +20,11 @@ class Index extends PureComponent {
   render() {
     return (
       <Tabs defaultActiveKey="processing">
-        <Tabs.TabPane key="processing" tab="处理中">
+        <Tabs.TabPane key="processing" tab="待审批">
           <ProcessingTable />
         </Tabs.TabPane>
-        <Tabs.TabPane key="finished" tab="已完成">
-          <FinishedTable />
-        </Tabs.TabPane>
-        <Tabs.TabPane key="rejected" tab="已驳回">
-          <RejectedTable />
-        </Tabs.TabPane>
-        <Tabs.TabPane key="withdraw" tab="已撤回">
-          <WithDrawTablw />
+        <Tabs.TabPane key="finished" tab="已审批">
+          <ApprovedTable />
         </Tabs.TabPane>
       </Tabs>
     );
