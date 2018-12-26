@@ -18,6 +18,7 @@ class FormItem extends PureComponent {
       errorMsg,
       required,
       extraStyle,
+      asideStyle,
     } = this.props;
     const itemStyle = {
       width: `${width}px`,
@@ -34,7 +35,7 @@ class FormItem extends PureComponent {
     return (
       <div className={classnames} style={itemStyle}>
         <div className={styles.item}>
-          <div className={styles.aside}>
+          <div className={styles.aside} style={asideStyle}>
             {required && <span style={{ color: '#d9333f' }}>*</span>}
             {name}：
           </div>
@@ -49,5 +50,6 @@ class FormItem extends PureComponent {
 }
 FormItem.defaultProps = {
   errorMsg: '',
+  asideStyle: {},
 };
 export default FormItem;

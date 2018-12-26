@@ -6,6 +6,35 @@ export default {
     flowDetails: {},
     availableFlows: [],
     startListDetails: {},
+    preStepData: {
+      available_steps: [
+        {
+          id: 363,
+          name: '第二步',
+          approver_type: 0,
+          approvers: [],
+        },
+        {
+          id: 364,
+          name: 'test',
+          approver_type: 0,
+          approvers: [],
+        },
+      ],
+      step_end: 0,
+      timestamp: 1545811121,
+      concurrent_type: 1,
+      flow_id: 67,
+      step_run_id: null,
+      message: '',
+      is_cc: '1',
+      cc_person: [
+        {
+          staff_name: '刘勇01',
+          staff_sn: 110103,
+        },
+      ],
+    },
   },
 
   subscriptions: {},

@@ -6,7 +6,7 @@ import { connect } from 'dva';
 // import TreeSelect from '../../TreeSelect'
 import request from '../../../utils/request';
 
-import { markTreeData, judgeIsNothing } from '../../../utils/utils';
+import { markTreeData, judgeIsNothing, getTreeChildren } from '../../../utils/utils';
 
 import StaffItem from './StaffItem';
 import ExtraFilters from './ExtraFilters/index';
@@ -29,7 +29,7 @@ const defSearchType = [
 class StaffModal extends Component {
   constructor(props) {
     super(props);
-    const { visible, fetchDataSource, checkedStaff, multiple, currentUser } = this.props;
+    const { visible, fetchDataSource, checkedStaff, multiple } = this.props;
     this.state = {
       visible,
       searchType: defSearchType,
@@ -54,7 +54,6 @@ class StaffModal extends Component {
     };
     this.allDataSource = { filters: '', data: [] };
     this.multiple = multiple;
-    this.currentUser = currentUser;
     this.fetchFiltersDataSource = debounce(params => {
       if (!this.state.quickUsed) {
         this.setState({
@@ -115,14 +114,15 @@ class StaffModal extends Component {
     });
   };
 
-  onTreeSelect = (value, a, extra) => {
-    const {
-      node: {
-        props: { title },
-      },
-    } = extra;
+  onTreeSelect = value => {
+    let depFilters = '';
+    if (value !== 'all') {
+      const children = getTreeChildren(value, this.props.department, { parentId: 'parent_id' });
+      const childIds = children.map(item => item.id);
+      depFilters = `department.id=[${childIds.concat(value).join(',')}]`;
+    }
     const filters = {
-      department: value !== 'all' ? `department.full_name~${title}` : '',
+      department: depFilters,
       staff: '',
       filter: '',
     };
@@ -333,13 +333,21 @@ class StaffModal extends Component {
       .join(';');
 
   quickFetch = () => {
-    const { department } = this.currentUser;
-    const depFilters = `department.id=${department.parent_id || department.id}`;
+    const {
+      currentUser: { department },
+    } = this.props;
+    const children = getTreeChildren(department.parent_id || department.id, this.props.department, {
+      parentId: 'parent_id',
+    });
+    const childIds = children.map(item => item.id);
+    const depFilters = `department.id=[${childIds
+      .concat(department.parent_id || department.id)
+      .join(',')}]`;
     const filters = { ...this.state.filters, department: depFilters };
     this.setState({
       filters,
     });
-    this.fetchFiltersDataSource({ page: 1, filters: this.mapFilters(filters) });
+    this.fetchFiltersDataSource({ page: 1, pagesize, filters: this.mapFilters(filters) });
   };
 
   filtersChange = value => {
@@ -451,7 +459,7 @@ class StaffModal extends Component {
           </div>
         </div>
         <div className={style.checked_list}>
-          {checkedStaff.map(item => (
+          {(checkedStaff || []).map(item => (
             <StaffItem
               itemStyle={{ marginRight: '0' }}
               detail={item}
@@ -472,8 +480,8 @@ class StaffModal extends Component {
       </div>
       <div className={style.search_result} style={{ height: 'auto' }}>
         <div className={style.quick_item} onClick={this.quickFetch}>
-          {this.currentUser && this.currentUser.department
-            ? this.currentUser.department.full_name
+          {this.props.currentUser && this.props.currentUser.department
+            ? this.props.currentUser.department.full_name
             : ''}
         </div>
       </div>
@@ -481,7 +489,7 @@ class StaffModal extends Component {
   );
 
   renderStaffList = () => {
-    const { checkedStaff, extraFilters, searchValue, filters } = this.state;
+    const { checkedStaff, extraFilters, searchValue } = this.state;
     const {
       source: { data, total, page },
       fetchLoading,
@@ -490,7 +498,7 @@ class StaffModal extends Component {
       brands,
       positions,
     } = this.props;
-    const staffSns = checkedStaff.map(item => item.staff_sn);
+    const staffSns = (checkedStaff || []).map(item => item.staff_sn);
     const extra = data.find(item => staffSns.indexOf(item.staff_sn) === -1);
     const realTotal = total || 1;
     const brandsOpt = brands.map(item => {

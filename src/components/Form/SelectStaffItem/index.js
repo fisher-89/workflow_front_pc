@@ -12,6 +12,8 @@ class SelectStaffItem extends PureComponent {
   constructor(props) {
     super(props);
     const { defaultValue } = this.props;
+    console.log('defaultValue: ', defaultValue);
+
     const staffs = judgeIsNothing(defaultValue) ? defaultValue : '';
     this.state = {
       value: staffs,
@@ -71,6 +73,7 @@ class SelectStaffItem extends PureComponent {
       field: { id },
       required,
       disabled,
+      asideStyle,
     } = this.props;
     const { errorMsg, value } = this.state;
     const muti = field.is_checkbox;
@@ -83,7 +86,7 @@ class SelectStaffItem extends PureComponent {
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required}>
+        <FormItem {...field} errorMsg={errorMsg} required={required} asideStyle={asideStyle}>
           <div className={className} id={newId}>
             <Select
               disabled={disabled}
@@ -100,6 +103,7 @@ class SelectStaffItem extends PureComponent {
     return (
       <FormItem
         {...field}
+        asideStyle={asideStyle}
         height="auto"
         errorMsg={errorMsg}
         required={required}
@@ -126,6 +130,7 @@ class SelectStaffItem extends PureComponent {
       required,
       disabled,
       defaultValue,
+      asideStyle,
     } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
@@ -140,6 +145,7 @@ class SelectStaffItem extends PureComponent {
         width="500"
         height="auto"
         errorMsg={errorMsg}
+        asideStyle={asideStyle}
         required={required}
         extraStyle={{ height: 'auto', minWidth: '600px' }}
       >
@@ -147,6 +153,7 @@ class SelectStaffItem extends PureComponent {
           <SelectStaff
             multiple={multiple}
             defaultValue={defaultValue}
+            name={this.props.name}
             value={value}
             range={{ max, min }}
             effect="staff/fetchStaffs"
@@ -158,5 +165,8 @@ class SelectStaffItem extends PureComponent {
     );
   }
 }
-
+SelectStaffItem.defaultProps = {
+  onChange: () => {},
+  name: { realname: 'text', staff_sn: 'value' },
+};
 export default SelectStaffItem;

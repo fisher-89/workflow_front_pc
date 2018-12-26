@@ -142,7 +142,7 @@ class SelectStaff extends Component {
       <div className={style.tag_container}>
         <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
           <div className={style.tagItem}>
-            {source.map(item => (
+            {(source || []).map(item => (
               <Tag closable key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
                 {item.realname}
               </Tag>

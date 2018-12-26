@@ -107,12 +107,13 @@ class TextItem extends PureComponent {
   };
 
   makeNewProps = () => {
-    const { field, required } = this.props;
+    const { field, required, asideStyle } = this.props;
     const { errorMsg } = this.state;
     const props = {
       ...field,
       required,
       errorMsg,
+      asideStyle,
     };
     return props;
   };

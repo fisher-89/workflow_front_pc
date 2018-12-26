@@ -9,6 +9,7 @@ import EditForm from './EditForm';
 import SelectStaffItem from './SelectStaffItem';
 import SelectDepItem from './DepItem';
 import ShopSelectItem from './ShopSelectItem';
+import FormItem from './FormItem';
 
 export default TextItem;
 export {
@@ -24,4 +25,5 @@ export {
   SelectStaffItem,
   SelectDepItem,
   ShopSelectItem,
+  FormItem,
 };

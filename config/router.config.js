@@ -22,16 +22,14 @@ export default [
         path: '/available_flow',
         name: '发起流程',
         component: './Flows/AvailableFlows',
-        // routes: [
-        //   {
-        //     path: '/test1/start_form',
-        //     component: './Flows/StartForm',
-        //   }
-        // ]
       },
+      // {
+      //   path: '/start_form/:id',
+      //   component: './Flows/StartForm',
+      // },
       {
         path: '/start_form/:id',
-        component: './Flows/StartForm',
+        component: './Flows',
       },
       {
         path: '/start_list',

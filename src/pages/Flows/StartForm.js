@@ -5,30 +5,11 @@ import { judgeIsNothing } from '../../utils/utils';
 import { EditForm } from '../../components/Form/index';
 import style from './index.less';
 
-const tempformData = {
-  file: [],
-  number: null,
-  area: [],
-  single: '给',
-  multi: ['发', '额'],
-  arra: ['2', '5'],
-  interface: '7',
-  interfaces: ['292'],
-  date: '2018-11-01',
-  text: '',
-  grid: [
-    {
-      interface: '4',
-      interfaces: [],
-      files: [],
-      time: null,
-    },
-  ],
-};
-@connect(({ start, loading }) => ({
+@connect(({ start, loading, match }) => ({
   startDetails: start.flowDetails,
   startLoading: loading.effects['start/getFlowInfo'],
   presetSubmit: loading.effects['start/preSet'],
+  match,
 }))
 class StartForm extends PureComponent {
   constructor(props) {
@@ -44,7 +25,7 @@ class StartForm extends PureComponent {
         params: { id },
       },
       dispatch,
-    } = this.props;
+    } = this.props.parProps;
     this.id = id;
     dispatch({
       type: 'start/getFlowInfo',
@@ -59,7 +40,11 @@ class StartForm extends PureComponent {
     const data = this.submitValidator();
     const { hasError, submitFormData } = data;
     if (!hasError) {
-      const { dispatch, startDetails } = this.props;
+      const {
+        dispatch,
+        startDetails,
+        parProps: { stepChange },
+      } = this.props;
       const startflow = startDetails[this.id];
       dispatch({
         type: 'start/preSet',
@@ -72,9 +57,9 @@ class StartForm extends PureComponent {
             const { status, errors } = response;
             if (status === 422) {
               this.serverValidate(errors);
+            } else {
+              stepChange();
             }
-            // history.push('/select_step');
-            // history.push('/approve_step');
           },
         },
       });
@@ -204,7 +189,7 @@ class StartForm extends PureComponent {
     }
     return (
       <Spin spinning={startLoading || presetSubmit === true}>
-        <div style={{ maxWidth: '900px', overflowX: 'scroll' }}>
+        <div style={{ maxWidth: '900px', overflowX: 'scroll', paddingBottom: '20px' }}>
           <div className={style.clearfix}>
             <span className={style.flow_title}>流程名称</span>
             <span className={style.flow_des}>{startflow.flow.name}</span>
@@ -217,9 +202,11 @@ class StartForm extends PureComponent {
             formData={this.state.formData}
             onChange={data => this.setState({ formData: data })}
           />
-          <Button type="primary" onClick={this.handleSubmit}>
-            提交
-          </Button>
+          <div style={{ paddingLeft: '120px' }}>
+            <Button type="primary" onClick={this.handleSubmit}>
+              提交
+            </Button>
+          </div>
         </div>
       </Spin>
     );

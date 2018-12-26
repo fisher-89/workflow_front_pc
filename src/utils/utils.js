@@ -407,6 +407,27 @@ export function markTreeData(
 }
 
 /**
+ * 获取id的所有下级数据
+ * @param {数据源} data
+ * @param {查找的id} id
+ */
+
+export function getTreeChildren(depId, currentDep, { parentId = 'parent_id' }) {
+  let data = [];
+  findTreeChildren(depId, currentDep, { parentId }, data);
+  return data;
+}
+export function findTreeChildren(depId, currentDep, { parentId = 'parent_id' }, newData) {
+  const children = currentDep.filter(item => `${item[parentId]}` === `${depId}`);
+  if (children.length) {
+    children.forEach(item => {
+      newData.push(item);
+      findTreeChildren(item.id, currentDep, parentId, newData);
+    });
+  }
+}
+
+/**
  * 获取url参数对象
  * @param {参数名称} name
  */
