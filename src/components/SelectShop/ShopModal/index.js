@@ -34,7 +34,7 @@ class ShopModal extends Component {
     this.state = {
       visible,
       searchType: defSearchType,
-      checkedShop,
+      checkedShop: checkedShop || [],
       swicthVisible: false,
       searchValue: '',
       filters: {
@@ -74,7 +74,7 @@ class ShopModal extends Component {
     ) {
       this.setState({
         visible,
-        checkedShop,
+        checkedShop: checkedShop || [],
       });
     }
   }
@@ -160,7 +160,7 @@ class ShopModal extends Component {
     let newCheckedStaffs = '';
 
     if (!value) {
-      newCheckedStaffs = checkedShop.filter(item => staffSns.indexOf(item.shop_sn) === -1);
+      newCheckedStaffs = (checkedShop || []).filter(item => staffSns.indexOf(item.shop_sn) === -1);
       this.setState({
         checkedShop: [...newCheckedStaffs].unique('shop_sn'),
       });
@@ -170,7 +170,7 @@ class ShopModal extends Component {
         return;
       }
       const filters = this.mapFilters(this.makeAllFilters());
-      const sn = checkedShop.map(item => item.shop_sn);
+      const sn = (checkedShop || []).map(item => item.shop_sn);
       const extra = this.allDataSource.data.length
         ? this.allDataSource.data.find(item => sn.indexOf(item.shop_sn) === -1)
         : [];
@@ -330,7 +330,6 @@ class ShopModal extends Component {
   };
 
   filtersChange = value => {
-    console.log(value);
     this.setState(
       {
         extraFilters: value,
@@ -515,7 +514,8 @@ class ShopModal extends Component {
         <Spin spinning={fetchLoading || false}>
           <div className={style.search_result}>
             {(data || []).map(item => {
-              const checked = checkedShop.map(staff => staff.shop_sn).indexOf(item.shop_sn) > -1;
+              const checked =
+                (checkedShop || []).map(staff => staff.shop_sn).indexOf(item.shop_sn) > -1;
               return (
                 <ShopItem
                   extra={null}

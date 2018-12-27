@@ -141,7 +141,7 @@ class SelectShop extends Component {
     const { source } = this.state;
 
     return (
-      <div className={style.tag_container}>
+      <div className={style.tag_container} onClick={e => e.stopPropagation()}>
         <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
           <div className={style.tagItem}>
             {source.map(item => (
@@ -154,6 +154,7 @@ class SelectShop extends Component {
         <ShopModal
           visible={this.state.visible}
           onChange={this.onMaskChange}
+          onCancel={() => this.setState({ visible: false })}
           multiple={multiple}
           fetchUrl="/api/oa/shops"
           range={range}

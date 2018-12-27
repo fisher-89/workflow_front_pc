@@ -33,7 +33,7 @@ class StaffModal extends Component {
     this.state = {
       visible,
       searchType: defSearchType,
-      checkedStaff,
+      checkedStaff: checkedStaff || [],
       swicthVisible: false,
       searchValue: '',
       filters: {
@@ -86,7 +86,7 @@ class StaffModal extends Component {
     ) {
       this.setState({
         visible,
-        checkedStaff,
+        checkedStaff: checkedStaff || [],
       });
     }
   }
@@ -100,10 +100,7 @@ class StaffModal extends Component {
 
   onCancel = () => {
     this.resetState(() => {
-      this.props.onChange(
-        false,
-        this.multiple ? this.props.checkedStaff : this.props.checkedStaff[0] || ''
-      );
+      this.props.onCancel();
     });
   };
 
@@ -149,7 +146,9 @@ class StaffModal extends Component {
     const staffSns = data.map(item => item.staff_sn);
     let newCheckedStaffs;
     if (!value) {
-      newCheckedStaffs = checkedStaff.filter(item => staffSns.indexOf(item.staff_sn) === -1);
+      newCheckedStaffs = (checkedStaff || []).filter(
+        item => staffSns.indexOf(item.staff_sn) === -1
+      );
     } else {
       newCheckedStaffs = data.concat(checkedStaff);
     }
@@ -169,7 +168,9 @@ class StaffModal extends Component {
     let newCheckedStaffs = '';
 
     if (!value) {
-      newCheckedStaffs = checkedStaff.filter(item => staffSns.indexOf(item.staff_sn) === -1);
+      newCheckedStaffs = (checkedStaff || []).filter(
+        item => staffSns.indexOf(item.staff_sn) === -1
+      );
       this.setState({
         checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
       });
@@ -298,7 +299,8 @@ class StaffModal extends Component {
 
   handleOnChange = item => {
     const { checkedStaff } = this.state;
-    const isChecked = checkedStaff.find(staff => staff.staff_sn === item.staff_sn);
+    const isChecked = (checkedStaff || []).find(staff => staff.staff_sn === item.staff_sn);
+
     let newCheckedStaff = '';
 
     if (this.multiple) {
@@ -312,6 +314,7 @@ class StaffModal extends Component {
     } else {
       newCheckedStaff = [item];
     }
+
     this.setState({
       checkedStaff: newCheckedStaff,
     });
@@ -568,7 +571,8 @@ class StaffModal extends Component {
         <Spin spinning={fetchLoading || false}>
           <div className={style.search_result}>
             {(data || []).map(item => {
-              const checked = checkedStaff.map(staff => staff.staff_sn).indexOf(item.staff_sn) > -1;
+              const checked =
+                (checkedStaff || []).map(staff => staff.staff_sn).indexOf(item.staff_sn) > -1;
               return (
                 <StaffItem
                   extra={null}
@@ -600,7 +604,7 @@ class StaffModal extends Component {
   render() {
     const { visible, quickUsed, checkedStaff } = this.state;
     return (
-      <div id="staff">
+      <div id="staff" onClick={e => e.stopPropagation()}>
         <Modal
           visible={visible}
           onCancel={this.onCancel}

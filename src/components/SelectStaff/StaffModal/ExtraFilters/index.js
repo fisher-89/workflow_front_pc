@@ -56,7 +56,6 @@ class ExtraFilters extends Component {
         filters: { ...filters },
       },
       () => {
-        console.log('filters:', filters);
         onChange(filters);
       }
     );

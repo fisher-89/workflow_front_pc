@@ -2,9 +2,9 @@ import getAccessToken from '@/services/authority';
 
 export default {
   namespace: 'oauth',
-  state: { accessToken: '', },
+  state: { accessToken: '' },
   effects: {
-    * getAccessTokenByAuthCode({ payload, callBack }, { call, put }) {
+    *getAccessTokenByAuthCode({ payload, callBack }, { call, put }) {
       const params = {
         grant_type: 'authorization_code',
         client_id: OA_CLIENT_ID,
@@ -12,15 +12,16 @@ export default {
         ...payload,
       };
       const response = yield call(getAccessToken, params);
-      console.log(response);
-      if (!response) { return };
+      if (!response) {
+        return;
+      }
       yield put({
         type: 'saveAccessToken',
         payload: response,
       });
       callBack();
     },
-    * refreshAccessToken({ payload, callBack }, { call, put }) {
+    *refreshAccessToken({ payload, callBack }, { call, put }) {
       const params = {
         grant_type: 'refresh_token',
         refresh_token: localStorage.getItem(`${TOKEN_PREFIX}refresh_token`),
@@ -47,7 +48,10 @@ export default {
     },
     saveAccessToken(state, { payload }) {
       localStorage.setItem(`${TOKEN_PREFIX}access_token`, payload.access_token);
-      localStorage.setItem(`${TOKEN_PREFIX}access_token_expires_in`, new Date().getTime() + ((payload.expires_in - 10) * 1000));
+      localStorage.setItem(
+        `${TOKEN_PREFIX}access_token_expires_in`,
+        new Date().getTime() + (payload.expires_in - 10) * 1000
+      );
       localStorage.setItem(`${TOKEN_PREFIX}refresh_token`, payload.refresh_token);
       return {
         ...state,

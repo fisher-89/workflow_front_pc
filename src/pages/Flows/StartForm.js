@@ -43,7 +43,7 @@ class StartForm extends PureComponent {
       const {
         dispatch,
         startDetails,
-        parProps: { stepChange },
+        parProps: { handleSubmit },
       } = this.props;
       const startflow = startDetails[this.id];
       dispatch({
@@ -58,7 +58,7 @@ class StartForm extends PureComponent {
             if (status === 422) {
               this.serverValidate(errors);
             } else {
-              stepChange();
+              handleSubmit();
             }
           },
         },
@@ -140,7 +140,6 @@ class StartForm extends PureComponent {
           Object.keys(item).forEach(itemKey => {
             const curGridItemValue = item[itemKey];
             submitValue[itemKey] = curGridItemValue.value;
-
             const msg = oldErrorMsg || this.doValidator(curGridItemValue);
             hasError = hasError || msg;
             newValueItem[itemKey] = { ...curGridItemValue, errorMsg: msg };

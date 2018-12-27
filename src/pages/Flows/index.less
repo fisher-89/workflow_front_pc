@@ -88,6 +88,18 @@
   .step2_item {
     border: 1px solid #ccc;
     margin-bottom: 20px;
+    &.checked {
+      background: url('/muChecked.png') no-repeat 550px 22px;
+      background-size: 16px;
+    }
+    &.singelchecked {
+      background: url('/singleChecked.png') no-repeat 550px 22px;
+      background-size: 16px;
+    }
+    &.disabed_checked {
+      background: url('/defaultChecked.png') no-repeat 550px 22px;
+      background-size: 16px;
+    }
   }
   :global {
     .ant-form-item-label {

@@ -1,4 +1,4 @@
-import { getFlowList, getFlowInfo, preSet, getStartList } from '../services/start';
+import { getFlowList, getFlowInfo, preSet, getStartList, stepStart } from '../services/start';
 
 export default {
   namespace: 'start',
@@ -94,6 +94,14 @@ export default {
         payload.cb(data);
       }
     },
+    // 正式提交
+    *stepStart({ payload }, { call }) {
+      const data = yield call(stepStart, payload.data);
+      if (data && !data.error) {
+        payload.cb();
+      }
+    },
+
     *fetchStartList({ payload }, { call, put }) {
       const { params } = payload;
       const data = yield call(getStartList, params);

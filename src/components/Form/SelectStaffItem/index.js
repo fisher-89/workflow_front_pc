@@ -12,16 +12,12 @@ class SelectStaffItem extends PureComponent {
   constructor(props) {
     super(props);
     const { defaultValue } = this.props;
-    console.log('defaultValue: ', defaultValue);
-
     const staffs = judgeIsNothing(defaultValue) ? defaultValue : '';
     this.state = {
       value: staffs,
       errorMsg: '',
     };
   }
-
-  componentWillMount() {}
 
   componentWillReceiveProps(props) {
     const { value, errorMsg } = props;
@@ -130,6 +126,7 @@ class SelectStaffItem extends PureComponent {
       required,
       disabled,
       defaultValue,
+      rightStyle,
       asideStyle,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -142,18 +139,19 @@ class SelectStaffItem extends PureComponent {
     return (
       <FormItem
         {...field}
-        width="500"
+        // width="500"
         height="auto"
         errorMsg={errorMsg}
         asideStyle={asideStyle}
+        rightStyle={rightStyle}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{ height: 'auto', ...(multiple ? { minWidth: '600px' } : null) }}
       >
         <div className={className}>
           <SelectStaff
             multiple={multiple}
             defaultValue={defaultValue}
-            name={this.props.name}
+            name={this.props.formName}
             value={value}
             range={{ max, min }}
             effect="staff/fetchStaffs"
@@ -167,6 +165,6 @@ class SelectStaffItem extends PureComponent {
 }
 SelectStaffItem.defaultProps = {
   onChange: () => {},
-  name: { realname: 'text', staff_sn: 'value' },
+  formName: { realname: 'text', staff_sn: 'value' },
 };
 export default SelectStaffItem;

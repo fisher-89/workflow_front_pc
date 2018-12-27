@@ -32,7 +32,7 @@ class AddressItem extends PureComponent {
       required,
     } = this.props;
     let errorMsg = '';
-    if (required && (!judgeIsNothing(value) || !value.province)) {
+    if (required && (!judgeIsNothing(value) || !value.province_id)) {
       errorMsg = `请选择${name}`;
     }
     this.setState(
@@ -66,10 +66,10 @@ class AddressItem extends PureComponent {
             disabled={disabled}
             onChange={this.onChange}
             name={{
-              province_id: 'province',
-              city_id: 'city',
-              county_id: 'county',
-              address: 'addres',
+              province_id: 'province_id',
+              city_id: 'city_id',
+              county_id: 'county_id',
+              address: 'address',
             }}
           />
         </div>

@@ -19,6 +19,7 @@ class FormItem extends PureComponent {
       required,
       extraStyle,
       asideStyle,
+      rightStyle,
     } = this.props;
     const itemStyle = {
       width: `${width}px`,
@@ -39,7 +40,9 @@ class FormItem extends PureComponent {
             {required && <span style={{ color: '#d9333f' }}>*</span>}
             {name}：
           </div>
-          <div className={cls}>{children}</div>
+          <div className={cls} style={{ ...rightStyle }}>
+            {children}
+          </div>
         </div>
         <Tooltip placement="topLeft" title={errorMsg}>
           <div className={styles.error}>{errorMsg}</div>
@@ -51,5 +54,6 @@ class FormItem extends PureComponent {
 FormItem.defaultProps = {
   errorMsg: '',
   asideStyle: {},
+  rightStyle: {},
 };
 export default FormItem;

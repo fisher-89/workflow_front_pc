@@ -13,7 +13,7 @@ const { Step } = Steps;
 }))
 class Sumbit extends PureComponent {
   state = {
-    current: 1,
+    current: 0,
   };
 
   stepChange = current => {
@@ -22,20 +22,28 @@ class Sumbit extends PureComponent {
     });
   };
 
-  makeProps = index => ({
+  makeProps = () => ({
     ...this.props,
-    stepChange: v => {
-      this.stepChange(index);
+    handleSubmit: () => {
+      this.stepChange(1);
     },
   });
 
-  makeSteps2Props = () => {};
+  makeSteps2Props = () => ({
+    ...this.props,
+    handlePrevStep: () => {
+      this.stepChange(0);
+    },
+    handleSubmit: () => {
+      this.stepChange(2);
+    },
+  });
 
   render() {
     const { current } = this.state;
     const steps = [
-      { title: '第一步', content: <PresetForm parProps={this.makeProps(1)} /> },
-      { title: '第二步', content: <SubmitForm parProps={this.makeProps(2)} /> },
+      { title: '第一步', content: <PresetForm parProps={this.makeProps()} /> },
+      { title: '第二步', content: <SubmitForm parProps={this.makeSteps2Props()} /> },
       { title: '结果', content: 'result' },
     ];
     return (
