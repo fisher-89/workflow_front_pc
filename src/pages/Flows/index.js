@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Steps } from 'antd';
 import PresetForm from './StartForm';
 import SubmitForm from './Step2';
+import Result from '../../components/Result/index';
 
 const { Step } = Steps;
 
@@ -13,7 +14,7 @@ const { Step } = Steps;
 }))
 class Sumbit extends PureComponent {
   state = {
-    current: 0,
+    current: 2,
   };
 
   stepChange = current => {
@@ -44,7 +45,7 @@ class Sumbit extends PureComponent {
     const steps = [
       { title: '第一步', content: <PresetForm parProps={this.makeProps()} /> },
       { title: '第二步', content: <SubmitForm parProps={this.makeSteps2Props()} /> },
-      { title: '结果', content: 'result' },
+      { title: '结果', content: <Result type="success" title="提交成功" /> },
     ];
     return (
       <div style={{ maxWidth: '900px' }}>
