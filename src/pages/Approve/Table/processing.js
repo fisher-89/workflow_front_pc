@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Popconfirm, Divider } from 'antd';
 import { Link } from 'dva/router';
 import moment from 'moment';
 
@@ -10,7 +9,7 @@ import OATable from '../../../components/OATable';
 const type = 'processing';
 @connect(({ loading, start, approve }) => ({
   listLoading: loading.effects['approve/fetchApproveList'],
-  approveListDetails: approve.approveListDetails,
+  processingApprove: approve.processingApprove || {},
   availableFlows: start.availableFlows,
 }))
 class Processing extends Component {
@@ -76,19 +75,7 @@ class Processing extends Component {
         title: '操作',
         render: ({ id }) => (
           <Fragment>
-            <Link to={`/start_detail/${id}`}>查看</Link>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => this.widthDraw(id)} title="确定要撤回该流程吗？">
-              <a>通过</a>
-            </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => this.widthDraw(id)} title="确定要撤回该流程吗？">
-              <a>驳回</a>
-            </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => this.widthDraw(id)} title="确定要撤回该流程吗？">
-              <a>转交</a>
-            </Popconfirm>
+            <Link to={`/approve/${id}`}>查看</Link>
           </Fragment>
         ),
       },
@@ -98,9 +85,8 @@ class Processing extends Component {
 
   render() {
     const { listLoading } = this.props;
-    const { approveListDetails } = this.props;
-    const list = approveListDetails[type] || {};
-    const { data, total } = list;
+    const { processingApprove } = this.props;
+    const { data, total } = processingApprove || {};
     return (
       <div>
         <OATable

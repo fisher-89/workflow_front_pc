@@ -3,6 +3,7 @@ export default {
   'menu.我发起的': '我发起的',
   'menu.审批列表': '审批列表',
   'menu.抄送人列表': '抄送人列表',
+
   'navBar.lang': '语言',
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',

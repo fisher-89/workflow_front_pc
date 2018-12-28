@@ -8,6 +8,7 @@ import OATable from '../../../components/OATable';
 const type = 'finished';
 @connect(({ loading, start }) => ({
   listLoading: loading.effects['start/fetchStartList'],
+  finishedStart: start.finishedStart || {},
   startListDetails: start.startListDetails,
   availableFlows: start.availableFlows,
 }))
@@ -133,9 +134,8 @@ class StartList extends Component {
 
   render() {
     const { listLoading } = this.props;
-    const { startListDetails } = this.props;
-    const list = startListDetails[type] || {};
-    const { data, total } = list;
+    const { finishedStart } = this.props;
+    const { data, total } = finishedStart;
     return (
       <div>
         <OATable

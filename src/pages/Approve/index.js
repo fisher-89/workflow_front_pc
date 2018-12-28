@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Steps, Button } from 'antd';
-import PresetForm from './StartForm';
-import SubmitForm from './Step2';
+import Step1 from './Step1';
+import Step2 from '../Flows/Step2';
 import Result from '../../components/Result/index';
 
 const { Step } = Steps;
@@ -15,6 +15,7 @@ const { Step } = Steps;
 class Sumbit extends PureComponent {
   state = {
     current: 0,
+    type: 'approve',
   };
 
   stepChange = current => {
@@ -23,15 +24,23 @@ class Sumbit extends PureComponent {
     });
   };
 
-  makeProps = () => ({
+  makeStep1Props = () => ({
     ...this.props,
-    handleSubmit: () => {
-      this.stepChange(1);
+    handleSubmit: type => {
+      this.setState(
+        {
+          type,
+        },
+        () => {
+          this.stepChange(1);
+        }
+      );
     },
   });
 
   makeSteps2Props = () => ({
     ...this.props,
+    type: this.state.type,
     handlePrevStep: () => {
       this.stepChange(0);
     },
@@ -42,24 +51,20 @@ class Sumbit extends PureComponent {
 
   makeBtns = () => (
     <div>
-      <Button type="primary" onClick={() => this.props.history.replace('/available_flow')}>
-        再次发起
-      </Button>
-      <span style={{ marginRight: '20px' }} />
-      <Button onClick={() => this.props.history.replace('/start_list')}>查看列表</Button>
+      <Button onClick={() => this.props.history.replace('/approvelist')}>查看列表</Button>
     </div>
   );
 
   render() {
     const { current } = this.state;
     const steps = [
-      { title: '第一步', content: <PresetForm parProps={this.makeProps()} /> },
-      { title: '第二步', content: <SubmitForm parProps={this.makeSteps2Props()} /> },
+      { title: '第一步', content: <Step1 parProps={this.makeStep1Props()} /> },
+      { title: '第二步', content: <Step2 parProps={this.makeSteps2Props()} /> },
       {
         title: '结果',
         content: (
           <div style={{ paddingTop: '50px' }}>
-            <Result type="success" title="提交成功" actions={this.makeBtns()} />
+            <Result type="success" title="操作成功" actions={this.makeBtns()} />
           </div>
         ),
       },

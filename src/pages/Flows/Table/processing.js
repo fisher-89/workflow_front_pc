@@ -11,7 +11,7 @@ import OATable from '../../../components/OATable';
 const type = 'processing';
 @connect(({ loading, start }) => ({
   listLoading: loading.effects['start/fetchStartList'],
-  startListDetails: start.startListDetails,
+  processingStart: start.processingStart || {},
   availableFlows: start.availableFlows,
 }))
 class StartList extends Component {
@@ -24,16 +24,23 @@ class StartList extends Component {
     dispatch({
       type: 'start/fetchStartList',
       payload: {
-        params: { ...(params || {}), type: 'processing' },
+        params: { ...(params || {}), type },
       },
     });
   };
 
-  widthDraw = id => {};
+  withDraw = r => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'start/doWithDraw',
+      payload: {
+        flow_run_id: r.id,
+      },
+    });
+  };
 
   makeColums = () => {
     const { availableFlows } = this.props;
-
     const columns = [
       {
         title: '序号',
@@ -47,7 +54,6 @@ class StartList extends Component {
         key: 'flow_type_id',
         filters: availableFlows.map(item => ({ text: item.name, value: item.id })),
         render: a => {
-          // const { availableFlows } = this.props;
           const flow = (availableFlows || []).find(item => item.id === a);
           return flow ? flow.name : '';
         },
@@ -85,11 +91,11 @@ class StartList extends Component {
       },
       {
         title: '操作',
-        render: ({ id }) => (
+        render: r => (
           <Fragment>
-            <Link to={`/start_detail/${id}`}>查看</Link>
+            <Link to={`/start_detail/${r.id}`}>查看</Link>
             <Divider type="vertical" />
-            <Popconfirm onConfirm={() => this.widthDraw(id)} title="确定要撤回该流程吗？">
+            <Popconfirm onConfirm={() => this.withDraw(r)} title="确定要撤回该流程吗？">
               <a>撤回</a>
             </Popconfirm>
           </Fragment>
@@ -99,39 +105,10 @@ class StartList extends Component {
     return columns;
   };
 
-  makeDetailButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="detail"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        查看
-      </span>
-    );
-  };
-
-  makeWithDrawButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="withdraw"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        撤回
-      </span>
-    );
-  };
-
   render() {
     const { listLoading } = this.props;
-    const { startListDetails } = this.props;
-    const list = startListDetails[type] || {};
-    const { data, total } = list;
+    const { processingStart } = this.props;
+    const { data, total } = processingStart;
     return (
       <div>
         <OATable

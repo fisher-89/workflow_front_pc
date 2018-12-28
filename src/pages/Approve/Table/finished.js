@@ -14,7 +14,7 @@ const approveState = [
 ];
 @connect(({ loading, start, approve }) => ({
   listLoading: loading.effects['approve/fetchApproveList'],
-  approveListDetails: approve.approveListDetails,
+  approvedApprove: approve.approvedApprove || {},
   availableFlows: start.availableFlows,
 }))
 class Approved extends Component {
@@ -75,7 +75,7 @@ class Approved extends Component {
         title: '操作',
         render: ({ id }) => (
           <Fragment>
-            <Link to={`/start_detail/${id}`}>查看</Link>
+            <Link to={`/approve/${id}`}>查看</Link>
           </Fragment>
         ),
       },
@@ -85,9 +85,8 @@ class Approved extends Component {
 
   render() {
     const { listLoading } = this.props;
-    const { approveListDetails } = this.props;
-    const list = approveListDetails[type] || {};
-    const { data, total } = list;
+    const { approvedApprove } = this.props;
+    const { data, total } = approvedApprove;
     return (
       <div>
         <OATable

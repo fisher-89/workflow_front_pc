@@ -1,40 +1,20 @@
-import { getFlowList, getFlowInfo, preSet, getStartList, stepStart } from '../services/start';
+import {
+  getFlowList,
+  getFlowInfo,
+  preSet,
+  getStartList,
+  stepStart,
+  doWithdraw,
+} from '../services/start';
+import defaultReducers from '../reducers';
 
 export default {
   namespace: 'start',
   state: {
     flowDetails: {},
     availableFlows: [],
-    startListDetails: {},
-    preStepData: {
-      available_steps: [
-        {
-          id: 363,
-          name: '第二步',
-          approver_type: 0,
-          approvers: [],
-        },
-        {
-          id: 364,
-          name: 'test',
-          approver_type: 0,
-          approvers: [],
-        },
-      ],
-      step_end: 0,
-      timestamp: 1545811121,
-      concurrent_type: 1,
-      flow_id: 67,
-      step_run_id: null,
-      message: '',
-      is_cc: '1',
-      cc_person: [
-        {
-          staff_name: '刘勇01',
-          staff_sn: 110103,
-        },
-      ],
-    },
+    processingStart: {},
+    preStepData: {},
   },
 
   subscriptions: {},
@@ -110,8 +90,20 @@ export default {
           type: 'save',
           payload: {
             data,
-            store: 'startList',
-            id: params.type,
+            store: `${params.type}Start`,
+          },
+        });
+      }
+    },
+    *doWithDraw({ payload }, { call, put }) {
+      const data = yield call(doWithdraw, payload);
+      if (data && !data.error) {
+        yield put({
+          type: 'update',
+          payload: {
+            data,
+            store: 'processingStart',
+            id: payload.flow_run_id,
           },
         });
       }
@@ -119,22 +111,6 @@ export default {
   },
 
   reducers: {
-    save(state, action) {
-      const { store, id, data } = action.payload;
-      if (id === undefined) {
-        return {
-          ...state,
-          [store]: data,
-        };
-      }
-      const originalStore = state[`${store}Details`];
-      return {
-        ...state,
-        [`${store}Details`]: {
-          ...originalStore,
-          [id]: data,
-        },
-      };
-    },
+    ...defaultReducers,
   },
 };

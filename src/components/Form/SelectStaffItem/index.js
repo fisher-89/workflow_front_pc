@@ -131,7 +131,7 @@ class SelectStaffItem extends PureComponent {
     } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
-    const options = field.available_options;
+    const options = field.available_options || [];
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     if (options.length) {
       return this.renderSelect(options);

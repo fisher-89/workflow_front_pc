@@ -23,10 +23,6 @@ export default [
         name: '发起流程',
         component: './Flows/AvailableFlows',
       },
-      // {
-      //   path: '/start_form/:id',
-      //   component: './Flows/StartForm',
-      // },
       {
         path: '/start_form/:id',
         component: './Flows',
@@ -38,8 +34,12 @@ export default [
       },
       {
         path: '/approvelist',
-        name: '我审批的',
+        name: '审批列表',
         component: './Approve/Table',
+      },
+      {
+        path: '/approve/:id',
+        component: './Approve/index',
       },
       {
         path: '/cclist',

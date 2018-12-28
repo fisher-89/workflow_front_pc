@@ -8,7 +8,7 @@ import OATable from '../../../components/OATable';
 const type = 'all';
 @connect(({ loading, start, cc }) => ({
   listLoading: loading.effects['cc/fetchCCList'],
-  ccListDetails: cc.ccListDetails,
+  ccList: cc.ccList,
   availableFlows: start.availableFlows,
 }))
 class CCList extends Component {
@@ -88,9 +88,8 @@ class CCList extends Component {
   };
 
   render() {
-    const { listLoading, ccListDetails } = this.props;
-    const list = ccListDetails[type] || {};
-    const { data, total } = list;
+    const { listLoading, ccList } = this.props;
+    const { data, total } = ccList;
     return (
       <div>
         <OATable

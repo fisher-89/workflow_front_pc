@@ -1,10 +1,17 @@
-import { fetchApproveList } from '../services/start';
+import {
+  fetchApproveList,
+  fetchStepInfo,
+  doReject,
+  doDeliver,
+  getThrough,
+} from '../services/start';
+import defaultReducers from '../reducers';
 
 export default {
   namespace: 'approve',
   state: {
-    flowDetails: {},
-    approveListDetails: {},
+    approveDetails: {},
+    processingApprove: {},
   },
 
   subscriptions: {},
@@ -18,31 +25,54 @@ export default {
           type: 'save',
           payload: {
             data,
-            store: 'approveList',
-            id: params.type,
+            store: `${params.type}Approve`,
           },
         });
+      }
+    },
+    *fetchStepInfo({ payload }, { call, put }) {
+      const data = yield call(fetchStepInfo, payload);
+      if (data && !data.error) {
+        yield put({
+          type: 'save',
+          payload: {
+            data,
+            store: 'approve',
+            id: payload,
+          },
+        });
+      }
+    },
+    *doDeliver({ payload }, { call }) {
+      const { params, cb } = payload;
+      const data = yield call(doDeliver, params);
+      if (data && !data.error) {
+        if (cb) {
+          cb(data);
+        }
+      }
+    },
+    *doReject({ payload }, { call }) {
+      const { params, cb } = payload;
+      const data = yield call(doReject, params);
+      if (data && !data.error) {
+        if (cb) {
+          cb(data);
+        }
+      }
+    },
+    *getThrough({ payload }, { call }) {
+      const { params, cb } = payload;
+      const data = yield call(getThrough, params);
+      if (data && !data.error) {
+        if (cb) {
+          cb(data);
+        }
       }
     },
   },
 
   reducers: {
-    save(state, action) {
-      const { store, id, data } = action.payload;
-      if (id === undefined) {
-        return {
-          ...state,
-          [store]: data,
-        };
-      }
-      const originalStore = state[`${store}Details`];
-      return {
-        ...state,
-        [`${store}Details`]: {
-          ...originalStore,
-          [id]: data,
-        },
-      };
-    },
+    ...defaultReducers,
   },
 };

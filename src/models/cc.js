@@ -4,7 +4,7 @@ export default {
   namespace: 'cc',
   state: {
     flowDetails: {},
-    ccListDetails: {},
+    ccList: {},
   },
 
   subscriptions: {},
@@ -19,7 +19,6 @@ export default {
           payload: {
             data,
             store: 'ccList',
-            id: params.type,
           },
         });
       }

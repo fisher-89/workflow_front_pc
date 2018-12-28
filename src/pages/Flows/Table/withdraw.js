@@ -6,7 +6,7 @@ import OATable from '../../../components/OATable';
 const type = 'withdraw';
 @connect(({ loading, start }) => ({
   listLoading: loading.effects['start/fetchStartList'],
-  startListDetails: start.startListDetails,
+  withdrawStart: start.withdrawStart,
   availableFlows: start.availableFlows,
 }))
 class StartList extends Component {
@@ -106,9 +106,8 @@ class StartList extends Component {
 
   render() {
     const { listLoading } = this.props;
-    const { startListDetails } = this.props;
-    const list = startListDetails[type] || {};
-    const { data, total } = list;
+    const { withdrawStart } = this.props;
+    const { data, total } = withdrawStart;
     return (
       <div>
         <OATable

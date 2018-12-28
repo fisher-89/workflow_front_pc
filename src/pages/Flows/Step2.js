@@ -2,59 +2,93 @@ import React, { PureComponent } from 'react';
 import { Button, Spin, Form } from 'antd';
 import classNames from 'classnames';
 import { connect } from 'dva';
+import { judgeIsNothing } from '../../utils/utils';
 import { FormItem, SelectStaffItem, TextItem } from '../../components/Form/index';
 import style from './index.less';
 
-@connect(({ start, loading }) => ({
+@connect(({ start, loading, approve }) => ({
   preStepData: start.preStepData,
-  submitLoading: loading.effects['start/stepStart'],
+  approveDetails: approve.approveDetails,
+  startDetails: start.approveDetails,
+  loading,
+  submitLoading:
+    loading.effects['start/stepStart'] ||
+    loading.effects['approve/getThrough'] ||
+    loading.effects['approve/doDeliver'] ||
+    loading.effects['approve/doReject'] ||
+    false,
 }))
 class Step2 extends PureComponent {
   constructor(props) {
     super(props);
-    const { preStepData } = props;
+    const {
+      preStepData,
+      approveDetails,
+      parProps: {
+        match: {
+          params: { id },
+        },
+      },
+    } = props;
     const formData = this.makeStepData(preStepData);
+    this.id = id;
+    this.startflow = approveDetails[this.id] || null;
     this.state = {
       formData,
     };
   }
 
   makeStepData = preStepData => {
-    const availableSteps = preStepData.available_steps;
-    const steps = availableSteps.map(step => {
-      const temp = {
-        key: 'approvers',
-        name: step.name,
-        value: {},
-        errorMsg: '',
-        id: step.id,
-      };
-      return { checked: preStepData.concurrent_type === 2, approvers: temp };
-    });
-    const nextStep = {
-      key: 'next_step',
-      errorMsg: '',
-      name: '执行步骤',
-      require: true,
-      isGrid: true,
-      value: steps,
-    };
+    const {
+      parProps: { type },
+    } = this.props;
     const formData = {
-      next_step: nextStep,
+      remark: {
+        key: 'remark',
+        value: '',
+        errorMsg: '',
+      },
     };
-    if (preStepData.is_cc === '1') {
-      formData.cc_person = {
-        key: 'cc_person',
-        value: [...preStepData.cc_person],
+    if (type === 'start' || type === 'approve') {
+      if (preStepData.available_steps.length && preStepData.step_end === 0) {
+        const availableSteps = preStepData.available_steps;
+        const steps = availableSteps.map(step => {
+          const temp = {
+            key: 'approvers',
+            name: '审批人',
+            value: {},
+            errorMsg: '',
+            id: step.id,
+          };
+          return { checked: preStepData.concurrent_type === 2, approvers: temp };
+        });
+        const nextStep = {
+          key: 'next_step',
+          errorMsg: '',
+          name: '执行步骤',
+          required: true,
+          isGrid: true,
+          value: steps,
+        };
+        formData.next_step = nextStep;
+      }
+      if (preStepData.is_cc === '1') {
+        formData.cc_person = {
+          key: 'cc_person',
+          value: [...preStepData.cc_person],
+          errorMsg: '',
+        };
+      }
+    }
+    if (type === 'deliver') {
+      formData.deliver = {
+        key: 'deliver',
+        required: true,
+        name: '转交人',
+        value: '',
         errorMsg: '',
       };
     }
-    formData.remark = {
-      key: 'remark',
-      value: '',
-      errorMsg: '',
-    };
-
     return formData;
   };
 
@@ -161,6 +195,24 @@ class Step2 extends PureComponent {
     };
   };
 
+  makeDeliverProps = () => {
+    const { formData } = this.state;
+    const person = formData.deliver;
+    const field = {
+      width: 600,
+      name: '转交人',
+    };
+    return {
+      value: person.value,
+      errorMsg: person.errorMsg,
+      required: true,
+      formName: { realname: 'approver_name', staff_sn: 'approver_sn' },
+      field,
+      asideStyle: { width: '90px' },
+      onChange: (value, errorMsg) => this.approverChange(value, errorMsg, { formKey: 'deliver' }),
+    };
+  };
+
   makeRemarkProps = () => {
     const field = {
       width: 600,
@@ -195,6 +247,7 @@ class Step2 extends PureComponent {
         if (index === i) {
           obj = { ...item };
           obj.checked = !item.checked;
+          obj.approvers.required = !item.checked;
         } else {
           obj = { ...item };
         }
@@ -207,6 +260,7 @@ class Step2 extends PureComponent {
         if (index === i) {
           obj = { ...item };
           obj.checked = 1;
+          obj.approvers.required = true;
         }
         return obj;
       });
@@ -220,6 +274,7 @@ class Step2 extends PureComponent {
 
   handlePrev = e => {
     e.preventDefault();
+    this.setState({ formData: {} });
     this.props.parProps.handlePrevStep();
   };
 
@@ -231,16 +286,17 @@ class Step2 extends PureComponent {
       parProps: { handleSubmit },
     } = this.props;
     const { hasError, submitFormData } = data;
-    const params = {
-      step_run_id: preStepData.step_run_id,
-      timestamp: preStepData.timestamp,
-      ...submitFormData,
-      flow_id: preStepData.flow_id,
-      host: `${window.location.origin}/approve?source=dingtalk`,
-      cc_host: `${window.location.origin}/cc_detail?source=dingtalk`,
-    };
+
     if (!hasError) {
       const { dispatch } = this.props;
+      const params = {
+        step_run_id: preStepData.step_run_id,
+        timestamp: preStepData.timestamp,
+        ...submitFormData,
+        flow_id: preStepData.flow_id,
+        host: `${window.location.origin}/approve?source=dingtalk`,
+        cc_host: `${window.location.origin}/cc_detail?source=dingtalk`,
+      };
       dispatch({
         type: 'start/stepStart',
         payload: {
@@ -312,7 +368,7 @@ class Step2 extends PureComponent {
     const { preStepData } = this.props;
     let hasError = '';
     const newFormData = { ...formData };
-    const submitFormData = {};
+    let submitFormData = {};
     Object.keys(formData).forEach(key => {
       const curData = formData[key];
       const oldErrorMsg = curData.errorMsg;
@@ -339,6 +395,8 @@ class Step2 extends PureComponent {
             gridValue.push(submitValue);
           }
           const msg = oldErrorMsg || this.doValidator(curGridItemValue);
+          console.log('curGridItemValue: ', msg, curGridItemValue);
+
           hasError = hasError || msg;
           newValueItem.approvers = { ...curGridItemValue, errorMsg: msg };
           return newValueItem;
@@ -351,11 +409,15 @@ class Step2 extends PureComponent {
       } else {
         const msg = oldErrorMsg || this.doValidator(curData);
         hasError = hasError || msg;
-        newFormData[key] = {
-          ...formItem,
-          errorMsg: msg,
-        };
-        submitFormData[key] = formItem.value;
+        if (key === 'deliver') {
+          submitFormData = { ...submitFormData, ...formItem.value };
+        } else {
+          newFormData[key] = {
+            ...formItem,
+            errorMsg: msg,
+          };
+          submitFormData[key] = formItem.value;
+        }
       }
     });
     this.setState({
@@ -375,14 +437,88 @@ class Step2 extends PureComponent {
     return '';
   };
 
+  pass = () => {
+    const { hasError, submitFormData } = this.submitValidator();
+    console.log('hasError: ', hasError);
+    if (!hasError) {
+      const {
+        dispatch,
+        parProps: { handleSubmit },
+        preStepData,
+      } = this.props;
+      dispatch({
+        type: 'approve/getThrough',
+        payload: {
+          params: {
+            ...submitFormData,
+            host: `${window.location.origin}/approve?source=dingtalk`,
+            step_run_id: preStepData.step_run_id,
+            timestamp: preStepData.timestamp,
+            flow_id: preStepData.flow_id,
+            cc_host: `${window.location.origin}/cc_detail?source=dingtalk`,
+          },
+          cb: () => {
+            handleSubmit();
+          },
+        },
+      });
+    }
+  };
+
+  deliver = () => {
+    const { hasError, submitFormData } = this.submitValidator();
+    if (!hasError) {
+      const {
+        dispatch,
+        parProps: { handleSubmit },
+      } = this.props;
+
+      dispatch({
+        type: 'approve/doDeliver',
+        payload: {
+          params: {
+            ...submitFormData,
+            step_run_id: this.startflow.step_run.id,
+            host: `${window.location.origin}/approve?source=dingtalk`,
+          },
+          cb: () => {
+            handleSubmit();
+          },
+        },
+      });
+    }
+  };
+
+  reject = () => {
+    const { hasError, submitFormData } = this.submitValidator();
+    if (!hasError) {
+      const {
+        dispatch,
+        parProps: { handleSubmit },
+      } = this.props;
+      dispatch({
+        type: 'approve/doReject',
+        payload: {
+          params: {
+            ...submitFormData,
+            step_run_id: this.startflow.step_run.id,
+          },
+          cb: () => {
+            handleSubmit();
+          },
+        },
+      });
+    }
+  };
+
   renderSteps = () => {
     const { formData } = this.state;
     const { preStepData } = this.props;
     const stepItem = { ...this.makeProps(), asideStyle: { width: '90px' } };
-    const isEnd =
-      (preStepData.step_end === 1 && preStepData.available_steps.length) ||
-      (preStepData.step_end === 0 && !preStepData.available_steps.length);
-    const concurrentType = preStepData.concurrent_type;
+    const isEnd = !(preStepData.available_steps.length && preStepData.step_end === 0);
+    if (isEnd) {
+      return null;
+    }
     return (
       <FormItem
         {...{
@@ -394,40 +530,82 @@ class Step2 extends PureComponent {
           asideStyle: { width: '90px' },
         }}
       >
-        {!isEnd &&
-          formData.next_step.value.map((step, i) => {
-            const cls = classNames(style.step2_item, {
-              [style.checked]: step.checked && concurrentType === 1,
-              [style.disabed_checked]: step.checked && concurrentType === 2,
-              [style.singelchecked]: step.checked && concurrentType === 0,
-            });
-            const key = i;
-            return (
-              <div className={cls} key={key} onClick={e => this.handleClick(step, i, e)}>
-                <FormItem name="步骤名称" {...stepItem}>
-                  <div style={{ lineHeight: '40px' }}>哈哈</div>
-                </FormItem>
-                <SelectStaffItem {...this.makeApproProps(step, i)} />
-              </div>
-            );
-          })}
+        {formData.next_step.value.map((step, i) => {
+          const cls = classNames(style.step2_item, {
+            [style.checked]: step.checked && concurrentType === 1,
+            [style.disabed_checked]: step.checked && concurrentType === 2,
+            [style.singelchecked]: step.checked && concurrentType === 0,
+          });
+          const key = i;
+          const curStep = preStepData.available_steps[i];
+          return (
+            <div className={cls} key={key} onClick={e => this.handleClick(step, i, e)}>
+              <FormItem name="步骤名称" {...stepItem}>
+                <div style={{ lineHeight: '40px' }}>{curStep.name}</div>
+              </FormItem>
+              <SelectStaffItem {...this.makeApproProps(step, i)} />
+            </div>
+          );
+        })}
       </FormItem>
     );
   };
 
+  renderBtn = () => {
+    const {
+      parProps: { type },
+    } = this.props;
+    let btn = '';
+    if (type === 'start') {
+      btn = (
+        <Button onClick={this.handleSubmit} type="primary">
+          提交
+        </Button>
+      );
+    }
+    if (type === 'approve') {
+      btn = (
+        <Button onClick={this.pass} type="primary">
+          通过
+        </Button>
+      );
+    }
+    if (type === 'reject') {
+      btn = (
+        <Button onClick={this.reject} type="primary">
+          驳回
+        </Button>
+      );
+    }
+    if (type === 'deliver') {
+      btn = (
+        <Button onClick={this.deliver} type="primary">
+          转交
+        </Button>
+      );
+    }
+    return btn;
+  };
+
   render() {
-    const { submitLoading } = this.props;
+    const {
+      submitLoading,
+      parProps: { type },
+      preStepData = {},
+    } = this.props;
+
     return (
       <Spin spinning={submitLoading || false}>
         <div className={style.step2}>
           <div>
-            {this.renderSteps()}
-            <SelectStaffItem {...this.makeCCProps()} />
-            <TextItem {...this.makeRemarkProps()} />
+            {type !== 'deliver' && type !== 'reject' ? this.renderSteps() : null}
+            {type === 'start' && type === 'approve' && preStepData.is_cc === '1' ? (
+              <SelectStaffItem {...this.makeCCProps()} />
+            ) : null}
+            {type === 'deliver' ? <SelectStaffItem {...this.makeDeliverProps()} /> : null}
+            {type !== 'start' ? <TextItem {...this.makeRemarkProps()} /> : null}
             <div style={{ marginLeft: '90px' }}>
-              <Button type="primary" onClick={this.handleSubmit}>
-                提交
-              </Button>
+              {this.renderBtn()}
               <span style={{ marginRight: '20px' }} />
               <Button onClick={this.handlePrev}>上一步</Button>
             </div>
@@ -437,4 +615,7 @@ class Step2 extends PureComponent {
     );
   }
 }
+Step2.defaultProps = {
+  type: 'start',
+};
 export default Step2;
