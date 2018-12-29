@@ -102,17 +102,21 @@ class ShopModal extends Component {
     });
   };
 
-  onTreeSelect = (value, a, extra) => {
-    const {
-      node: {
-        props: { title },
-      },
-    } = extra;
-    const filters = this.resetObject(this.state.filters);
+  onTreeSelect = value => {
+    let depFilters = '';
+    if (value !== 'all') {
+      const children = getTreeChildren(value, this.props.department, { parentId: 'parent_id' });
+      const childIds = children.map(item => item.id);
+      depFilters = `department.id=[${childIds.concat(value).join(',')}]`;
+    }
+    const filters = {
+      ...this.resetObject(this.state.filters),
+      department: depFilters,
+    };
     this.setState(
       {
         searchValue: '',
-        filters: { ...filters, department: value !== 'all' ? `department.full_name~${title}` : '' },
+        filters,
       },
       () => {
         this.fetchFiltersDataSource({
@@ -457,13 +461,14 @@ class ShopModal extends Component {
   };
 
   renderStaffList = () => {
-    const { checkedShop, extraFilters, searchValue } = this.state;
+    const { checkedShop, extraFilters, searchValue, searchType } = this.state;
     const {
       source: { data, total, page },
       fetchLoading,
       multiple,
       status,
     } = this.props;
+    const curTab = searchType.find(item => item.checked);
     const shopSns = checkedShop.map(item => item.shop_sn);
     const extra = data.find(item => shopSns.indexOf(item.shop_sn) === -1);
     const realTotal = total || 1;
@@ -521,7 +526,7 @@ class ShopModal extends Component {
                   extra={null}
                   detail={item}
                   checked={checked}
-                  keywords={searchValue}
+                  keywords={{ type: curTab.type, value: searchValue }}
                   handleClick={() => this.handleOnChange(item)}
                   key={item.shop_sn}
                 />

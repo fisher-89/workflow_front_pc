@@ -60,20 +60,28 @@ class SelectStaff extends PureComponent {
                 <div className={style.card} />
               </Popover>
               <div className={style.name}>
-                {reactStringReplace(detail.name, keywords, (match, i) => (
-                  <span key={i} style={{ color: 'red' }}>
-                    {match}
-                  </span>
-                ))}
+                {reactStringReplace(
+                  detail.name,
+                  keywords.type === 1 ? keywords.value : '',
+                  (match, i) => (
+                    <span key={i} style={{ color: 'red' }}>
+                      {match}
+                    </span>
+                  )
+                )}
               </div>
             </div>
             <div className={style.des}>
               店铺编码：
-              {reactStringReplace(`${detail.shop_sn}`, keywords, (match, i) => (
-                <span key={i} style={{ color: 'red' }}>
-                  {match}
-                </span>
-              ))}
+              {reactStringReplace(
+                `${detail.shop_sn}`,
+                keywords.type === 1 ? keywords.value : '',
+                (match, i) => (
+                  <span key={i} style={{ color: 'red' }}>
+                    {match}
+                  </span>
+                )
+              )}
             </div>
           </div>
         </div>

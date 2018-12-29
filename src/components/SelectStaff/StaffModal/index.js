@@ -119,9 +119,8 @@ class StaffModal extends Component {
       depFilters = `department.id=[${childIds.concat(value).join(',')}]`;
     }
     const filters = {
+      ...this.resetObject(this.state.filters),
       department: depFilters,
-      staff: '',
-      filter: '',
     };
     this.setState(
       {
@@ -481,7 +480,7 @@ class StaffModal extends Component {
       <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
         <span>快捷搜索</span>
       </div>
-      <div className={style.search_result} style={{ height: 'auto' }}>
+      <div className={style.search_result} style={{ height: 'auto', cursor: 'pointer' }}>
         <div className={style.quick_item} onClick={this.quickFetch}>
           {this.props.currentUser && this.props.currentUser.department
             ? this.props.currentUser.department.full_name

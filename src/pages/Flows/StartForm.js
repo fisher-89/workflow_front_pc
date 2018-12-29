@@ -188,7 +188,7 @@ class StartForm extends PureComponent {
     }
     return (
       <Spin spinning={startLoading || presetSubmit === true}>
-        <div style={{ maxWidth: '900px', overflowX: 'scroll', paddingBottom: '20px' }}>
+        <div style={{ maxWidth: '900px', paddingBottom: '20px' }}>
           <div className={style.clearfix}>
             <span className={style.flow_title}>流程名称</span>
             <span className={style.flow_des}>{startflow.flow.name}</span>
@@ -201,7 +201,7 @@ class StartForm extends PureComponent {
             formData={this.state.formData}
             onChange={data => this.setState({ formData: data })}
           />
-          <div style={{ paddingLeft: '120px' }}>
+          <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
             <Button type="primary" onClick={this.handleSubmit}>
               提交
             </Button>
