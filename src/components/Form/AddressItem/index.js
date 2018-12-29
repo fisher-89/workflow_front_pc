@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import Address from '../../Address';
@@ -6,7 +6,7 @@ import { judgeIsNothing } from '../../../utils/utils';
 import style from './index.less';
 
 @connect()
-class AddressItem extends PureComponent {
+class AddressItem extends Component {
   constructor(props) {
     super(props);
     const { defaultValue } = props;
@@ -24,6 +24,13 @@ class AddressItem extends PureComponent {
         errorMsg,
       });
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      JSON.stringify(nextProps) !== JSON.stringify(this.props) ||
+      JSON.stringify(this.state) !== JSON.stringify(nextState)
+    );
   }
 
   onChange = value => {

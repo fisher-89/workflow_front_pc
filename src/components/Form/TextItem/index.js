@@ -1,11 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Input, InputNumber } from 'antd';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
 import style from './index.less';
 
 @connect()
-class TextItem extends PureComponent {
+class TextItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,6 +22,13 @@ class TextItem extends PureComponent {
         errorMsg,
       });
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      JSON.stringify(nextProps) !== JSON.stringify(this.props) ||
+      JSON.stringify(this.state) !== JSON.stringify(nextState)
+    );
   }
 
   inputOnChange = e => {

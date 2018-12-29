@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import FormItem from '../FormItem';
 import Select from '../../Select';
 import { validValue } from '../../../utils/utils';
 import style from './index.less';
 
-class SelectItem extends PureComponent {
+class SelectItem extends Component {
   constructor(props) {
     super(props);
     const { defaultValue, field } = this.props;
@@ -23,6 +23,13 @@ class SelectItem extends PureComponent {
         errorMsg,
       });
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      JSON.stringify(nextProps) !== JSON.stringify(this.props) ||
+      JSON.stringify(this.state) !== JSON.stringify(nextState)
+    );
   }
 
   onSingleChange = value => {
@@ -60,6 +67,7 @@ class SelectItem extends PureComponent {
   };
 
   render() {
+    console.log('render: ');
     const {
       field,
       field: { id },

@@ -86,7 +86,7 @@ class UploadItem extends PureComponent {
   render() {
     const {
       field,
-      field: { validator },
+      field: { validator, max, min },
       required,
       disabled,
     } = this.props;
@@ -109,6 +109,7 @@ class UploadItem extends PureComponent {
             suffix={suffix}
             id={field.id}
             value={value}
+            range={{ max, min }}
             onChange={this.onChange}
             disabled={disabled}
           />

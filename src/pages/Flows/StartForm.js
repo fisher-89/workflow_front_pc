@@ -39,6 +39,8 @@ class StartForm extends PureComponent {
     e.preventDefault();
     const data = this.submitValidator();
     const { hasError, submitFormData } = data;
+    console.log('submitFormData:', submitFormData);
+
     if (!hasError) {
       const {
         dispatch,

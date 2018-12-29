@@ -162,13 +162,19 @@ class FileUpload extends PureComponent {
 
   render() {
     const { fileList, previewVisible, previewSrc } = this.state;
-    const { disabled, loading, url } = this.props;
-    const uploadButton = disabled ? null : (
-      <div>
-        <Icon type="plus" />
-        <div className={style.ant_upload_text}>上传</div>
-      </div>
-    );
+    const {
+      disabled,
+      loading,
+      url,
+      range: { max },
+    } = this.props;
+    const uploadButton =
+      disabled || fileList.length >= (max || 10) ? null : (
+        <div>
+          <Icon type="plus" />
+          <div className={style.ant_upload_text}>上传</div>
+        </div>
+      );
     const className = classNames(style.upload, {
       [style.disabled]: disabled,
     });
