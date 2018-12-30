@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
 import Address from '../../Address';
 import { judgeIsNothing } from '../../../utils/utils';
 import style from './index.less';
+import districtData from '../../../assets/district';
 
+const { district } = districtData;
 @connect()
 class AddressItem extends Component {
   constructor(props) {
@@ -53,9 +56,27 @@ class AddressItem extends Component {
     );
   };
 
+  renderAddress = () => {
+    const { value } = this.state;
+    const { field } = this.props;
+    const prov = district.find(item => item.id === value.province_id) || {};
+    const county = district.find(item => item.id === value.county_id) || {};
+    const city = district.find(item => item.id === value.city_id) || {};
+    const address = `${prov.name || ''}${county.name || ''}${city.name || ''}${value.address ||
+      ''}`;
+    return (
+      <DetailItem {...field}>
+        <span>{address}</span>
+      </DetailItem>
+    );
+  };
+
   render() {
-    const { field, required, disabled } = this.props;
+    const { field, required, disabled, readonly } = this.props;
     const { value, errorMsg } = this.state;
+    if (readonly) {
+      return this.renderAddress();
+    }
     return (
       <FormItem
         className={style.address}

@@ -194,7 +194,7 @@ class StartForm extends PureComponent {
         <div style={{ maxWidth: '900px', paddingBottom: '20px' }}>
           <div className={style.clearfix}>
             <span className={style.flow_title}>流程名称</span>
-            <span className={style.flow_des}>{startflow.step.name}</span>
+            <span className={style.flow_des}>{startflow.flow_run.name}</span>
           </div>
           <EditForm
             startflow={startflow}

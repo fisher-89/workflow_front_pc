@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
+
 import Select from '../../Select';
 import { validValue } from '../../../utils/utils';
 import style from './index.less';
@@ -66,18 +68,27 @@ class SelectItem extends Component {
     return newOpts;
   };
 
+  renderInfo = (value, field, multiple) => (
+    <DetailItem {...field}>
+      {' '}
+      <span>{multiple ? (value || []).join('，') : value}</span>
+    </DetailItem>
+  );
+
   render() {
-    console.log('render: ');
     const {
       field,
       field: { id },
       required,
       disabled,
+      readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
     const newId = `${id}-select`;
-
+    if (readonly) {
+      return this.renderInfo(value, field, field.is_checkbox);
+    }
     if (!field.is_checkbox) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (

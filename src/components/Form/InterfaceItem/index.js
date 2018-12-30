@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
+
 import Select from '../../Select';
 import { validValue } from '../../../utils/utils';
 import style from './index.less';
@@ -80,16 +82,27 @@ class InterfaceItem extends Component {
     } else callback();
   };
 
+  renderInfo = (value, field, multiple) => (
+    <DetailItem {...field}>
+      {' '}
+      <span>{multiple ? (value || []).join('，') : value}</span>
+    </DetailItem>
+  );
+
   render() {
     const {
       field,
       field: { id },
       required,
       disabled,
+      readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
     const newId = `${id}-select`;
+    if (readonly) {
+      return this.renderInfo(value, field, field.is_checkbox);
+    }
     if (!field.is_checkbox) {
       const className = [style.inteface, errorMsg ? style.errorMsg : ''].join(' ');
       return (

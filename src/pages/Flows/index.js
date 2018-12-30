@@ -32,6 +32,7 @@ class Sumbit extends PureComponent {
 
   makeSteps2Props = () => ({
     ...this.props,
+    type: 'start',
     handlePrevStep: () => {
       this.stepChange(0);
     },

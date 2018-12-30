@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
+
 import TagGroup from '../../TagGroup';
 import { judgeIsNothing } from '../../../utils/utils';
 
@@ -58,15 +60,25 @@ class SelectItem extends PureComponent {
     return newOpts;
   };
 
+  renderInfo = (value, field) => (
+    <DetailItem {...field}>
+      <span>{(value || []).join('，')}</span>
+    </DetailItem>
+  );
+
   render() {
     const {
       field,
       required,
       disabled,
+      readonly,
       field: { max, min },
     } = this.props;
     const { errorMsg, value } = this.state;
     const className = [style.tag, errorMsg ? style.errorMsg : ''].join(' ');
+    if (readonly) {
+      return this.renderInfo(value, field);
+    }
     return (
       <FormItem
         {...field}

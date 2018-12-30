@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
 import SelectShop from '../../SelectShop';
 import Select from '../../Select';
 import { judgeIsNothing, validValue } from '../../../utils/utils';
@@ -115,16 +116,31 @@ class ShopSelectItem extends PureComponent {
     );
   };
 
+  renderInfo = (value, field, multiple) => (
+    <DetailItem {...field}>
+      {value ? (
+        <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
+      ) : (
+        ''
+      )}
+    </DetailItem>
+  );
+
   render() {
     const {
       field,
       field: { max, min },
       required,
       disabled,
+      readonly,
       defaultValue,
     } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
+    console.log(readonly);
+    if (readonly) {
+      return this.renderInfo(value, field, multiple);
+    }
     const options = field.available_options;
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     if (options.length) {

@@ -214,5 +214,6 @@ FileUpload.defaultProps = {
   onChange: () => {},
   listType: 'picture-card',
   suffix: [],
+  range: { max: 10, min: '' },
 };
 export default FileUpload;

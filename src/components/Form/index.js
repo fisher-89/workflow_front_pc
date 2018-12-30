@@ -10,6 +10,7 @@ import SelectStaffItem from './SelectStaffItem';
 import SelectDepItem from './DepItem';
 import ShopSelectItem from './ShopSelectItem';
 import FormItem from './FormItem';
+import FormDetail from './FormDetail';
 
 export default TextItem;
 export {
@@ -26,4 +27,5 @@ export {
   SelectDepItem,
   ShopSelectItem,
   FormItem,
+  FormDetail,
 };

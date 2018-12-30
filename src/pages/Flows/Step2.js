@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button, Spin, Form } from 'antd';
+import { Button, Spin } from 'antd';
 import classNames from 'classnames';
 import { connect } from 'dva';
 import { judgeIsNothing } from '../../utils/utils';
@@ -395,7 +395,6 @@ class Step2 extends PureComponent {
             gridValue.push(submitValue);
           }
           const msg = oldErrorMsg || this.doValidator(curGridItemValue);
-          console.log('curGridItemValue: ', msg, curGridItemValue);
 
           hasError = hasError || msg;
           newValueItem.approvers = { ...curGridItemValue, errorMsg: msg };
@@ -439,7 +438,6 @@ class Step2 extends PureComponent {
 
   pass = () => {
     const { hasError, submitFormData } = this.submitValidator();
-    console.log('hasError: ', hasError);
     if (!hasError) {
       const {
         dispatch,
@@ -514,6 +512,8 @@ class Step2 extends PureComponent {
   renderSteps = () => {
     const { formData } = this.state;
     const { preStepData } = this.props;
+    const concurrentType = preStepData.concurrent_type;
+
     const stepItem = { ...this.makeProps(), asideStyle: { width: '90px' } };
     const isEnd = !(preStepData.available_steps.length && preStepData.step_end === 0);
     if (isEnd) {

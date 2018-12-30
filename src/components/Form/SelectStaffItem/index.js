@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
+
 import SelectStaff from '../../SelectStaff';
 import Select from '../../Select';
 import { judgeIsNothing, validValue } from '../../../utils/utils';
@@ -62,6 +64,16 @@ class SelectStaffItem extends PureComponent {
       }
     );
   };
+
+  renderInfo = (value, field, multiple) => (
+    <DetailItem {...field}>
+      {value ? (
+        <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
+      ) : (
+        ''
+      )}
+    </DetailItem>
+  );
 
   renderSelect = options => {
     const {
@@ -128,9 +140,13 @@ class SelectStaffItem extends PureComponent {
       defaultValue,
       rightStyle,
       asideStyle,
+      readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
+    if (readonly) {
+      return this.renderInfo(value, field, multiple);
+    }
     const options = field.available_options || [];
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     if (options.length) {

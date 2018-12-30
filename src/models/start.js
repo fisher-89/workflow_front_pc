@@ -5,6 +5,7 @@ import {
   getStartList,
   stepStart,
   doWithdraw,
+  startDetail,
 } from '../services/start';
 import defaultReducers from '../reducers';
 
@@ -15,6 +16,7 @@ export default {
     availableFlows: [],
     processingStart: {},
     preStepData: {},
+    startDetails: {},
   },
 
   subscriptions: {},
@@ -95,6 +97,20 @@ export default {
         });
       }
     },
+    *fetchStepInfo({ payload }, { call, put }) {
+      const data = yield call(startDetail, payload);
+      if (data && !data.error) {
+        yield put({
+          type: 'save',
+          payload: {
+            data,
+            store: 'start',
+            id: payload,
+          },
+        });
+      }
+    },
+
     *doWithDraw({ payload }, { call, put }) {
       const data = yield call(doWithdraw, payload);
       if (data && !data.error) {

@@ -33,6 +33,10 @@ export default [
         component: './Flows/Table',
       },
       {
+        path: '/start/:id',
+        component: './Flows/StartDetail.js',
+      },
+      {
         path: '/approvelist',
         name: '审批列表',
         component: './Approve/Table',

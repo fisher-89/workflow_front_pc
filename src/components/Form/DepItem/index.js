@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { TreeSelect } from 'antd';
 import FormItem from '../FormItem';
-
+import DetailItem from '../DetailItem';
 import Select from '../../Select';
 import { makeFieldValue, markTreeData, judgeIsNothing, validValue } from '../../../utils/utils';
 import style from './index.less';
@@ -136,11 +136,24 @@ class SelectDepItem extends PureComponent {
     );
   };
 
+  renderInfo = (value, field, multiple) => (
+    <DetailItem {...field}>
+      {value ? (
+        <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
+      ) : (
+        ''
+      )}
+    </DetailItem>
+  );
+
   render() {
-    const { field, required, department } = this.props;
+    const { field, required, department, readonly } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
     const options = field.available_options;
+    if (readonly) {
+      return this.renderInfo(value, field, multiple);
+    }
     if (options.length) {
       return this.renderSelect(options);
     }

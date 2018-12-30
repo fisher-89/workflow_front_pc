@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import FileUpload from '../../FileUpload';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
+
 import { dealThumbImg } from '../../../utils/convert';
 import { isImage, uniq } from '../../../utils/utils';
 import style from './index.less';
@@ -83,16 +85,29 @@ class UploadItem extends PureComponent {
     return unique;
   };
 
+  renderInfo = (value, field, suffix) => (
+    <DetailItem {...field}>
+      <div className={style.upfile}>
+        <FileUpload suffix={suffix} id={field.id} value={value} disabled />
+      </div>
+    </DetailItem>
+  );
+
   render() {
     const {
       field,
       field: { validator, max, min },
       required,
       disabled,
+      readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
-    const className = [errorMsg ? style.errorMsg : style.noerror, style.upfile].join(' ');
     const suffix = this.makeSuffix(validator);
+
+    if (readonly) {
+      return this.renderInfo(value, field, suffix);
+    }
+    const className = [errorMsg ? style.errorMsg : style.noerror, style.upfile].join(' ');
 
     return (
       <FormItem
@@ -111,7 +126,7 @@ class UploadItem extends PureComponent {
             value={value}
             range={{ max, min }}
             onChange={this.onChange}
-            disabled={disabled}
+            disabled={disabled || readonly}
           />
         </div>
       </FormItem>

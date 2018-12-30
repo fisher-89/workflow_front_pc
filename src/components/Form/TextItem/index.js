@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Input, InputNumber } from 'antd';
 import { connect } from 'dva';
 import FormItem from '../FormItem';
+import DetailItem from '../DetailItem';
+
 import style from './index.less';
 
 @connect()
@@ -125,11 +127,22 @@ class TextItem extends Component {
     return props;
   };
 
+  renderInfo = (value, field) => (
+    <DetailItem {...field}>
+      <span>{value}</span>
+    </DetailItem>
+  );
+
   render() {
     const {
       field: { line, type },
+      field,
+      readonly,
     } = this.props;
-    const { errorMsg } = this.state;
+    const { errorMsg, value } = this.state;
+    if (readonly) {
+      return this.renderInfo(value, field);
+    }
     return (
       <FormItem {...this.makeNewProps()}>
         <div className={errorMsg ? style.errorMsg : style.noerror}>
