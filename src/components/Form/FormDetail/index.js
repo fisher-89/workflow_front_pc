@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Tooltip } from 'antd';
 import {
   TextItem,
   AddressItem,
@@ -15,7 +14,6 @@ import {
   ShopSelectItem,
 } from '../index';
 import style from './index.less';
-import styles from '../index.less';
 
 @connect(({ start }) => ({ startDetails: start.startDetails }))
 class EditForm extends PureComponent {
@@ -245,7 +243,6 @@ class EditForm extends PureComponent {
 
   renderAddressItem = (item, formInfo, keyInfo) => {
     const { value } = formInfo;
-
     const { domKey } = keyInfo;
     return (
       <div className={style.edit_form} key={domKey}>
@@ -290,14 +287,10 @@ class EditForm extends PureComponent {
       const formInfo = {
         ...{
           key: field.key,
-          errorMsg: curValue[field.key].errorMsg,
           value: curValue[field.key].value,
-          required: field.required,
-          disabled: field.disabled,
-          readonly: field.readonly,
+          readonly: true,
         },
       };
-      console.log('formInfo', formInfo);
       const newKeyInfo = {
         ...keyInfo,
         childKey: field.key,
@@ -332,17 +325,10 @@ class EditForm extends PureComponent {
                 const content = this.renderGridItem(item, { ...itemFormData }, keyInfo);
                 return (
                   <div className={style.grid_content} key={key}>
-                    <span onClick={() => this.deleteGridItem(item, curValue, i)} />
                     {content}
                   </div>
                 );
               })}
-            </div>
-            <Tooltip placement="topLeft" title={curValue.errorMsg}>
-              <div className={styles.error}>{curValue.errorMsg}</div>
-            </Tooltip>
-            <div className={style.grid_add}>
-              <p className={style.btn} onClick={() => this.gridAdd(item, curValue)} />
             </div>
           </div>
         );
@@ -358,7 +344,6 @@ class EditForm extends PureComponent {
   };
 
   render() {
-    console.log('render');
     const newForm = this.state.startflow ? this.renderFormContent() : null;
     return <div>{newForm}</div>;
   }
