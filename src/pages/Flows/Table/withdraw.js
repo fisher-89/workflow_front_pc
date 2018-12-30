@@ -76,34 +76,6 @@ class StartList extends Component {
     return columns;
   };
 
-  makeDetailButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="detail"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        查看
-      </span>
-    );
-  };
-
-  makeWithDrawButton = item => {
-    const { history } = this.props;
-    return (
-      <span
-        key="withdraw"
-        onClick={() => {
-          history.push(`/start_detail/${item.id}`);
-        }}
-      >
-        撤回
-      </span>
-    );
-  };
-
   render() {
     const { listLoading } = this.props;
     const { withdrawStart } = this.props;

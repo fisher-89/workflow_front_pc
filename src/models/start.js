@@ -1,3 +1,5 @@
+import { notification } from 'antd';
+
 import {
   getFlowList,
   getFlowInfo,
@@ -111,17 +113,29 @@ export default {
       }
     },
 
-    *doWithDraw({ payload }, { call, put }) {
-      const data = yield call(doWithdraw, payload);
+    *doWithDraw(
+      {
+        payload: { params, cb },
+      },
+      { call, put }
+    ) {
+      const data = yield call(doWithdraw, params);
       if (data && !data.error) {
+        notification.success({
+          message: '操作成功',
+        });
         yield put({
-          type: 'update',
+          type: 'updateList',
           payload: {
-            data,
+            id: params.flow_run_id,
             store: 'processingStart',
-            id: payload.flow_run_id,
+            noti: false,
+            data,
           },
         });
+        if (cb) {
+          cb();
+        }
       }
     },
   },

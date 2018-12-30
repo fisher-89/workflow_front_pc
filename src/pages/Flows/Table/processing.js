@@ -34,7 +34,9 @@ class StartList extends Component {
     dispatch({
       type: 'start/doWithDraw',
       payload: {
-        flow_run_id: r.id,
+        params: {
+          flow_run_id: r.id,
+        },
       },
     });
   };
@@ -77,7 +79,7 @@ class StartList extends Component {
         searcher: true,
         render: a => {
           const stepRun = a.step_run;
-          return last(stepRun).approver_name;
+          return stepRun.length > 0 ? last(stepRun).approver_name : '';
         },
       },
       {
@@ -94,10 +96,14 @@ class StartList extends Component {
         render: r => (
           <Fragment>
             <Link to={`/start/${r.id}`}>查看</Link>
-            <Divider type="vertical" />
-            <Popconfirm onConfirm={() => this.withDraw(r)} title="确定要撤回该流程吗？">
-              <a>撤回</a>
-            </Popconfirm>
+            {r.status === 0 ? (
+              <Fragment>
+                <Divider type="vertical" />
+                <Popconfirm onConfirm={() => this.withDraw(r)} title="确定要撤回该流程吗？">
+                  <a>撤回</a>
+                </Popconfirm>
+              </Fragment>
+            ) : null}
           </Fragment>
         ),
       },
@@ -108,6 +114,7 @@ class StartList extends Component {
   render() {
     const { listLoading } = this.props;
     const { processingStart } = this.props;
+    console.log('processingStart: ', processingStart);
     const { data, total } = processingStart;
     return (
       <div>

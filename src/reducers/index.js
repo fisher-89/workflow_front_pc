@@ -88,23 +88,19 @@ export default {
       [store]: dataState,
     };
   },
-  update(state, action) {
-    const { store, id, data, message } = action.payload;
-    if (data.message) {
-      notification.error({
-        message: data.message,
-      });
-      return { ...state };
-    }
-    notification.success({
-      message: message || '编辑成功',
-    });
-    const originalStore = { ...state[`${store}Details`] };
-    Object.keys(originalStore).forEach(key => {
-      if (`${id}` === `${key}`) {
-        originalStore[key] = data;
+  updateList(state, action) {
+    const { store, id, data, message, noti = true } = action.payload;
+    if (noti) {
+      if (data.message) {
+        notification.error({
+          message: data.message,
+        });
+        return { ...state };
       }
-    });
+      notification.success({
+        message: message || '编辑成功',
+      });
+    }
 
     const dataSource = Array.isArray(state[store]) ? state[store] : state[store].data || [];
     let updated = false;
@@ -132,11 +128,59 @@ export default {
     return {
       ...state,
       [store]: dataState,
+    };
+  },
+  update(state, action) {
+    const { store, id, data, message, listStore } = action.payload;
+    if (data.message) {
+      notification.error({
+        message: data.message,
+      });
+      return { ...state };
+    }
+    notification.success({
+      message: message || '编辑成功',
+    });
+    const originalStore = { ...state[`${store}Details`] };
+    Object.keys(originalStore).forEach(key => {
+      if (`${id}` === `${key}`) {
+        originalStore[key] = data;
+      }
+    });
+
+    const dataSource = Array.isArray(state[listStore || store])
+      ? state[listStore || store]
+      : state[listStore || store].data || [];
+    let updated = false;
+    const newStore = dataSource.map(item => {
+      if (parseInt(item.id, 0) === parseInt(id, 0)) {
+        updated = true;
+        return data;
+      }
+      return item;
+    });
+    if (!updated) {
+      newStore.push(data);
+    }
+    let dataState;
+    if (Array.isArray(state[listStore || store])) {
+      dataState = state[listStore || store] ? [...newStore] : [];
+    } else {
+      dataState = state[listStore || store].data
+        ? {
+            ...state[listStore || store],
+            data: newStore,
+          }
+        : {};
+    }
+    return {
+      ...state,
+      [listStore || store]: dataState,
       [`${store}Details`]: originalStore,
     };
   },
   delete(state, action) {
-    const { store, id, data = [], message } = action.payload;
+    const { store, id, data = [], message, listStore } = action.payload;
     if (data.message) {
       notification.error({
         message: data.message,
@@ -153,20 +197,20 @@ export default {
       }
     });
 
-    const dataState = Array.isArray(state[store])
-      ? state[store]
+    const dataState = Array.isArray(state[listStore || store])
+      ? state[listStore || store]
         ? state[store].filter(item => item.id !== id)
         : []
-      : state[store].data
+      : state[listStore || store].data
         ? {
-            ...state[store],
-            total: state[store].total - 1,
-            data: state[store].data.filter(item => item.id !== id),
+            ...state[listStore || store],
+            total: state[listStore || store].total - 1,
+            data: state[listStore || store].data.filter(item => item.id !== id),
           }
         : {};
     return {
       ...state,
-      [store]: dataState,
+      [listStore || store]: dataState,
       [`${store}Details`]: originalStore,
     };
   },
