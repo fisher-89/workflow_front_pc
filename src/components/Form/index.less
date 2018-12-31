@@ -5,8 +5,7 @@
   padding-bottom: 5px;
   padding-right: 20px;
   width: 300px;
-  min-width: 300px;
-  // position: absolute;
+  min-width: 300px; // position: absolute;
   display: flex;
   flex-direction: column;
   :global {
@@ -90,11 +89,62 @@
   }
   .right {
     flex-grow: 1;
-    border-radius: 4px;
     min-width: 170px;
     border: 1px solid transparent;
+    :global {
+      .ant-select-selection.ant-select-selection--single {
+        background: url('/drop_down.png') no-repeat right center;
+        background-size: 16px 16px;
+        padding-right: 11px;
+        background-origin: content-box;
+      }
+      .ant-select .ant-select-arrow {
+        display: none;
+      }
+      .ant-select-selection__clear {
+        top: 0;
+        margin-top: 0;
+        right: 50px;
+        height: 36px;
+        line-height: 36px;
+        > i {
+          margin-top: 12px;
+        }
+      }
+    }
     &.has_error {
       border-color: @error-color;
+      box-shadow: 0 0 4px rgba(217, 51, 63, 0.1);
+      :global {
+        * {
+          box-shadow: 0;
+        }
+        .ant-input-group.ant-input-group-compact > .ant-select > .ant-select-selection:hover,
+        .ant-input-group.ant-input-group-compact > .ant-calendar-picker .ant-input:hover,
+        .ant-input-group.ant-input-group-compact > .ant-select-auto-complete .ant-input:hover,
+        .ant-input-group.ant-input-group-compact > .ant-cascader-picker .ant-input:hover,
+        .ant-input-group.ant-input-group-compact > .ant-mention-wrapper .ant-mention-editor:hover,
+        .ant-input-group.ant-input-group-compact > .ant-time-picker .ant-time-picker-input:hover,
+        .ant-input-group.ant-input-group-compact > .ant-select > .ant-select-selection:focus,
+        .ant-input-group.ant-input-group-compact > .ant-calendar-picker .ant-input:focus,
+        .ant-input-group.ant-input-group-compact > .ant-select-auto-complete .ant-input:focus,
+        .ant-input-group.ant-input-group-compact > .ant-cascader-picker .ant-input:focus,
+        .ant-input-group.ant-input-group-compact > .ant-mention-wrapper .ant-mention-editor:focus,
+        .ant-input-group.ant-input-group-compact > .ant-time-picker .ant-time-picker-input:focus,
+        .ant-input:hover,
+        .ant-select-selection__rendered:focus,
+        .ant-input:focus {
+          border-color: @error-color;
+          box-shadow: none;
+        }
+        .ant-input-number:hover,
+        .ant-input-number-input-wrap:focus,
+        .ant-input-number:focus,
+        .ant-input-number-focused {
+          box-shadow: none;
+          border-color: #ccc;
+        }
+      }
     }
   }
 }

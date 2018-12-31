@@ -98,6 +98,8 @@ class SelectItem extends Component {
               disabled={disabled}
               options={options}
               value={value}
+              showArrow
+              showSearch
               onChange={this.onSingleChange}
               getPopupContainer={() => document.getElementById(newId)}
             />

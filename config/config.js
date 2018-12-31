@@ -90,6 +90,7 @@ export default {
   theme: {
     // ...theme,
     'primary-color': defaultSettings.primaryColor,
+    'border-radius-base': 0,
   },
   externals: {
     '@antv/data-set': 'DataSet',
