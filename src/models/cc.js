@@ -1,10 +1,10 @@
-import { getCCList } from '../services/start';
+import { getCCList, getCCDetail } from '../services/start';
 
 export default {
   namespace: 'cc',
   state: {
-    flowDetails: {},
     ccList: {},
+    ccDetails: {},
   },
 
   subscriptions: {},
@@ -21,6 +21,23 @@ export default {
             store: 'ccList',
           },
         });
+      }
+    },
+    *fetchStepInfo({ payload }, { call, put }) {
+      const { id, cb } = payload;
+      const data = yield call(getCCDetail, id);
+      if (data && !data.error) {
+        yield put({
+          type: 'save',
+          payload: {
+            data,
+            id,
+            store: 'cc',
+          },
+        });
+        if (cb) {
+          cb(data);
+        }
       }
     },
   },

@@ -55,6 +55,9 @@ export function getCCList(data) {
   });
 }
 
+export function getCCDetail(id) {
+  return request(`/api/cc/${id}`);
+}
 // 审批列表
 export function fetchApproveList(data) {
   return request('/api/approval', {

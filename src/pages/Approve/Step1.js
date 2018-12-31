@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Button, Spin } from 'antd';
 import { connect } from 'dva';
 import { judgeIsNothing } from '../../utils/utils';
-import { EditForm } from '../../components/Form/index';
+import { EditForm, FormDetail } from '../../components/Form/index';
 import style from '../Flows/index.less';
 
 @connect(({ approve, loading }) => ({
@@ -10,7 +10,7 @@ import style from '../Flows/index.less';
   startLoading: loading.effects['approve/getFlowInfo'],
   presetSubmit: loading.effects['start/preSet'],
 }))
-class StartForm extends PureComponent {
+class ApproveForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -196,14 +196,19 @@ class StartForm extends PureComponent {
             <span className={style.flow_title}>流程名称</span>
             <span className={style.flow_des}>{startflow.flow_run.name}</span>
           </div>
-          <EditForm
-            startflow={startflow}
-            ref={r => {
-              this.form = r;
-            }}
-            formData={this.state.formData}
-            onChange={data => this.setState({ formData: data })}
-          />
+          {startflow.step_run.action_type === 0 ? (
+            <EditForm
+              startflow={startflow}
+              ref={r => {
+                this.form = r;
+              }}
+              formData={this.state.formData}
+              onChange={data => this.setState({ formData: data })}
+            />
+          ) : (
+            <FormDetail startflow={startflow} />
+          )}
+
           <div style={{ paddingLeft: '120px' }}>
             {startflow.step_run.action_type === 0 && (
               <Button type="primary" onClick={this.handleSubmit}>
@@ -229,4 +234,4 @@ class StartForm extends PureComponent {
     );
   }
 }
-export default StartForm;
+export default ApproveForm;

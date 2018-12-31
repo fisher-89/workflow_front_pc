@@ -79,7 +79,7 @@ class StartList extends Component {
   render() {
     const { listLoading } = this.props;
     const { withdrawStart } = this.props;
-    const { data, total } = withdrawStart;
+    const { data, total } = withdrawStart || {};
     return (
       <div>
         <OATable

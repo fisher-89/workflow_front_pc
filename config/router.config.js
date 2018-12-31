@@ -51,6 +51,10 @@ export default [
         component: './CC/Table',
       },
       {
+        path: '/cc_detail/:id',
+        component: './CC/CcDetail',
+      },
+      {
         path: '/exception/404',
         component: './Exception/404',
       },

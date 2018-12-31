@@ -133,9 +133,8 @@ class StartList extends Component {
   };
 
   render() {
-    const { listLoading } = this.props;
-    const { finishedStart } = this.props;
-    const { data, total } = finishedStart;
+    const { listLoading, finishedStart } = this.props;
+    const { data, total } = finishedStart || {};
     return (
       <div>
         <OATable

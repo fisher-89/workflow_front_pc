@@ -114,7 +114,6 @@ class StartList extends Component {
   render() {
     const { listLoading } = this.props;
     const { processingStart } = this.props;
-    console.log('processingStart: ', processingStart);
     const { data, total } = processingStart;
     return (
       <div>
