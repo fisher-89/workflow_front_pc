@@ -100,6 +100,8 @@ class SelectStaffItem extends PureComponent {
               disabled={disabled}
               options={options}
               value={newValue}
+              showSearch
+              optionFilterProp="children"
               getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSelectChange}
             />
@@ -121,7 +123,10 @@ class SelectStaffItem extends PureComponent {
           <Select
             options={options}
             mode="multiple"
+            allowClear={false}
             value={newValue}
+            showSearch
+            optionFilterProp="children"
             onChange={v => this.onSelectChange(v, 1)}
             getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}
@@ -134,7 +139,7 @@ class SelectStaffItem extends PureComponent {
   render() {
     const {
       field,
-      field: { max, min },
+      field: { max, min, description },
       required,
       disabled,
       defaultValue,
@@ -166,6 +171,7 @@ class SelectStaffItem extends PureComponent {
         <div className={className}>
           <SelectStaff
             multiple={multiple}
+            description={description}
             defaultValue={defaultValue}
             name={this.props.formName}
             value={value}

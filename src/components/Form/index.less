@@ -104,8 +104,9 @@
       .ant-select-selection__clear {
         top: 0;
         margin-top: 0;
-        right: 50px;
+        right: 36px;
         height: 36px;
+        width: 36px;
         line-height: 36px;
         > i {
           margin-top: 12px;
@@ -140,9 +141,16 @@
         .ant-input-number:hover,
         .ant-input-number-input-wrap:focus,
         .ant-input-number:focus,
-        .ant-input-number-focused {
+        .ant-input-number-focused,
+        .ant-select-selection,
+        .ant-select-selection:focus {
           box-shadow: none;
           border-color: #ccc;
+        }
+        .ant-select-selection,
+        .ant-select-selection:focus {
+          border-color: #ccc;
+          box-shadow: none;
         }
       }
     }

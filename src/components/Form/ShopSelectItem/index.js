@@ -83,9 +83,12 @@ class ShopSelectItem extends PureComponent {
         <FormItem {...field} errorMsg={errorMsg} required={required}>
           <div className={className} id={newId}>
             <Select
+              showSearch
               disabled={disabled}
               options={options}
               value={newValue}
+              optionFilterProp="children"
+              allowClear
               getPopupContainer={() => document.getElementById(newId)}
               onChange={v => this.onSelectChange(v, 0)}
             />
@@ -106,6 +109,9 @@ class ShopSelectItem extends PureComponent {
           <Select
             options={options}
             mode="multiple"
+            allowClear={false}
+            showSearch
+            optionFilterProp="children"
             value={newValue}
             onChange={v => this.onSelectChange(v, 1)}
             getPopupContainer={() => document.getElementById(newId)}
@@ -137,7 +143,6 @@ class ShopSelectItem extends PureComponent {
     } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
-    console.log(readonly);
     if (readonly) {
       return this.renderInfo(value, field, multiple);
     }

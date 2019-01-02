@@ -100,6 +100,7 @@ class SelectItem extends Component {
               value={value}
               showArrow
               showSearch
+              optionFilterProp="children"
               onChange={this.onSingleChange}
               getPopupContainer={() => document.getElementById(newId)}
             />
@@ -121,6 +122,7 @@ class SelectItem extends Component {
             options={options}
             mode="multiple"
             value={value}
+            allowClear={false}
             onChange={this.onMutiChange}
             getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}

@@ -110,6 +110,8 @@ class InterfaceItem extends Component {
           <div className={className} id={newId}>
             <Select
               disabled={disabled}
+              showSearch
+              optionFilterProp="children"
               options={options}
               value={value}
               getPopupContainer={() => document.getElementById(newId)}
@@ -133,6 +135,9 @@ class InterfaceItem extends Component {
             disabled={disabled}
             options={options}
             value={value || []}
+            allowClear={false}
+            showSearch
+            optionFilterProp="children"
             mode="multiple"
             getPopupContainer={() => document.getElementById(newId)}
             onChange={this.onMutiChange}

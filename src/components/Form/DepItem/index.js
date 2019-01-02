@@ -106,6 +106,8 @@ class SelectDepItem extends PureComponent {
               disabled={disabled}
               options={options}
               value={newValue}
+              showSearch
+              optionFilterProp="children"
               getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSelectChange}
             />
@@ -126,6 +128,9 @@ class SelectDepItem extends PureComponent {
           <Select
             options={options}
             mode="multiple"
+            allowClear={false}
+            showSearch
+            optionFilterProp="children"
             value={newValue}
             onChange={v => this.onSelectChange(v, 1)}
             getPopupContainer={() => document.getElementById(newId)}

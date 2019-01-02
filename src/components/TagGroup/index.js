@@ -154,13 +154,13 @@ export default class TagGroup extends React.Component {
     } = this.props;
     const editStyle = onEditing
       ? {
-          paddingRight: '35px',
           display: 'flex',
           alignItem: 'center',
         }
       : {};
     const itemStyle = {
       border: '1px dashed #c7c7c7',
+      padding: '0 4px',
       ...editStyle,
     };
     return (
