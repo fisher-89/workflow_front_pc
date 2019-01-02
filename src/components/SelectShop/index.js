@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Tag } from 'antd';
+import { Tag, AutoComplete } from 'antd';
 import { connect } from 'dva';
 import request from '../../utils/request';
 import { makeFieldValue, judgeIsNothing } from '../../utils/utils';
 
 import ShopModal from './ShopModal';
 import style from './index.less';
+
+const { Option } = AutoComplete;
 
 @connect(({ loading, staff }) => ({
   loading,
@@ -34,6 +36,8 @@ class SelectShop extends Component {
               )
             : '',
           visible: false,
+          searchResult: [],
+          serachValue: '',
         });
       });
     } else {
@@ -41,6 +45,8 @@ class SelectShop extends Component {
         value,
         source: [],
         visible: false,
+        searchResult: [],
+        serachValue: '',
       };
     }
     this.multiple = multiple;
@@ -89,6 +95,23 @@ class SelectShop extends Component {
     );
   };
 
+  onSelect = v => {
+    const { searchResult } = this.state;
+    const { name, onChange } = this.props;
+    const result = searchResult.find(item => `${item.id}` === `${v}`);
+    const newValue = makeFieldValue(result, { shop_sn: name.id, name: name.name }, false, false);
+    this.setState(
+      {
+        value: newValue,
+        source: [result],
+        serachValue: result.name,
+      },
+      () => {
+        onChange;
+      }
+    );
+  };
+
   onMaskChange = (visible, value) => {
     const { name } = this.props;
     const isNothing = !judgeIsNothing(value);
@@ -106,6 +129,7 @@ class SelectShop extends Component {
         visible,
         value: newValue,
         source,
+        serachValue: !this.multiple ? value.name : '',
       },
       () => {
         this.props.onChange(newValue);
@@ -132,6 +156,56 @@ class SelectShop extends Component {
     });
   };
 
+  searchChange = value => {
+    this.setState({ serachValue: value });
+    request('/api/oa/shops', {
+      method: 'GET',
+      body: {
+        page: 1,
+        pagesize: 10,
+        filters: value ? `name~${value}` : '',
+      },
+    }).then(res => {
+      this.setState({
+        searchResult: res.data,
+      });
+    });
+  };
+
+  renderSingle = () => {
+    const { searchResult, value, serachValue } = this.state;
+    const { description } = this.props;
+    const children = searchResult.length ? (
+      searchResult.map(r => <Option key={r.id}>{r.name}</Option>)
+    ) : (
+      <Option key="nothing" disabled>
+        无匹配结果
+      </Option>
+    );
+    return (
+      <div className={style.single_result}>
+        <span className={style.search_icon} onClick={this.handleClick} />
+        <div className={style.single_search}>
+          <AutoComplete
+            onSearch={this.searchChange}
+            onFocus={() => {
+              this.setState({ serachValue: '' });
+            }}
+            onBlur={() => {
+              this.setState({ serachValue: value.text });
+            }}
+            placeholder={value.text || description}
+            onSelect={this.onSelect}
+            style={{ border: '1px solid #d9d9d9' }}
+            value={serachValue}
+          >
+            {children}
+          </AutoComplete>
+        </div>
+      </div>
+    );
+  };
+
   render() {
     const { selfStyle, multiple, range } = this.props;
 
@@ -142,15 +216,19 @@ class SelectShop extends Component {
 
     return (
       <div className={style.tag_container} onClick={e => e.stopPropagation()}>
-        <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
-          <div className={style.tagItem}>
-            {source.map(item => (
-              <Tag closable key={item.shop_sn} onClose={e => this.onDelete(e, item)}>
-                {item.name}
-              </Tag>
-            ))}
+        {this.multiple ? (
+          <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
+            <div className={style.tagItem}>
+              {source.map(item => (
+                <Tag closable key={item.shop_sn} onClose={e => this.onDelete(e, item)}>
+                  {item.name}
+                </Tag>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          this.renderSingle()
+        )}
         <ShopModal
           visible={this.state.visible}
           onChange={this.onMaskChange}

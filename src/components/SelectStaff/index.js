@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { Tag } from 'antd';
+import { Tag, AutoComplete } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
+
 import request from '../../utils/request';
 import { makeFieldValue, judgeIsNothing } from '../../utils/utils';
 
 import StaffModal from './StaffModal';
 import style from './index.less';
 
+const { Option } = AutoComplete;
 @connect(({ loading, staff }) => ({
   loading,
   staff,
@@ -27,6 +30,8 @@ class SelectStaff extends Component {
           value: defaultValue,
           source: res,
           visible: false,
+          searchResult: [],
+          serachValue: '',
         });
       });
     } else {
@@ -34,9 +39,14 @@ class SelectStaff extends Component {
         value,
         source: [],
         visible: false,
+        searchResult: [],
+        serachValue: '',
       };
     }
     this.multiple = multiple;
+    this.fetchFiltersDataSource = debounce(params => {
+      this.fetchDataSource(params);
+    }, 500);
   }
 
   componentWillReceiveProps(props) {
@@ -79,6 +89,28 @@ class SelectStaff extends Component {
     );
   };
 
+  onSelect = v => {
+    const { searchResult } = this.state;
+    const { name, onChange } = this.props;
+    const result = searchResult.find(item => `${item.staff_sn}` === `${v}`);
+    const newValue = makeFieldValue(
+      result,
+      { staff_sn: name.staff_sn, realname: name.realname },
+      false,
+      false
+    );
+    this.setState(
+      {
+        value: newValue,
+        source: [result],
+        serachValue: result.realname,
+      },
+      () => {
+        onChange;
+      }
+    );
+  };
+
   onMaskChange = (visible, value) => {
     const { name } = this.props;
     const isNothing = !judgeIsNothing(value);
@@ -101,6 +133,7 @@ class SelectStaff extends Component {
         visible,
         value: newValue,
         source,
+        serachValue: !this.multiple ? value.realname : '',
       },
       () => {
         this.props.onChange(newValue);
@@ -127,6 +160,55 @@ class SelectStaff extends Component {
     });
   };
 
+  searchChange = value => {
+    this.setState({ serachValue: value });
+    request('/api/oa/staff', {
+      method: 'GET',
+      body: {
+        page: 1,
+        pagesize: 10,
+        filters: value ? `realname~${value}` : '',
+      },
+    }).then(res => {
+      this.setState({
+        searchResult: res.data,
+      });
+    });
+  };
+
+  renderSingle = () => {
+    const { searchResult, value, serachValue } = this.state;
+    const { description } = this.props;
+    const children = searchResult.length ? (
+      searchResult.map(r => <Option key={r.staff_sn}>{r.realname}</Option>)
+    ) : (
+      <Option key="nothing" disabled>
+        无匹配结果{' '}
+      </Option>
+    );
+    return (
+      <div className={style.single_result}>
+        <span className={style.search_icon} onClick={this.handleClick} />
+        <div className={style.single_search}>
+          <AutoComplete
+            onSearch={this.searchChange}
+            onFocus={() => {
+              this.setState({ serachValue: '' });
+            }}
+            onBlur={() => {
+              this.setState({ serachValue: value.text });
+            }}
+            placeholder={value.text || description}
+            onSelect={this.onSelect}
+            style={{ border: '1px solid #d9d9d9' }}
+            value={serachValue}
+            dataSource={children}
+          />
+        </div>
+      </div>
+    );
+  };
+
   render() {
     const { selfStyle, multiple, range } = this.props;
 
@@ -134,18 +216,21 @@ class SelectStaff extends Component {
       return null;
     }
     const { source } = this.state;
-
     return (
       <div className={style.tag_container} onClick={e => e.stopPropagation()}>
-        <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
-          <div className={style.tagItem}>
-            {(source || []).map(item => (
-              <Tag closable key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
-                {item.realname}
-              </Tag>
-            ))}
+        {multiple ? (
+          <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
+            <div className={style.tagItem}>
+              {(source || []).map(item => (
+                <Tag closable key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
+                  {item.realname}
+                </Tag>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          this.renderSingle()
+        )}
         <StaffModal
           visible={this.state.visible}
           onChange={this.onMaskChange}
