@@ -194,13 +194,12 @@ class SelectShop extends Component {
             onBlur={() => {
               this.setState({ serachValue: value.text });
             }}
+            dataSource={searchResult.length ? children : [children]}
             placeholder={value.text || description}
             onSelect={this.onSelect}
             style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}
-          >
-            {children}
-          </AutoComplete>
+          />
         </div>
       </div>
     );

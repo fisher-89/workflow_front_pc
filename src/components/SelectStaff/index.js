@@ -202,7 +202,7 @@ class SelectStaff extends Component {
             onSelect={this.onSelect}
             style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}
-            dataSource={children}
+            dataSource={searchResult.length ? children : [children]}
           />
         </div>
       </div>
