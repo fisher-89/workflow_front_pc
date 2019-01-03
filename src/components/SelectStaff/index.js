@@ -99,6 +99,7 @@ class SelectStaff extends Component {
       false,
       false
     );
+    console.log('newValue', newValue);
     this.setState(
       {
         value: newValue,
@@ -106,7 +107,7 @@ class SelectStaff extends Component {
         serachValue: result.realname,
       },
       () => {
-        onChange;
+        onChange(newValue);
       }
     );
   };
@@ -178,7 +179,7 @@ class SelectStaff extends Component {
 
   renderSingle = () => {
     const { searchResult, value, serachValue } = this.state;
-    const { description } = this.props;
+    const { description, name } = this.props;
     const children = searchResult.length ? (
       searchResult.map(r => <Option key={r.staff_sn}>{r.realname}</Option>)
     ) : (
@@ -196,9 +197,9 @@ class SelectStaff extends Component {
               this.setState({ serachValue: '' });
             }}
             onBlur={() => {
-              this.setState({ serachValue: value.text });
+              this.setState({ serachValue: value[name.realname] });
             }}
-            placeholder={value.text || description}
+            placeholder={value[name.realname] || description}
             onSelect={this.onSelect}
             style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}

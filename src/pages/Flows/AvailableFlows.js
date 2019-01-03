@@ -45,7 +45,7 @@ class AvailableFlows extends PureComponent {
 
   render() {
     return (
-      <div>
+      <div style={{ paddingLeft: '4px' }}>
         <div>{this.renderFlowList()}</div>
       </div>
     );

@@ -59,12 +59,6 @@ class StartList extends Component {
         sorter: true,
       },
       {
-        title: '备注',
-        searcher: true,
-        render: () => '备注',
-      },
-
-      {
         title: '操作',
         render: ({ id }) => (
           <Fragment>

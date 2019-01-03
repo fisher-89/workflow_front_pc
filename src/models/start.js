@@ -17,7 +17,35 @@ export default {
     flowDetails: {},
     availableFlows: [],
     processingStart: {},
-    preStepData: {},
+    preStepData: {
+      available_steps: [
+        {
+          id: 408,
+          name: '第二步',
+          approver_type: 0,
+          approvers: [],
+        },
+        {
+          id: 409,
+          name: 'test',
+          approver_type: 0,
+          approvers: [],
+        },
+      ],
+      step_end: 0,
+      timestamp: 1546483127,
+      concurrent_type: 1,
+      flow_id: 93,
+      step_run_id: null,
+      message: '',
+      is_cc: '1',
+      cc_person: [
+        {
+          staff_name: '刘勇01',
+          staff_sn: 110103,
+        },
+      ],
+    },
     startDetails: {},
   },
 

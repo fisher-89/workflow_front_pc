@@ -754,22 +754,20 @@ export function analysisData(dataSource, key, keyIndex, name, dataSourceIndex) {
 // 转换时间差为天小时分钟
 export function convertTimeDis(t1, t2) {
   const minutes = moment(t1).diff(moment(t2), 'minutes');
-  const days = minutes / (24 * 60);
-  const day = parseInt(days);
-  const hours = (days % 1) * 24;
-  const hour = parseInt(hours);
-  const minute = parseInt((hours % 1) * 60);
+  var day = parseInt(minutes / 60 / 24);
+  var hour = parseInt((minutes / 60) % 24);
+  var min = parseInt(minutes % 60);
   let str = '';
-  if (day) {
-    str = `${str}${day}天`;
+  if (day > 0) {
+    str = day + '天';
   }
-  if (hour) {
-    str = `${str}${hour}小时`;
+  if (hour > 0) {
+    str += hour + '小时';
   }
-  if (minute) {
-    str = `${str}${minute}分钟`;
+  if (min > 0) {
+    str += parseFloat(min) + '分钟';
   }
-  return str;
+  return str || '刚刚';
 }
 
 export function getUrlParams(url) {
