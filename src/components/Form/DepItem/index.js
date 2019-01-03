@@ -7,6 +7,7 @@ import Select from '../../Select';
 import { makeFieldValue, markTreeData, judgeIsNothing, validValue } from '../../../utils/utils';
 import style from './index.less';
 
+const defaultInfo = '请选择';
 @connect(({ staff }) => ({ department: staff.department }))
 class SelectDepItem extends PureComponent {
   constructor(props) {
@@ -85,7 +86,7 @@ class SelectDepItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id },
+      field: { id, description, name },
       required,
       disabled,
     } = this.props;
@@ -96,6 +97,7 @@ class SelectDepItem extends PureComponent {
       newValue = muti ? (value || []).map(item => item.value) : value.value;
     }
     const newId = `${id}-select`;
+    const desc = description || `${defaultInfo}${name}`;
 
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
@@ -106,6 +108,7 @@ class SelectDepItem extends PureComponent {
               disabled={disabled}
               options={options}
               value={newValue}
+              placeholder={desc}
               showSearch
               optionFilterProp="children"
               getPopupContainer={() => document.getElementById(newId)}
@@ -130,6 +133,7 @@ class SelectDepItem extends PureComponent {
             mode="multiple"
             allowClear={false}
             showSearch
+            placeholder={desc}
             optionFilterProp="children"
             value={newValue}
             onChange={v => this.onSelectChange(v, 1)}

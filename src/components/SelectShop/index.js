@@ -107,7 +107,7 @@ class SelectShop extends Component {
         serachValue: result.name,
       },
       () => {
-        onChange;
+        onChange(newValue);
       }
     );
   };
@@ -174,7 +174,7 @@ class SelectShop extends Component {
 
   renderSingle = () => {
     const { searchResult, value, serachValue } = this.state;
-    const { description } = this.props;
+    const { description, name } = this.props;
     const children = searchResult.length ? (
       searchResult.map(r => <Option key={r.id}>{r.name}</Option>)
     ) : (
@@ -192,10 +192,10 @@ class SelectShop extends Component {
               this.setState({ serachValue: '' });
             }}
             onBlur={() => {
-              this.setState({ serachValue: value.text });
+              this.setState({ serachValue: value[name.name] });
             }}
             dataSource={searchResult.length ? children : [children]}
-            placeholder={value.text || description}
+            placeholder={value[name.name] || description}
             onSelect={this.onSelect}
             style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}

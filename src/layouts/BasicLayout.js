@@ -220,7 +220,7 @@ class BasicLayout extends React.PureComponent {
       paddingTop: fixedHeader ? 64 : 0,
       overflow: 'auto',
       maxWidth: '1920px',
-      minWidth: '900px',
+      // minWidth: '910px',
     };
   };
 

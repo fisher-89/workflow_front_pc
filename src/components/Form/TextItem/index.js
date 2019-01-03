@@ -6,6 +6,7 @@ import DetailItem from '../DetailItem';
 
 import style from './index.less';
 
+const defaultInfo = '请输入';
 @connect()
 class TextItem extends Component {
   constructor(props) {
@@ -80,9 +81,10 @@ class TextItem extends Component {
   renderNumberInput = () => {
     const { value } = this.state;
     const {
-      field: { max, min, scale },
+      field: { max, min, scale, description, name },
       disabled,
     } = this.props;
+    const desc = description || `${defaultInfo}${name}`;
     return (
       <InputNumber
         max={max === '' ? Infinity : max - 0}
@@ -90,6 +92,7 @@ class TextItem extends Component {
         disabled={disabled}
         precision={scale}
         value={value}
+        placeholder={desc}
         onChange={this.numberInputChange}
       />
     );
@@ -97,11 +100,17 @@ class TextItem extends Component {
 
   renderTextArea = () => {
     const { value } = this.state;
-    const { disabled } = this.props;
+    const {
+      disabled,
+      field: { description, name },
+    } = this.props;
+    const desc = description || `${defaultInfo}${name}`;
+
     return (
       <Input.TextArea
         value={value}
         autosize={false}
+        placeholder={desc}
         disabled={disabled}
         onChange={this.inputOnChange}
       />
@@ -110,19 +119,31 @@ class TextItem extends Component {
 
   renderInput = () => {
     const { value } = this.state;
-    const { disabled } = this.props;
-
-    return <Input value={value} onChange={this.inputOnChange} disabled={disabled} />;
+    const {
+      disabled,
+      field: { description, name },
+    } = this.props;
+    const desc = description || `${defaultInfo}${name}`;
+    return (
+      <Input value={value} placeholder={desc} onChange={this.inputOnChange} disabled={disabled} />
+    );
   };
 
   makeNewProps = () => {
-    const { field, required, asideStyle } = this.props;
+    const {
+      field,
+      required,
+      asideStyle,
+      field: { max },
+    } = this.props;
     const { errorMsg } = this.state;
+    const extraStyle = (max || 10) < 10 ? { minWidth: '600px' } : null;
     const props = {
       ...field,
       required,
       errorMsg,
       asideStyle,
+      extraStyle,
     };
     return props;
   };
@@ -135,7 +156,7 @@ class TextItem extends Component {
 
   render() {
     const {
-      field: { line, type },
+      field: { line, type, max },
       field,
       readonly,
     } = this.props;
@@ -147,8 +168,8 @@ class TextItem extends Component {
       <FormItem {...this.makeNewProps()}>
         <div className={errorMsg ? style.errorMsg : style.noerror}>
           {type === 'int' && this.renderNumberInput()}
-          {!!(type === 'text' && line !== 1) && this.renderTextArea()}
-          {!!(type === 'text' && line === 1) && this.renderInput()}
+          {!!(type === 'text' && (max || 11) > 10) && this.renderTextArea()}
+          {!!(type === 'text' && (max || 1) <= 10) && this.renderInput()}
         </div>
       </FormItem>
     );

@@ -3,14 +3,16 @@
   max-height: 320px !important;
 }
 
-.dropdown::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-  background-color: #1890ff;
-}
-
+// .dropdown::-webkit-scrollbar {
+//   width: 4px;
+//   height: 4px;
+//   background-color: #1890ff;
+// }
 .select {
   :global {
+    .ant-select-selection__placeholder {
+      margin-top: -6px;
+    }
     .ant-form-item-control {
       line-height: 38px;
     }
@@ -35,6 +37,9 @@
   :global {
     .ant-select-selection--multiple {
       min-height: 38px;
+    }
+    .ant-select-selection__placeholder {
+      margin-top: -6px;
     }
     .ant-select {
       width: 100%;

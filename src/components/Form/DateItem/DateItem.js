@@ -8,6 +8,7 @@ import { judgeIsNothing } from '../../../utils/utils';
 
 import style from './index.less';
 
+const defaultInfo = '请选择';
 class SelectItem extends PureComponent {
   constructor(props) {
     super(props);
@@ -61,7 +62,7 @@ class SelectItem extends PureComponent {
       required,
       disabled,
       readonly,
-      field: { max, min, type },
+      field: { max, min, type, description, name },
     } = this.props;
     const { errorMsg, value } = this.state;
     const className = [style.date, errorMsg ? style.errorMsg : ''].join(' ');
@@ -69,12 +70,14 @@ class SelectItem extends PureComponent {
     if (readonly) {
       return this.renderInfo(value, field);
     }
+    const desc = description || `${defaultInfo}${name}`;
     if (type === 'datetime') {
       return (
         <FormItem {...field} errorMsg={errorMsg} required={required}>
           <div className={className}>
             <DatePicker
               disabled={disabled}
+              placeholder={desc}
               value={newValue}
               range={{ min, max }}
               popupClassName={style.date_popup}
@@ -92,6 +95,7 @@ class SelectItem extends PureComponent {
           <DatePicker
             disabled={disabled}
             value={newValue}
+            placeholder={desc}
             range={{ min, max }}
             format="YYYY-MM-DD"
             onChange={this.handleOnChange}
