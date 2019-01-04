@@ -1,0 +1,71 @@
+@import '../../utils/utils.less';
+
+.textover {
+  width: 56px;
+  .textOverflow();
+}
+.look {
+  &:hover {
+    color: @primary-color;
+  }
+}
+.remark_title {
+  margin: 0 auto;
+  // width: 345*2/75rem;
+  display: flex;
+  height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  .title {
+    span {
+      display: inline-block;
+      font-size: 14px;
+      &:first-child {
+        min-width: 42px;
+        color: #000;
+        text-align: right;
+        margin-right: 15px;
+      }
+    }
+    span + span {
+      color: rgb(136, 136, 136);
+    }
+  }
+}
+
+.remark {
+  // padding: 10px 0;
+  margin-bottom: 10px;
+  &:first-child {
+    margin-top: 10px;
+  }
+  // width: 345*2/75rem;
+  display: flex;
+  // border-bottom: 1px solid rgb(204, 204, 204);
+  &:last-child {
+    border-bottom: none;
+  }
+  span {
+    width: 56px;
+    margin-right: 15px;
+    font-size: 14px;
+    color: #333;
+    text-align: right;
+    flex-shrink: 0;
+    height: 22px;
+    line-height: 22px;
+  }
+  div {
+    line-height: 22px;
+    font-size: 14px;
+    color: rgb(136, 136, 136);
+    flex-grow: 1;
+    text-align: left;
+  }
+}
+
+:global {
+  .am-modal-mask {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+  }
+}

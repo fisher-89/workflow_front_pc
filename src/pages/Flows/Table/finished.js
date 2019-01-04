@@ -96,7 +96,7 @@ class StartList extends Component {
         title: '操作',
         render: ({ id }) => (
           <Fragment>
-            <Link to={`/start_detail/${id}`}>查看</Link>
+            <Link to={`/start/${id}`}>查看</Link>
           </Fragment>
         ),
       },
@@ -110,7 +110,7 @@ class StartList extends Component {
       <span
         key="detail"
         onClick={() => {
-          history.push(`/start_detail/${item.id}`);
+          history.push(`/start/${item.id}`);
         }}
       >
         查看
@@ -124,7 +124,7 @@ class StartList extends Component {
       <span
         key="withdraw"
         onClick={() => {
-          history.push(`/start_detail/${item.id}`);
+          history.push(`/start/${item.id}`);
         }}
       >
         撤回

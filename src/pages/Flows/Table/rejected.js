@@ -84,7 +84,7 @@ class StartList extends Component {
         title: '操作',
         render: ({ id }) => (
           <Fragment>
-            <Link to={`/start_detail/${id}`}>查看</Link>
+            <Link to={`/start/${id}`}>查看</Link>
           </Fragment>
         ),
       },

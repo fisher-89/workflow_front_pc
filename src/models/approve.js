@@ -30,17 +30,23 @@ export default {
         });
       }
     },
-    *fetchStepInfo({ payload }, { call, put }) {
-      const data = yield call(fetchStepInfo, payload);
+    *fetchStepInfo(
+      {
+        payload: { id, cb },
+      },
+      { call, put }
+    ) {
+      const data = yield call(fetchStepInfo, id);
       if (data && !data.error) {
         yield put({
           type: 'save',
           payload: {
             data,
             store: 'approve',
-            id: payload,
+            id,
           },
         });
+        if (cb) cb(data);
       }
     },
     *doDeliver({ payload }, { call }) {

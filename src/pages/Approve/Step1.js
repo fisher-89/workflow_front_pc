@@ -3,12 +3,15 @@ import { Button, Spin } from 'antd';
 import { connect } from 'dva';
 import { judgeIsNothing } from '../../utils/utils';
 import { EditForm, FormDetail } from '../../components/Form/index';
+import FlowChart from '../../components/FlowChart/chart';
+
 import style from '../Flows/index.less';
 
-@connect(({ approve, loading }) => ({
+@connect(({ approve, loading, start }) => ({
   approveDetails: approve.approveDetails,
   startLoading: loading.effects['approve/getFlowInfo'],
   presetSubmit: loading.effects['start/preSet'],
+  flowChart: start.flowChart,
 }))
 class ApproveForm extends PureComponent {
   constructor(props) {
@@ -28,7 +31,15 @@ class ApproveForm extends PureComponent {
     this.id = id;
     dispatch({
       type: 'approve/fetchStepInfo',
-      payload: id,
+      payload: {
+        id,
+      },
+    });
+    dispatch({
+      type: 'start/fetchFlowSteps',
+      payload: {
+        id,
+      },
     });
   }
 
@@ -180,6 +191,7 @@ class ApproveForm extends PureComponent {
 
   render() {
     const {
+      flowChart,
       approveDetails,
       startLoading,
       presetSubmit,
@@ -191,11 +203,11 @@ class ApproveForm extends PureComponent {
     }
     return (
       <Spin spinning={startLoading || presetSubmit === true}>
-        <div style={{ maxWidth: '900px', paddingBottom: '20px' }}>
+        <div style={{ paddingBottom: '20px', width: '900px' }}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
-            <span className={style.flow_title}>流程名称</span>
-            <span className={style.flow_des}>{startflow.flow_run.name}</span>
-          </div>
+            <span className={style.flow_title}> 流程名称</span>
+            <span className={style.flow_des}> {startflow.flow_run.name}</span>
+          </div>{' '}
           {startflow.step_run.action_type === 0 ? (
             <EditForm
               startflow={startflow}
@@ -208,20 +220,21 @@ class ApproveForm extends PureComponent {
           ) : (
             <FormDetail startflow={startflow} />
           )}
-
+          <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
           <div style={{ paddingLeft: '120px' }}>
+            {' '}
             {startflow.step_run.action_type === 0 && (
               <Button type="primary" onClick={this.handleSubmit}>
                 通过
               </Button>
-            )}
-            <span style={{ marginRight: '20px' }} />
+            )}{' '}
+            <span style={{ marginRight: '20px' }} />{' '}
             {startflow.step_run.action_type === 0 && (
               <Button type="primary" onClick={() => handleSubmit('deliver')}>
                 转交
               </Button>
-            )}
-            <span style={{ marginRight: '20px' }} />
+            )}{' '}
+            <span style={{ marginRight: '20px' }} />{' '}
             {startflow.step.reject_type !== 0 &&
               startflow.step_run.action_type === 0 && (
                 <Button type="primary" onClick={() => handleSubmit('reject')}>

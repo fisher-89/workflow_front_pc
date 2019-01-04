@@ -8,6 +8,7 @@ import {
   stepStart,
   doWithdraw,
   startDetail,
+  getFlowChart,
 } from '../services/start';
 import defaultReducers from '../reducers';
 
@@ -16,6 +17,7 @@ export default {
   state: {
     flowDetails: {},
     availableFlows: [],
+    flowChart: [],
     processingStart: {},
     preStepData: {
       available_steps: [
@@ -86,7 +88,26 @@ export default {
         }
       }
     },
-
+    *fetchFlowSteps(
+      {
+        payload: { id, cb },
+      },
+      { call, put }
+    ) {
+      const data = yield call(getFlowChart, id);
+      if (data && !data.error) {
+        yield put({
+          type: 'save',
+          payload: {
+            store: 'flowChart',
+            data,
+          },
+        });
+        if (cb) {
+          cb(data);
+        }
+      }
+    },
     // 预提交
     *preSet({ payload }, { call, put }) {
       const data = yield call(preSet, payload.data);
@@ -127,17 +148,25 @@ export default {
         });
       }
     },
-    *fetchStepInfo({ payload }, { call, put }) {
-      const data = yield call(startDetail, payload);
+    *fetchStepInfo(
+      {
+        payload: { id, cb },
+      },
+      { call, put }
+    ) {
+      const data = yield call(startDetail, id);
       if (data && !data.error) {
         yield put({
           type: 'save',
           payload: {
             data,
             store: 'start',
-            id: payload,
+            id,
           },
         });
+        if (cb) {
+          cb(data);
+        }
       }
     },
 

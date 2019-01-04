@@ -93,3 +93,9 @@ export function doDeliver(data) {
     body: data,
   });
 }
+
+export function getFlowChart(id) {
+  return request(`/api/flow-chart/${id}`, {
+    method: 'GET',
+  });
+}

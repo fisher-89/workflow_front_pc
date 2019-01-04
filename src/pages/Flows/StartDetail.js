@@ -2,12 +2,14 @@ import React, { PureComponent } from 'react';
 import { Button, Spin } from 'antd';
 import { connect } from 'dva';
 import { FormDetail } from '../../components/Form/index';
+import FlowChart from '../../components/FlowChart/chart';
 import style from './index.less';
 
 @connect(({ start, loading }) => ({
   startDetails: start.startDetails,
   startLoading: loading.effects['start/getFlowInfo'],
   presetSubmit: loading.effects['start/preSet'],
+  flowChart: start.flowChart,
 }))
 class StartDetail extends PureComponent {
   componentWillMount() {
@@ -20,7 +22,17 @@ class StartDetail extends PureComponent {
     this.id = id;
     dispatch({
       type: 'start/fetchStepInfo',
-      payload: this.id,
+      payload: {
+        id,
+        cb: detail => {
+          dispatch({
+            type: 'start/fetchFlowSteps',
+            payload: {
+              id: detail.step_run.id,
+            },
+          });
+        },
+      },
     });
   }
 
@@ -43,7 +55,7 @@ class StartDetail extends PureComponent {
   };
 
   render() {
-    const { startDetails, startLoading, presetSubmit } = this.props;
+    const { startDetails, startLoading, presetSubmit, flowChart } = this.props;
     const startflow = startDetails[this.id] || null;
     if (!startflow || !Object.keys(startflow).length) {
       return null;
@@ -58,6 +70,7 @@ class StartDetail extends PureComponent {
             <span className={style.flow_des}>{startflow.flow_run.name}</span>
           </div>
           <FormDetail startflow={startflow} />
+          <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
           {flowRun && flowRun.status === 0 ? (
             <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
               <Button type="primary" onClick={this.withDraw}>

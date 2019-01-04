@@ -35,6 +35,7 @@ export default {
             store: 'cc',
           },
         });
+
         if (cb) {
           cb(data);
         }
