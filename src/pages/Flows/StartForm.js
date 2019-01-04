@@ -190,7 +190,7 @@ class StartForm extends PureComponent {
     }
     return (
       <Spin spinning={startLoading || presetSubmit === true}>
-        <div style={{ maxWidth: '900px', paddingBottom: '20px' }}>
+        <div style={{ paddingBottom: '20px', width: '900px' }}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}>流程名称</span>
             <span className={style.flow_des}>{startflow.flow.name}</span>
