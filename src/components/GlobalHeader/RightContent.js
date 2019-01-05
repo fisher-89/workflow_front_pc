@@ -51,10 +51,10 @@ export default class GlobalHeaderRight extends PureComponent {
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-        <Menu.Item key="userCenter">
+        {/* <Menu.Item key="userCenter">
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
-        <Menu.Divider />
+        <Menu.Divider /> */}
         <Menu.Item key="logout">
           <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
         </Menu.Item>
@@ -67,7 +67,7 @@ export default class GlobalHeaderRight extends PureComponent {
     }
     return (
       <div className={className}>
-        <HeaderSearch
+        {/* <HeaderSearch
           className={`${styles.action} ${styles.search}`}
           placeholder={formatMessage({ id: 'component.globalHeader.search' })}
           onSearch={value => {
@@ -81,7 +81,7 @@ export default class GlobalHeaderRight extends PureComponent {
         </HeaderSearch>
         <span className={`${styles.action} ${styles.setting}`}>
           <Icon type="setting" /> 设置
-        </span>
+        </span> */}
         {currentUser.realname ? (
           <Dropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>

@@ -189,10 +189,13 @@ class SelectStaff extends Component {
     );
     return (
       <div className={style.single_result}>
-        <span className={style.search_icon} onClick={this.handleClick} />
+        {this.props.disabled ? null : (
+          <span className={style.search_icon} onClick={this.handleClick} />
+        )}
         <div className={style.single_search}>
           <AutoComplete
             onSearch={this.searchChange}
+            disabled={this.props.disabled}
             onFocus={() => {
               this.setState({ serachValue: '' });
             }}
@@ -211,7 +214,7 @@ class SelectStaff extends Component {
   };
 
   render() {
-    const { selfStyle, multiple, range } = this.props;
+    const { selfStyle, multiple, range, disabled } = this.props;
 
     if (!this.state) {
       return null;
@@ -220,10 +223,14 @@ class SelectStaff extends Component {
     return (
       <div className={style.tag_container} onClick={e => e.stopPropagation()}>
         {multiple ? (
-          <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
+          <div
+            className={style.result}
+            style={{ ...selfStyle }}
+            onClick={disabled ? () => {} : this.handleClick}
+          >
             <div className={style.tagItem}>
               {(source || []).map(item => (
-                <Tag closable key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
+                <Tag closable={!disabled} key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
                   {item.realname}
                 </Tag>
               ))}

@@ -156,7 +156,13 @@ class SelectDepItem extends PureComponent {
   );
 
   render() {
-    const { field, required, department, readonly } = this.props;
+    const {
+      field,
+      field: { name, description },
+      required,
+      department,
+      readonly,
+    } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
     const options = field.available_options;
@@ -171,6 +177,8 @@ class SelectDepItem extends PureComponent {
       { value: 'id', label: 'name', parentId: 'parent_id' },
       0
     );
+    const desc = description || `${defaultInfo}${name}`;
+
     if (multiple) {
       const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
       const newValue = (value || []).map(item => item.value);
@@ -187,6 +195,7 @@ class SelectDepItem extends PureComponent {
             <TreeSelect
               dropdownClassName={style.dropdown}
               maxTagCount={10}
+              placeholder={desc}
               showSearch
               multiple
               value={newValue}
@@ -209,6 +218,7 @@ class SelectDepItem extends PureComponent {
           <TreeSelect
             dropdownClassName={style.dropdown}
             maxTagCount={10}
+            placeholder={desc}
             showSearch
             allowClear
             value={newValue}

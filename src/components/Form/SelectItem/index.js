@@ -6,6 +6,7 @@ import Select from '../../Select';
 import { validValue } from '../../../utils/utils';
 import style from './index.less';
 
+const defaultInfo = '请选择';
 class SelectItem extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +79,7 @@ class SelectItem extends Component {
   render() {
     const {
       field,
-      field: { id },
+      field: { id, name, description },
       required,
       disabled,
       readonly,
@@ -89,6 +90,8 @@ class SelectItem extends Component {
     if (readonly) {
       return this.renderInfo(value, field, field.is_checkbox);
     }
+    const desc = description || `${defaultInfo}${name}`;
+
     if (!field.is_checkbox) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
@@ -98,6 +101,7 @@ class SelectItem extends Component {
               disabled={disabled}
               options={options}
               value={value}
+              placeholder={desc}
               showArrow
               showSearch
               optionFilterProp="children"
@@ -122,6 +126,7 @@ class SelectItem extends Component {
             options={options}
             mode="multiple"
             value={value}
+            placeholder={desc}
             allowClear={false}
             onChange={this.onMutiChange}
             getPopupContainer={() => document.getElementById(newId)}

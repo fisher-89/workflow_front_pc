@@ -184,13 +184,16 @@ class SelectShop extends Component {
     );
     return (
       <div className={style.single_result}>
-        <span className={style.search_icon} onClick={this.handleClick} />
+        {this.props.disabled ? null : (
+          <span className={style.search_icon} onClick={this.handleClick} />
+        )}
         <div className={style.single_search}>
           <AutoComplete
             onSearch={this.searchChange}
             onFocus={() => {
               this.setState({ serachValue: '' });
             }}
+            disabled={this.props.disabled}
             onBlur={() => {
               this.setState({ serachValue: value[name.name] });
             }}
@@ -206,7 +209,7 @@ class SelectShop extends Component {
   };
 
   render() {
-    const { selfStyle, multiple, range } = this.props;
+    const { selfStyle, multiple, range, disabled } = this.props;
 
     if (!this.state) {
       return null;
@@ -216,7 +219,11 @@ class SelectShop extends Component {
     return (
       <div className={style.tag_container} onClick={e => e.stopPropagation()}>
         {this.multiple ? (
-          <div className={style.result} style={{ ...selfStyle }} onClick={this.handleClick}>
+          <div
+            className={style.result}
+            style={{ ...selfStyle }}
+            onClick={disabled ? () => {} : this.handleClick}
+          >
             <div className={style.tagItem}>
               {source.map(item => (
                 <Tag closable key={item.shop_sn} onClose={e => this.onDelete(e, item)}>

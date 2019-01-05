@@ -305,7 +305,7 @@ class BasicLayout extends React.PureComponent {
             )}
           </ContainerQuery>
         </DocumentTitle>
-        {this.renderSettingDrawer()}
+        {/* {this.renderSettingDrawer()} */}
       </React.Fragment>
     );
   }

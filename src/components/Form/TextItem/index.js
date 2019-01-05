@@ -168,8 +168,8 @@ class TextItem extends Component {
       <FormItem {...this.makeNewProps()}>
         <div className={errorMsg ? style.errorMsg : style.noerror}>
           {type === 'int' && this.renderNumberInput()}
-          {!!(type === 'text' && (max || 11) > 10) && this.renderTextArea()}
-          {!!(type === 'text' && (max || 1) <= 10) && this.renderInput()}
+          {!!(type === 'text' && (max || 31) > 30) && this.renderTextArea()}
+          {!!(type === 'text' && (max || 1) <= 30) && this.renderInput()}
         </div>
       </FormItem>
     );

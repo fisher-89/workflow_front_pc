@@ -9,6 +9,8 @@ import { judgeIsNothing, validValue } from '../../../utils/utils';
 
 import style from './index.less';
 
+const defaultInfo = '请选择';
+
 @connect()
 class SelectStaffItem extends PureComponent {
   constructor(props) {
@@ -78,7 +80,7 @@ class SelectStaffItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id },
+      field: { id, description, name },
       required,
       disabled,
       asideStyle,
@@ -90,6 +92,7 @@ class SelectStaffItem extends PureComponent {
       newValue = muti ? value.map(item => item.value) : value.value;
     }
     const newId = `${id}-select`;
+    const desc = description || `${defaultInfo}${name}`;
 
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
@@ -99,6 +102,7 @@ class SelectStaffItem extends PureComponent {
             <Select
               disabled={disabled}
               options={options}
+              placeholder={desc}
               value={newValue}
               showSearch
               optionFilterProp="children"
@@ -124,6 +128,7 @@ class SelectStaffItem extends PureComponent {
             options={options}
             mode="multiple"
             allowClear={false}
+            placeholder={desc}
             value={newValue}
             showSearch
             optionFilterProp="children"
@@ -139,7 +144,7 @@ class SelectStaffItem extends PureComponent {
   render() {
     const {
       field,
-      field: { max, min, description },
+      field: { max, min, description, name },
       required,
       disabled,
       defaultValue,
@@ -148,6 +153,7 @@ class SelectStaffItem extends PureComponent {
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
+    const desc = description || `请输入${name}`;
     const multiple = field.is_checkbox;
     if (readonly) {
       return this.renderInfo(value, field, multiple);
@@ -171,7 +177,7 @@ class SelectStaffItem extends PureComponent {
         <div className={className}>
           <SelectStaff
             multiple={multiple}
-            description={description}
+            description={desc}
             defaultValue={defaultValue}
             name={this.props.formName}
             value={value}
