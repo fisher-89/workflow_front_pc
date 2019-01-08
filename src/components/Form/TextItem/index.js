@@ -137,7 +137,7 @@ class TextItem extends Component {
       field: { max },
     } = this.props;
     const { errorMsg } = this.state;
-    const extraStyle = (max || 10) < 10 ? { minWidth: '600px' } : null;
+    const extraStyle = (max || 31) > 30 ? { minWidth: '600px' } : null;
     const props = {
       ...field,
       required,

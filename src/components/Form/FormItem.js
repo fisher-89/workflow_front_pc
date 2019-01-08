@@ -12,8 +12,8 @@ class FormItem extends PureComponent {
       className,
       width,
       height,
-      x,
-      y,
+      col,
+      row,
       name,
       errorMsg,
       required,
@@ -22,10 +22,8 @@ class FormItem extends PureComponent {
       rightStyle,
     } = this.props;
     const itemStyle = {
-      width: `${width}px`,
-      height: `${height}px`,
-      top: `${y}px`,
-      left: `${x}px`,
+      width: width ? `${width}px` : col * 75,
+      height: height ? `${height}px` : row * 75,
       ...extraStyle,
     };
     // const minWidth = (width || 300) - 140;

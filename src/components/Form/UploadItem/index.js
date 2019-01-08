@@ -88,7 +88,7 @@ class UploadItem extends PureComponent {
   renderInfo = (value, field, suffix) => (
     <DetailItem {...field}>
       <div className={style.upfile}>
-        <FileUpload suffix={suffix} id={field.id} value={value} disabled />
+        <FileUpload suffix={suffix} id={`${field.id}`} value={value} disabled />
       </div>
     </DetailItem>
   );
@@ -114,9 +114,8 @@ class UploadItem extends PureComponent {
         {...field}
         required={required}
         errorMsg={errorMsg}
-        width="900"
         className="file"
-        extraStyle={{ height: 'auto' }}
+        extraStyle={{ height: 'auto', minWidth: '600px' }}
       >
         <div className={className}>
           <FileUpload

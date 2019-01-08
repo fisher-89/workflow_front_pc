@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Tooltip } from 'antd';
@@ -23,6 +25,7 @@ class EditForm extends PureComponent {
     super(props);
     const { startflow, onChange } = props;
     this.dealStartForm(startflow);
+    this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
     const formData = startflow ? this.initFormData() : {};
     onChange(formData);
     this.state = {
@@ -35,6 +38,7 @@ class EditForm extends PureComponent {
     const { startflow, formData } = props;
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
+      this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
         formData: newFormData,
@@ -95,6 +99,41 @@ class EditForm extends PureComponent {
     });
   };
 
+  makeFormInSameRows = visibleForm => {
+    const rows = {};
+    visibleForm.forEach(item => {
+      const { y, row } = item;
+      if (rows[y]) {
+        rows[y].push(item);
+      } else rows[y] = this.makeNewRow(item, y);
+    });
+    visibleForm.forEach(item => {
+      const { y, row } = item;
+      if (row > 1) {
+        this.mergeRows(rows, y, row);
+      }
+    });
+    return rows;
+  };
+
+  mergeRows = (rows, y, row) => {
+    let count = 0;
+    while (count < row - 1) {
+      count = count + 1;
+      rows[y] = rows[y].concat(rows[count + y] || []);
+      delete rows[count + y];
+    }
+  };
+
+  makeNewRow = (item, y) => {
+    const currentRow = [];
+    currentRow.push(item);
+    return currentRow;
+  };
+
+  sortRowItem = () => {
+    //每行的元素排序
+  };
   dealGridForm = (source, item, startflow, type) => {
     const forms = [];
     const fields = [];
@@ -508,32 +547,78 @@ class EditForm extends PureComponent {
 
   renderGridItem = (grid, curValue, keyInfo) => {
     const { visibleFields, key, name } = grid;
-    const forms = visibleFields.map(field => {
-      const formInfo = {
-        ...{
-          key: field.key,
-          errorMsg: curValue[field.key].errorMsg,
-          value: curValue[field.key].value,
-          required: field.required,
-          disabled: field.disabled,
-        },
-      };
-
-      const newKeyInfo = {
-        ...keyInfo,
-        childKey: field.key,
-        isGrid: true,
-        gridName: name,
-        domKey: `${key}${keyInfo.index}${field.key}`,
-      };
-      return this.renderFormItem(field, formInfo, newKeyInfo);
+    const gridItemRows = this.makeFormInSameRows(visibleFields);
+    console.log('gridItemRows', gridItemRows);
+    return Object.keys(gridItemRows || {}).map(row => {
+      const items = gridItemRows[row];
+      const content = items.map(field => {
+        const formInfo = {
+          ...{
+            key: field.key,
+            errorMsg: curValue[field.key].errorMsg,
+            value: curValue[field.key].value,
+            required: field.required,
+            disabled: field.disabled,
+          },
+        };
+        const newKeyInfo = {
+          ...keyInfo,
+          childKey: field.key,
+          isGrid: true,
+          gridName: name,
+          domKey: `${key}${keyInfo.index}${field.key}`,
+        };
+        return (
+          <div style={{ float: 'left' }} key={field.key}>
+            {this.renderFormItem(field, formInfo, newKeyInfo)}
+          </div>
+        );
+      });
+      return (
+        <div key={row}>
+          {content}
+          <div style={{ clear: 'both' }} />
+        </div>
+      );
     });
+    // const forms = visibleFields.map(field => {
+    //   const formInfo = {
+    //     ...{
+    //       key: field.key,
+    //       errorMsg: curValue[field.key].errorMsg,
+    //       value: curValue[field.key].value,
+    //       required: field.required,
+    //       disabled: field.disabled,
+    //     },
+    //   };
+    //   const newKeyInfo = {
+    //     ...keyInfo,
+    //     childKey: field.key,
+    //     isGrid: true,
+    //     gridName: name,
+    //     domKey: `${key}${keyInfo.index}${field.key}`,
+    //   };
+
+    //   return <div style={{float:'left'}} key={item.key}>{this.renderFormItem(field, formInfo, newKeyInfo)}</div>;
+    // });
 
     return forms;
   };
 
-  renderFormContent = () => {
-    const items = this.visibleForm.concat(this.availableGridItem);
+  renderRowsItem = rows => {
+    return Object.keys(rows || {}).map(row => {
+      const items = rows[row];
+      const content = this.renderFormContent(items);
+      return (
+        <div key={row}>
+          {content}
+          <div style={{ clear: 'both' }} />
+        </div>
+      );
+    });
+  };
+  renderFormContent = items => {
+    // const items = this.visibleForm.concat(this.availableGridItem);
     const newForm = items.map(item => {
       const { formData } = this.state;
       const curValue = formData[item.key];
@@ -573,13 +658,17 @@ class EditForm extends PureComponent {
         domKey: item.key,
         name: item.name,
       };
-      return this.renderFormItem(item, curValue || {}, keyInfo);
+      return (
+        <div style={{ float: 'left' }} key={item.key}>
+          {this.renderFormItem(item, curValue || {}, keyInfo)}
+        </div>
+      );
     });
     return newForm;
   };
 
   render() {
-    const newForm = this.state.startflow ? this.renderFormContent() : null;
+    const newForm = this.state.startflow ? this.renderRowsItem(this.rows) : null;
     return <div>{newForm}</div>;
   }
 }
