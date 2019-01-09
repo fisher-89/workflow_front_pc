@@ -21,20 +21,22 @@ class Index extends PureComponent {
 
   render() {
     return (
-      <Tabs defaultActiveKey="processing">
-        <Tabs.TabPane key="processing" tab="处理中">
-          <ProcessingTable />
-        </Tabs.TabPane>
-        <Tabs.TabPane key="finished" tab="已完成">
-          <FinishedTable />
-        </Tabs.TabPane>
-        <Tabs.TabPane key="rejected" tab="已驳回">
-          <RejectedTable />
-        </Tabs.TabPane>
-        <Tabs.TabPane key="withdraw" tab="已撤回">
-          <WithDrawTablw />
-        </Tabs.TabPane>
-      </Tabs>
+      <div style={{ marginRight: '50px' }}>
+        <Tabs defaultActiveKey="processing">
+          <Tabs.TabPane key="processing" tab="处理中">
+            <ProcessingTable />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="finished" tab="已完成">
+            <FinishedTable />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="rejected" tab="已驳回">
+            <RejectedTable />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="withdraw" tab="已撤回">
+            <WithDrawTablw />
+          </Tabs.TabPane>
+        </Tabs>
+      </div>
     );
   }
 }

@@ -83,9 +83,7 @@ class AddressItem extends Component {
         {...field}
         required={required}
         errorMsg={errorMsg}
-        // width="600"
-        height="150"
-        extraStyle={{ minWidth: '600px' }}
+        extraStyle={{ minWidth: '600px', height: '150px' }}
       >
         <div className={errorMsg ? style.errorMsg : style.noerror}>
           <Address

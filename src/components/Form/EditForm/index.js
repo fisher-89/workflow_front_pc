@@ -149,7 +149,6 @@ class EditForm extends PureComponent {
       }
       newRows[row] = rowItem;
     });
-    console.log('newRows', newRows);
     return newRows;
   };
 
@@ -568,71 +567,73 @@ class EditForm extends PureComponent {
     );
   };
 
-  renderGridItem = (grid, curValue, keyInfo) => {
+  renderGridItem = (grid, curValue, keyInfo, template) => {
     const { visibleFields, key, name } = grid;
-    const gridItemRows = this.makeFormInSameRows(visibleFields);
-    return Object.keys(gridItemRows || {}).map(row => {
-      const items = gridItemRows[row];
-      const content = items.map(field => {
-        const formInfo = {
-          ...{
-            key: field.key,
-            errorMsg: curValue[field.key].errorMsg,
-            value: curValue[field.key].value,
-            required: field.required,
-            disabled: field.disabled,
-          },
-        };
-        const newKeyInfo = {
-          ...keyInfo,
-          childKey: field.key,
-          isGrid: true,
-          gridName: name,
-          domKey: `${key}${keyInfo.index}${field.key}`,
-        };
+    if (template) {
+      const gridItemRows = this.makeFormInSameRows(visibleFields);
+      return Object.keys(gridItemRows || {}).map(row => {
+        const items = gridItemRows[row];
+        const content = items.map(field => {
+          const formInfo = {
+            ...{
+              key: field.key,
+              errorMsg: curValue[field.key].errorMsg,
+              value: curValue[field.key].value,
+              required: field.required,
+              disabled: field.disabled,
+            },
+          };
+          const newKeyInfo = {
+            ...keyInfo,
+            childKey: field.key,
+            isGrid: true,
+            gridName: name,
+            domKey: `${key}${keyInfo.index}${field.key}`,
+          };
+          return (
+            <div
+              style={{
+                position: field.base ? 'relative' : 'absolute',
+                minHeight: `${field.row * 75}px`,
+                width: `${field.col * 75}px`,
+                top: `${(field.y - row) * 75}px`,
+                left: `${field.x * 75}px`,
+              }}
+              key={field.key}
+            >
+              {this.renderFormItem(field, formInfo, newKeyInfo)}
+            </div>
+          );
+        });
         return (
-          <div
-            style={{
-              position: field.base ? 'relative' : 'absolute',
-              minHeight: `${field.row * 75}px`,
-              width: `${field.col * 75}px`,
-              top: `${(field.y - row) * 75}px`,
-              left: `${field.x * 75}px`,
-            }}
-            key={field.key}
-          >
-            {this.renderFormItem(field, formInfo, newKeyInfo)}
+          <div key={row} style={template ? { position: 'relative' } : null}>
+            {content}
           </div>
         );
       });
-      return (
-        <div key={row} style={{ position: 'relative' }}>
-          {content}
-        </div>
-      );
+    }
+    const forms = visibleFields.map(field => {
+      const formInfo = {
+        ...{
+          key: field.key,
+          errorMsg: curValue[field.key].errorMsg,
+          value: curValue[field.key].value,
+          required: field.required,
+          disabled: field.disabled,
+        },
+      };
+      const newKeyInfo = {
+        ...keyInfo,
+        childKey: field.key,
+        isGrid: true,
+        gridName: name,
+        domKey: `${key}${keyInfo.index}${field.key}`,
+      };
+
+      return <div key={field.key}>{this.renderFormItem(field, formInfo, newKeyInfo)}</div>;
     });
-    // const forms = visibleFields.map(field => {
-    //   const formInfo = {
-    //     ...{
-    //       key: field.key,
-    //       errorMsg: curValue[field.key].errorMsg,
-    //       value: curValue[field.key].value,
-    //       required: field.required,
-    //       disabled: field.disabled,
-    //     },
-    //   };
-    //   const newKeyInfo = {
-    //     ...keyInfo,
-    //     childKey: field.key,
-    //     isGrid: true,
-    //     gridName: name,
-    //     domKey: `${key}${keyInfo.index}${field.key}`,
-    //   };
 
-    //   return <div style={{float:'left'}} key={item.key}>{this.renderFormItem(field, formInfo, newKeyInfo)}</div>;
-    // });
-
-    // return forms;
+    return forms;
   };
 
   renderRowsItem = rows =>
@@ -664,7 +665,7 @@ class EditForm extends PureComponent {
                   index: i,
                 };
                 const key = `${itemFormData.key}${i}`;
-                const content = this.renderGridItem(item, { ...itemFormData }, keyInfo);
+                const content = this.renderGridItem(item, { ...itemFormData }, keyInfo, false);
                 return (
                   <div className={style.grid_content} key={key}>
                     <span onClick={() => this.deleteGridItem(item, curValue, i)} />
@@ -690,13 +691,17 @@ class EditForm extends PureComponent {
       return (
         <div
           key={item.key}
-          style={{
-            position: item.base ? 'relative' : 'absolute',
-            minHeight: `${item.row * 75}px`,
-            width: `${item.col * 75}px`,
-            top: `${(item.y - row) * 75}px`,
-            left: `${item.x * 75}px`,
-          }}
+          style={
+            row !== undefined
+              ? {
+                  position: item.base ? 'relative' : 'absolute',
+                  minHeight: `${item.row * 75}px`,
+                  width: `${item.col * 75}px`,
+                  top: `${(item.y - row) * 75}px`,
+                  left: `${item.x * 75}px`,
+                }
+              : {}
+          }
         >
           {this.renderFormItem(item, curValue || {}, keyInfo)}
         </div>
@@ -706,7 +711,10 @@ class EditForm extends PureComponent {
   };
 
   render() {
-    const newForm = this.state.startflow ? this.renderRowsItem(this.rows) : null;
+    // this.renderRowsItem(this.rows)
+    const newForm = this.state.startflow
+      ? this.renderFormContent(this.visibleForm.concat(this.availableGridItem))
+      : null;
     return <div>{newForm}</div>;
   }
 }

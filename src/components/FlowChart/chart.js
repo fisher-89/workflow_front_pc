@@ -504,7 +504,7 @@ class FlowChart extends Component {
         fontSize: '14px',
         display: 'inline-block',
         marginRight: '40px',
-        width: '128px',
+        width: '150px',
       };
       const statusMsg =
         i === chartData.length - 1 && status === 1 ? '完成' : flowchartStatus(line.action_type);
@@ -537,7 +537,7 @@ class FlowChart extends Component {
           </div>
           <div style={{ ...rightStyle }}>
             <span style={{ ...timeStyle }}>{line.acted_at}</span>
-            <Popover placement="bottomRight" content={this.renderPopContent(modalInfo)}>
+            <Popover placement="right" content={this.renderPopContent(modalInfo)}>
               <span className={style.look} style={{ ...remarkBtnStyle }}>
                 查看详情
               </span>

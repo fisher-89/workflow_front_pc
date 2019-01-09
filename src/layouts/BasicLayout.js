@@ -273,24 +273,26 @@ class BasicLayout extends React.PureComponent {
             background: '#fff',
           }}
         >
-          <Header
-            menuData={menuData}
-            handleMenuCollapse={this.handleMenuCollapse}
-            logo={logo}
-            isMobile={isMobile}
-            {...this.props}
-          />
-          <Content style={this.getContentStyle()}>
-            <div id="rightContent">
-              <Authorized
-                authority={routerConfig && routerConfig.authority}
-                noMatch={<Exception403 />}
-              >
-                {children}
-              </Authorized>
-            </div>
-          </Content>
-          <Footer />
+          <div>
+            <Header
+              menuData={menuData}
+              handleMenuCollapse={this.handleMenuCollapse}
+              logo={logo}
+              isMobile={isMobile}
+              {...this.props}
+            />
+            <Content style={this.getContentStyle()}>
+              <div id="rightContent">
+                <Authorized
+                  authority={routerConfig && routerConfig.authority}
+                  noMatch={<Exception403 />}
+                >
+                  {children}
+                </Authorized>
+              </div>
+            </Content>
+            <Footer />
+          </div>
         </Layout>
       </Layout>
     );
