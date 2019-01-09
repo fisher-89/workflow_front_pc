@@ -528,6 +528,7 @@ class Step2 extends PureComponent {
           width: 690,
           extraStyle: { height: 'auto' },
           asideStyle: { width: '90px' },
+          rightStyle: { width: '600px', minWidth: '600px' },
         }}
       >
         {formData.next_step.value.map((step, i) => {
