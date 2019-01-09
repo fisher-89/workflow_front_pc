@@ -80,7 +80,7 @@ class SelectStaffItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id, description, name },
+      field: { id, description, name, col, row },
       required,
       disabled,
       asideStyle,
@@ -121,7 +121,7 @@ class SelectStaffItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
       >
         <div className={className} id={newId}>
           <Select
@@ -144,7 +144,7 @@ class SelectStaffItem extends PureComponent {
   render() {
     const {
       field,
-      field: { max, min, description, name },
+      field: { max, min, description, name, row },
       required,
       disabled,
       defaultValue,
@@ -172,7 +172,11 @@ class SelectStaffItem extends PureComponent {
         asideStyle={asideStyle}
         rightStyle={rightStyle}
         required={required}
-        extraStyle={{ height: 'auto', ...(multiple ? { minWidth: '600px' } : null) }}
+        extraStyle={{
+          height: 'auto',
+          minHeight: `${row * 75}px`,
+          ...(multiple ? { minWidth: '600px' } : null),
+        }}
       >
         <div className={className}>
           <SelectStaff

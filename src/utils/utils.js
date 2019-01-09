@@ -801,3 +801,28 @@ export function getUrlParams(url) {
   }
   return obj;
 }
+
+// count Sort
+export function makeMergeSort(arr, name) {
+  var len = arr.length;
+  if (len < 2) {
+    return arr;
+  }
+  var middle = Math.floor(len / 2),
+    left = arr.slice(0, middle),
+    right = arr.slice(middle);
+  return merge(makeMergeSort(left, name), makeMergeSort(right, name), name);
+}
+export function merge(left, right, name) {
+  var result = [];
+  while (left.length > 0 && right.length > 0) {
+    if (left[0][name] <= right[0][name]) {
+      result.push(left.shift());
+    } else {
+      result.push(right.shift());
+    }
+  }
+  while (left.length) result.push(left.shift());
+  while (right.length) result.push(right.shift());
+  return result;
+}

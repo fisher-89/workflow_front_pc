@@ -79,7 +79,7 @@ class SelectItem extends Component {
   render() {
     const {
       field,
-      field: { id, name, description },
+      field: { id, name, description, row },
       required,
       disabled,
       readonly,
@@ -119,7 +119,7 @@ class SelectItem extends Component {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
       >
         <div className={className} id={newId}>
           <Select

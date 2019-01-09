@@ -1,4 +1,4 @@
-/* eslint-disable*/
+/* eslint no-param-reassign:0 */
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
@@ -16,6 +16,7 @@ import {
   SelectDepItem,
   ShopSelectItem,
 } from '../index';
+import { makeMergeSort } from '../../../utils/utils';
 import style from './index.less';
 import styles from '../index.less';
 
@@ -102,7 +103,7 @@ class EditForm extends PureComponent {
   makeFormInSameRows = visibleForm => {
     const rows = {};
     visibleForm.forEach(item => {
-      const { y, row } = item;
+      const { y } = item;
       if (rows[y]) {
         rows[y].push(item);
       } else rows[y] = this.makeNewRow(item, y);
@@ -113,27 +114,49 @@ class EditForm extends PureComponent {
         this.mergeRows(rows, y, row);
       }
     });
-    return rows;
+    return this.rearrangementRows(rows);
   };
 
   mergeRows = (rows, y, row) => {
     let count = 0;
     while (count < row - 1) {
-      count = count + 1;
+      count += 1;
       rows[y] = rows[y].concat(rows[count + y] || []);
       delete rows[count + y];
     }
   };
 
-  makeNewRow = (item, y) => {
+  makeNewRow = item => {
     const currentRow = [];
     currentRow.push(item);
     return currentRow;
   };
 
-  sortRowItem = () => {
-    //每行的元素排序
+  rearrangementRows = rows => {
+    const newRows = { ...rows };
+    Object.keys(rows).forEach(row => {
+      let hasBase = false;
+      const rowItem = rows[row].map(item => {
+        const obj = { ...item };
+        if (item.row > 1) {
+          obj.base = true;
+          hasBase = true;
+        }
+        return obj;
+      });
+      if (!hasBase) {
+        rowItem[0].base = true;
+      }
+      newRows[row] = rowItem;
+    });
+    console.log('newRows', newRows);
+    return newRows;
   };
+
+  sortRowItem = items => {
+    // 每行的元素排序
+  };
+
   dealGridForm = (source, item, startflow, type) => {
     const forms = [];
     const fields = [];
@@ -548,7 +571,6 @@ class EditForm extends PureComponent {
   renderGridItem = (grid, curValue, keyInfo) => {
     const { visibleFields, key, name } = grid;
     const gridItemRows = this.makeFormInSameRows(visibleFields);
-    console.log('gridItemRows', gridItemRows);
     return Object.keys(gridItemRows || {}).map(row => {
       const items = gridItemRows[row];
       const content = items.map(field => {
@@ -569,15 +591,23 @@ class EditForm extends PureComponent {
           domKey: `${key}${keyInfo.index}${field.key}`,
         };
         return (
-          <div style={{ float: 'left' }} key={field.key}>
+          <div
+            style={{
+              position: field.base ? 'relative' : 'absolute',
+              minHeight: `${field.row * 75}px`,
+              width: `${field.col * 75}px`,
+              top: `${(field.y - row) * 75}px`,
+              left: `${field.x * 75}px`,
+            }}
+            key={field.key}
+          >
             {this.renderFormItem(field, formInfo, newKeyInfo)}
           </div>
         );
       });
       return (
-        <div key={row}>
+        <div key={row} style={{ position: 'relative' }}>
           {content}
-          <div style={{ clear: 'both' }} />
         </div>
       );
     });
@@ -602,22 +632,21 @@ class EditForm extends PureComponent {
     //   return <div style={{float:'left'}} key={item.key}>{this.renderFormItem(field, formInfo, newKeyInfo)}</div>;
     // });
 
-    return forms;
+    // return forms;
   };
 
-  renderRowsItem = rows => {
-    return Object.keys(rows || {}).map(row => {
+  renderRowsItem = rows =>
+    Object.keys(rows || {}).map(row => {
       const items = rows[row];
-      const content = this.renderFormContent(items);
+      const content = this.renderFormContent(items, row);
       return (
-        <div key={row}>
+        <div key={row} style={{ position: 'relative', width: '900px' }}>
           {content}
-          <div style={{ clear: 'both' }} />
         </div>
       );
     });
-  };
-  renderFormContent = items => {
+
+  renderFormContent = (items, row) => {
     // const items = this.visibleForm.concat(this.availableGridItem);
     const newForm = items.map(item => {
       const { formData } = this.state;
@@ -659,7 +688,16 @@ class EditForm extends PureComponent {
         name: item.name,
       };
       return (
-        <div style={{ float: 'left' }} key={item.key}>
+        <div
+          key={item.key}
+          style={{
+            position: item.base ? 'relative' : 'absolute',
+            minHeight: `${item.row * 75}px`,
+            width: `${item.col * 75}px`,
+            top: `${(item.y - row) * 75}px`,
+            left: `${item.x * 75}px`,
+          }}
+        >
           {this.renderFormItem(item, curValue || {}, keyInfo)}
         </div>
       );

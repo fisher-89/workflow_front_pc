@@ -92,7 +92,7 @@ class InterfaceItem extends Component {
   render() {
     const {
       field,
-      field: { id },
+      field: { id, row },
       required,
       disabled,
       readonly,
@@ -128,7 +128,7 @@ class InterfaceItem extends Component {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
       >
         <div className={className} id={newId}>
           <Select

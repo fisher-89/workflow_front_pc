@@ -66,7 +66,7 @@ class ShopSelectItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id },
+      field: { id, row },
       required,
       disabled,
     } = this.props;
@@ -103,7 +103,7 @@ class ShopSelectItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
       >
         <div className={className} id={newId}>
           <Select
@@ -135,7 +135,7 @@ class ShopSelectItem extends PureComponent {
   render() {
     const {
       field,
-      field: { max, min },
+      field: { max, min, row },
       required,
       disabled,
       readonly,
@@ -154,11 +154,14 @@ class ShopSelectItem extends PureComponent {
     return (
       <FormItem
         {...field}
-        width="500"
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{
+          height: 'auto',
+          minHeight: `${row * 75}px`,
+          ...(multiple ? { minWidth: '600px' } : null),
+        }}
       >
         <div className={className}>
           <SelectShop

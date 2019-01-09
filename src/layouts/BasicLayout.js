@@ -216,10 +216,10 @@ class BasicLayout extends React.PureComponent {
   getContentStyle = () => {
     const { fixedHeader } = this.props;
     return {
-      margin: '24px 24px 0',
+      margin: '0px 2px 0 24px',
       paddingTop: fixedHeader ? 64 : 0,
       overflow: 'auto',
-      maxWidth: '1920px',
+      // maxWidth: '1920px',
       // minWidth: '910px',
     };
   };

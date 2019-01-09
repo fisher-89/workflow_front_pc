@@ -205,7 +205,7 @@ class StartForm extends PureComponent {
           />
           <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
             <Button type="primary" onClick={this.handleSubmit}>
-              提交
+              确定
             </Button>
           </div>
         </div>

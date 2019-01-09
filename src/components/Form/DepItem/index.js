@@ -86,7 +86,7 @@ class SelectDepItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id, description, name },
+      field: { id, description, name, row },
       required,
       disabled,
     } = this.props;
@@ -125,7 +125,7 @@ class SelectDepItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
       >
         <div className={className} id={newId}>
           <Select

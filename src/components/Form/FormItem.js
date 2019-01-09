@@ -21,6 +21,7 @@ class FormItem extends PureComponent {
       asideStyle,
       rightStyle,
     } = this.props;
+
     const itemStyle = {
       width: width ? `${width}px` : col * 75,
       height: height ? `${height}px` : row * 75,
