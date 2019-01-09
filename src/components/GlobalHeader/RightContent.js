@@ -48,9 +48,17 @@ export default class GlobalHeaderRight extends PureComponent {
       onMenuClick,
       // onNoticeClear,
       theme,
+      navTheme,
     } = this.props;
+    console.log(navTheme);
     const menu = (
-      <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
+      <Menu
+        className={styles.menu}
+        selectedKeys={[]}
+        onClick={onMenuClick}
+        style={{ padding: 0 }}
+        theme={navTheme}
+      >
         {/* <Menu.Item key="userCenter">
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
@@ -62,7 +70,7 @@ export default class GlobalHeaderRight extends PureComponent {
     );
     // const noticeData = this.getNoticeData();
     let className = styles.right;
-    if (theme === 'dark') {
+    if (navTheme === 'dark') {
       className = `${styles.right}  ${styles.dark}`;
     }
     return (
@@ -92,7 +100,7 @@ export default class GlobalHeaderRight extends PureComponent {
                 style={{ width: 48, height: 48 }}
                 src={currentUser.avatar || '/default_avatar.png'}
               />
-              <span className={styles.name} style={{ marginRight: 20 }}>
+              <span className={styles.name} style={{ marginRight: 50 }}>
                 {currentUser.realname}
               </span>
               <Icon type="down" />
