@@ -55,10 +55,10 @@ const proxy = {
     target: 'http://112.74.177.132:8002/oauth',
     pathRewrite: { '^/oauth': '' },
   },
-  '/api/current-user': {
-    target: 'http://112.74.177.132:8002/api',
-    pathRewrite: { '^/api': '' },
-  },
+  // '/api/current-user': {
+  //   target: 'http://112.74.177.132:8002/api',
+  //   pathRewrite: { '^/api': '' },
+  // },
   '/api/oa/': {
     target: `http://112.74.177.132:8002/api`,
     pathRewrite: { '^/api/oa': '' },
