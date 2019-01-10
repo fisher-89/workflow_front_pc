@@ -23,13 +23,13 @@ class FormItem extends PureComponent {
     } = this.props;
 
     const itemStyle = {
-      ...extraStyle,
       ...(col
         ? {
             width: `${col * 75}px`,
             height: `${row * 75}px`,
           }
         : {}),
+      ...extraStyle,
     };
     // const minWidth = (width || 300) - 140;
     const classnames = [styles.form_item, className].join(' ');

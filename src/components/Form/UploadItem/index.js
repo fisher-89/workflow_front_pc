@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import FileUpload from '../../FileUpload';
+// import FileUpload from '../../FileUpload';
+import FileUpload from '../../UploadCropper';
 import FormItem from '../FormItem';
 import DetailItem from '../DetailItem';
 
@@ -38,6 +39,7 @@ class UploadItem extends PureComponent {
       required,
       field: { name },
     } = this.props;
+    console.log(value);
     let files = [...value];
     if (deal) {
       files = (value || []).map((its, i) => {
@@ -66,12 +68,16 @@ class UploadItem extends PureComponent {
   };
 
   dealFiles = (f, i) => {
-    const isPic = isImage(f);
     let file = '';
-    if (isPic) {
-      file = { url: `${UPLOAD_PATH}${dealThumbImg(f, '_thumb')}`, uid: i };
+    if (f) {
+      const isPic = isImage(f);
+      if (isPic) {
+        file = { url: `${UPLOAD_PATH}${dealThumbImg(f, '_thumb')}`, uid: i };
+      } else {
+        file = { url: `${UPLOAD_PATH}${f}`, uid: i };
+      }
     } else {
-      file = { url: `${UPLOAD_PATH}${f}`, uid: i };
+      file = { url: '', uid: i };
     }
     return file;
   };
@@ -121,9 +127,10 @@ class UploadItem extends PureComponent {
           <FileUpload
             url="/api/files"
             suffix={suffix}
-            id={field.id}
+            id={`${field.id}`}
             value={value}
             range={{ max, min }}
+            max={10}
             onChange={this.onChange}
             disabled={disabled || readonly}
           />

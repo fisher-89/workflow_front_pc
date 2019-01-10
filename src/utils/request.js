@@ -64,11 +64,11 @@ export default function request(uri, params) {
   };
   if (uri.match(/\/api\//)) {
     if (
-      localStorage.getItem('OA_access_token') &&
-      localStorage.getItem('OA_access_token_expires_in') > new Date().getTime()
+      localStorage.getItem(`${TOKEN_PREFIX}access_token`) &&
+      localStorage.getItem(`${TOKEN_PREFIX}access_token_expires_in`) > new Date().getTime()
     ) {
       defaultOptions.headers = {
-        Authorization: `Bearer ${localStorage.getItem('OA_access_token')}`,
+        Authorization: `Bearer ${localStorage.getItem(`${TOKEN_PREFIX}access_token`)}`,
       };
     } else {
       window.location.href = `${OA_PATH}/oauth/authorize?client_id=${OA_CLIENT_ID}&response_type=code`;
