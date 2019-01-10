@@ -96,7 +96,12 @@ class ExtraFilters extends Component {
   render() {
     const { children } = this.props;
     return (
-      <Popover placement="bottomRight" trigger="click" content={this.renderContent()}>
+      <Popover
+        placement="bottomRight"
+        trigger="click"
+        getPopupContainer={() => document.getElementById('filter')}
+        content={this.renderContent()}
+      >
         {children}
       </Popover>
     );

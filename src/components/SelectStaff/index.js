@@ -31,7 +31,7 @@ class SelectStaff extends Component {
           source: res,
           visible: false,
           searchResult: [],
-          serachValue: '',
+          serachValue: defaultValue[name.realname],
         });
       });
     } else {

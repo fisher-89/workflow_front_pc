@@ -189,6 +189,11 @@
     height: 20px;
     margin-left: 20px;
     cursor: pointer;
+    :global {
+      .ant-popover-inner-content {
+        padding: 12px 0;
+      }
+    }
   }
   .checkall {
     padding: 0 6px;
@@ -265,7 +270,7 @@
 }
 
 .name {
-  width: 48px;
+  width: 38px;
   color: #333;
   margin-left: 3px;
   .textOverflow();
@@ -281,6 +286,7 @@
   width: 108px;
   color: #666;
   margin-top: 2px;
+  font-size: 12px;
   .textOverflow();
 }
 
@@ -300,7 +306,6 @@
 //   height: 4px;
 //   background-color: #1890ff;
 // }
-
 .delete {
   width: 20px;
   float: left;
@@ -405,3 +410,10 @@
 //   height: 4px;
 //   background-color: #1890ff;
 // }
+#filter {
+  :global {
+    .ant-popover-inner-content {
+      padding: 12px 0;
+    }
+  }
+}

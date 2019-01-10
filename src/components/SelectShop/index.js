@@ -37,7 +37,7 @@ class SelectShop extends Component {
             : '',
           visible: false,
           searchResult: [],
-          serachValue: '',
+          serachValue: defaultValue[name.name],
         });
       });
     } else {

@@ -39,7 +39,7 @@ class SelectDepItem extends PureComponent {
     const tempDeps = department.map(item => ({ ...item, id: `${item.id}` }));
     let selected = '';
     if (muti) {
-      selected = tempDeps.filter(item => (`${v}` || '').indexOf(item.id) > -1);
+      selected = tempDeps.filter(item => v.map(it => `${it}`).indexOf(item.id) > -1);
     } else {
       selected = tempDeps.filter(item => `${v}` === item.id);
     }
@@ -185,7 +185,6 @@ class SelectDepItem extends PureComponent {
       return (
         <FormItem
           {...field}
-          width="500"
           height="auto"
           errorMsg={errorMsg}
           required={required}
@@ -194,12 +193,11 @@ class SelectDepItem extends PureComponent {
           <div className={className}>
             <TreeSelect
               dropdownClassName={style.dropdown}
-              maxTagCount={10}
               placeholder={desc}
               showSearch
               multiple
               value={newValue}
-              allowClear
+              allowClear={false}
               treeData={newTreeData}
               onChange={v => this.onTreeChange(v, 1)}
               filterTreeNode={(inputValue, treeNode) =>
@@ -217,7 +215,6 @@ class SelectDepItem extends PureComponent {
         <div className={className}>
           <TreeSelect
             dropdownClassName={style.dropdown}
-            maxTagCount={10}
             placeholder={desc}
             showSearch
             allowClear

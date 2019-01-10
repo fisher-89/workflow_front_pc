@@ -60,11 +60,11 @@ class TextItem extends Component {
 
   numberInputChange = value => {
     const {
-      field: { name },
+      field: { name, required },
       onChange,
     } = this.props;
     let errorMsg = '';
-    if (value === '' || value === undefined) {
+    if (required && (value === '' || value === undefined)) {
       errorMsg = `请输入${name}`;
     }
     this.setState(
@@ -150,7 +150,7 @@ class TextItem extends Component {
 
   renderInfo = (value, field) => (
     <DetailItem {...field}>
-      <span>{value}</span>
+      <span> {value}</span>
     </DetailItem>
   );
 
@@ -167,8 +167,9 @@ class TextItem extends Component {
     return (
       <FormItem {...this.makeNewProps()}>
         <div className={errorMsg ? style.errorMsg : style.noerror}>
-          {type === 'int' && this.renderNumberInput()}
-          {!!(type === 'text' && (max || 31) > 30) && this.renderTextArea()}
+          {' '}
+          {type === 'int' && this.renderNumberInput()}{' '}
+          {!!(type === 'text' && (max || 31) > 30) && this.renderTextArea()}{' '}
           {!!(type === 'text' && (max || 1) <= 30) && this.renderInput()}
         </div>
       </FormItem>

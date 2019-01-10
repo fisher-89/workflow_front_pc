@@ -6,7 +6,7 @@ import { connect } from 'dva';
 // import TreeSelect from '../../TreeSelect'
 import request from '../../../utils/request';
 
-import { markTreeData, judgeIsNothing } from '../../../utils/utils';
+import { markTreeData, judgeIsNothing, getTreeChildren } from '../../../utils/utils';
 
 import ShopItem from './ShopItem';
 import ExtraFilters from './ExtraFilters/index';
@@ -401,7 +401,7 @@ class ShopModal extends Component {
           ) : (
             <TreeSelect
               dropdownClassName={style.dropdown}
-              maxTagCount={10}
+              treeDefaultExpandedKeys={['all']}
               showSearch
               treeData={[{ value: 'all', title: '全部', children: newTreeData }]}
               onSelect={this.onTreeSelect}
@@ -494,7 +494,9 @@ class ShopModal extends Component {
             onChange={this.filtersChange}
             filters={extraFilters}
           >
-            <span className={cls}>筛选</span>
+            <span className={cls} id="filter">
+              筛选
+            </span>
           </ExtraFilters>
           {multiple ? (
             <React.Fragment>

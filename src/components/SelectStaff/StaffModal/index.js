@@ -416,7 +416,7 @@ class StaffModal extends Component {
           ) : (
             <TreeSelect
               dropdownClassName={style.dropdown}
-              maxTagCount={10}
+              treeDefaultExpandedKeys={['all']}
               showSearch
               treeData={[{ value: 'all', title: '全部', children: newTreeData }]}
               onSelect={this.onTreeSelect}
@@ -545,7 +545,9 @@ class StaffModal extends Component {
             onChange={this.filtersChange}
             filters={extraFilters}
           >
-            <span className={cls}>筛选</span>
+            <span className={cls} id="filter">
+              筛选
+            </span>
           </ExtraFilters>
           {multiple ? (
             <React.Fragment>
