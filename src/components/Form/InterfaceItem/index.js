@@ -82,9 +82,14 @@ class InterfaceItem extends Component {
     } else callback();
   };
 
-  renderInfo = (value, field, multiple) => (
-    <DetailItem {...field}>
-      {' '}
+  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+    <DetailItem
+      {...field}
+      template={template}
+      extraStyle={
+        multiple ? { height: 'auto', minHeight: template ? `${row * 50}px` : '50px' } : {}
+      }
+    >
       <span>{multiple ? (value || []).join('，') : value}</span>
     </DetailItem>
   );
@@ -101,7 +106,7 @@ class InterfaceItem extends Component {
     const options = this.getOptions();
     const newId = `${id}-select`;
     if (readonly) {
-      return this.renderInfo(value, field, field.is_checkbox);
+      return this.renderInfo(value, this.props, field.is_checkbox);
     }
     if (!field.is_checkbox) {
       const className = [style.inteface, errorMsg ? style.errorMsg : ''].join(' ');

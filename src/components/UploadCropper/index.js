@@ -66,7 +66,6 @@ class UploadCropper extends React.Component {
   };
 
   handleChange = ({ file, fileList }) => {
-    console.log('change');
     const { max, onChange, cropper } = this.props;
     if (fileList.length > max) {
       message.error('上传数量已经达到最大限制!!');
@@ -149,7 +148,6 @@ class UploadCropper extends React.Component {
   };
 
   customRequest = file => {
-    console.log('customRequest');
     const { fileItem } = this.state;
     // if (!fileItem) return;
     const { url, id } = this.props;
@@ -228,9 +226,9 @@ class UploadCropper extends React.Component {
     const className = classNames(style.upload, {
       [style.disabled]: disabled,
     });
+    console.log(fileList);
     return (
       <div style={{ position: 'relative' }} className={className}>
-        {disabled && <div style={disableUploadStyle} />}{' '}
         <Upload
           fileList={fileList}
           listType="picture-card"
@@ -242,8 +240,8 @@ class UploadCropper extends React.Component {
           onPreview={this.handlePreview}
           beforeUpload={this.beforeUpload}
         >
-          {uploadButton}{' '}
-        </Upload>{' '}
+          {uploadButton}
+        </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '100%' }} src={previewImage} />{' '}
         </Modal>

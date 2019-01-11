@@ -13,6 +13,7 @@ class FormItem extends PureComponent {
       width,
       height,
       col,
+      template,
       row,
       name,
       errorMsg,
@@ -23,7 +24,7 @@ class FormItem extends PureComponent {
     } = this.props;
 
     const itemStyle = {
-      ...(col
+      ...(template
         ? {
             width: `${col * 75}px`,
             height: `${row * 75}px`,

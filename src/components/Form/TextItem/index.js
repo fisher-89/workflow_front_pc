@@ -148,8 +148,8 @@ class TextItem extends Component {
     return props;
   };
 
-  renderInfo = (value, field) => (
-    <DetailItem {...field}>
+  renderInfo = (value, field, template) => (
+    <DetailItem {...field} template={template}>
       <span> {value}</span>
     </DetailItem>
   );
@@ -158,16 +158,16 @@ class TextItem extends Component {
     const {
       field: { type, max },
       field,
+      template,
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
     if (readonly) {
-      return this.renderInfo(value, field);
+      return this.renderInfo(value, field, template);
     }
     return (
       <FormItem {...this.makeNewProps()}>
         <div className={errorMsg ? style.errorMsg : style.noerror}>
-          {' '}
           {type === 'int' && this.renderNumberInput()}{' '}
           {!!(type === 'text' && (max || 31) > 30) && this.renderTextArea()}{' '}
           {!!(type === 'text' && (max || 1) <= 30) && this.renderInput()}

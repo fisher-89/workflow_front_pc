@@ -60,8 +60,16 @@ class SelectItem extends PureComponent {
     return newOpts;
   };
 
-  renderInfo = (value, field) => (
-    <DetailItem {...field}>
+  renderInfo = (value, { field, template, field: { row } }) => (
+    <DetailItem
+      {...field}
+      template={template}
+      extraStyle={{
+        height: 'auto',
+        minHeight: template ? `${row * 50}px` : '50px',
+        minWidth: template ? '600px' : '300px',
+      }}
+    >
       <span>{(value || []).join('，')}</span>
     </DetailItem>
   );
@@ -77,7 +85,7 @@ class SelectItem extends PureComponent {
     const { errorMsg, value } = this.state;
     const className = [style.tag, errorMsg ? style.errorMsg : ''].join(' ');
     if (readonly) {
-      return this.renderInfo(value, field);
+      return this.renderInfo(value, this.props);
     }
     return (
       <FormItem

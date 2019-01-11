@@ -122,8 +122,20 @@ class ShopSelectItem extends PureComponent {
     );
   };
 
-  renderInfo = (value, field, multiple) => (
-    <DetailItem {...field}>
+  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+    <DetailItem
+      {...field}
+      template={template}
+      extraStyle={
+        multiple
+          ? {
+              height: 'auto',
+              minHeight: template ? `${row * 50}px` : '50px',
+              minWidth: template ? '600px' : '300px',
+            }
+          : {}
+      }
+    >
       {value ? (
         <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
       ) : (
@@ -144,7 +156,7 @@ class ShopSelectItem extends PureComponent {
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
     if (readonly) {
-      return this.renderInfo(value, field, multiple);
+      return this.renderInfo(value, this.props, multiple);
     }
     const options = field.available_options;
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');

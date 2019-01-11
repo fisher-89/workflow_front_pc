@@ -63,7 +63,6 @@ class SelectDepItem extends PureComponent {
 
   dealValueOnChange = value => {
     const { onChange } = this.props;
-
     const errorMsg = validValue(value, this.props);
     this.setState(
       {
@@ -145,8 +144,20 @@ class SelectDepItem extends PureComponent {
     );
   };
 
-  renderInfo = (value, field, multiple) => (
-    <DetailItem {...field}>
+  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+    <DetailItem
+      {...field}
+      template={template}
+      extraStyle={
+        multiple
+          ? {
+              height: 'auto',
+              minHeight: template ? `${row * 50}px` : '50px',
+              minWidth: template ? '600px' : '300px',
+            }
+          : {}
+      }
+    >
       {value ? (
         <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
       ) : (
@@ -167,7 +178,7 @@ class SelectDepItem extends PureComponent {
     const multiple = field.is_checkbox;
     const options = field.available_options;
     if (readonly) {
-      return this.renderInfo(value, field, multiple);
+      return this.renderInfo(value, this.props, multiple);
     }
     if (options.length) {
       return this.renderSelect(options);

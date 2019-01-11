@@ -8,20 +8,21 @@ class DetailItem extends PureComponent {
     const {
       children,
       className,
-      width,
-      height,
-      x,
-      y,
+      col,
+      row,
+      template,
       name,
       extraStyle,
       asideStyle,
       rightStyle,
     } = this.props;
     const itemStyle = {
-      width: `${width}px`,
-      height: `${height}px`,
-      top: `${y}px`,
-      left: `${x}px`,
+      ...(template
+        ? {
+            width: `${col * 50}px`,
+            height: `${row * 50}px`,
+          }
+        : { height: 'auto' }),
       ...extraStyle,
     };
     const classnames = [styles.form_item, className].join(' ');

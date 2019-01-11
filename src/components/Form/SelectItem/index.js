@@ -69,9 +69,20 @@ class SelectItem extends Component {
     return newOpts;
   };
 
-  renderInfo = (value, field, multiple) => (
-    <DetailItem {...field}>
-      {' '}
+  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+    <DetailItem
+      {...field}
+      extraStyle={
+        multiple
+          ? {
+              height: 'auto',
+              minHeight: template ? `${row * 50}px` : '50px',
+              minWidth: template ? '600px' : '300px',
+            }
+          : {}
+      }
+      template={template}
+    >
       <span>{multiple ? (value || []).join('，') : value}</span>
     </DetailItem>
   );
@@ -88,7 +99,7 @@ class SelectItem extends Component {
     const options = this.getOptions();
     const newId = `${id}-select`;
     if (readonly) {
-      return this.renderInfo(value, field, field.is_checkbox);
+      return this.renderInfo(value, this.props, field.is_checkbox);
     }
     const desc = description || `${defaultInfo}${name}`;
 

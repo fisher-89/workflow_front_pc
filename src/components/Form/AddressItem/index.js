@@ -58,14 +58,14 @@ class AddressItem extends Component {
 
   renderAddress = () => {
     const { value } = this.state;
-    const { field } = this.props;
+    const { field, template } = this.props;
     const prov = district.find(item => item.id === value.province_id) || {};
     const county = district.find(item => item.id === value.county_id) || {};
     const city = district.find(item => item.id === value.city_id) || {};
     const address = `${prov.name || ''}${county.name || ''}${city.name || ''}${value.address ||
       ''}`;
     return (
-      <DetailItem {...field}>
+      <DetailItem {...field} template={template}>
         <span>{address}</span>
       </DetailItem>
     );

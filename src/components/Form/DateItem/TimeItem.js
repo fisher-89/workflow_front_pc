@@ -49,8 +49,8 @@ class TimeItem extends PureComponent {
     );
   };
 
-  renderInfo = (value, field) => (
-    <DetailItem {...field}>
+  renderInfo = (value, field, template) => (
+    <DetailItem {...field} template={template}>
       <span>{value}</span>
     </DetailItem>
   );
@@ -61,13 +61,14 @@ class TimeItem extends PureComponent {
       required,
       disabled,
       readonly,
+      template,
       field: { max, min },
     } = this.props;
     const { errorMsg, value } = this.state;
     const className = [style.date, errorMsg ? style.errorMsg : ''].join(' ');
     const newValue = value ? moment(value, 'HH:mm:ss') : null;
     if (readonly) {
-      return this.renderInfo(value, field);
+      return this.renderInfo(value, field, template);
     }
     return (
       <FormItem {...field} errorMsg={errorMsg} required={required}>

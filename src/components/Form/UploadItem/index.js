@@ -91,10 +91,16 @@ class UploadItem extends PureComponent {
     return unique;
   };
 
-  renderInfo = (value, field, suffix) => (
-    <DetailItem {...field}>
-      <div className={style.upfile}>
-        <FileUpload suffix={suffix} id={`${field.id}`} value={value} disabled />
+  renderInfo = (value, { field, template, field: { row } }, suffix) => (
+    <DetailItem
+      {...field}
+      template={template}
+      extraStyle={template ? { minHeight: `${row * 100}px`, minWidth: '600px' } : {}}
+    >
+      <div className={style.filelist}>
+        {value && value.length ? (
+          <FileUpload suffix={suffix} id={`${field.id}`} value={value} disabled />
+        ) : null}
       </div>
     </DetailItem>
   );
@@ -111,7 +117,7 @@ class UploadItem extends PureComponent {
     const suffix = this.makeSuffix(validator);
 
     if (readonly) {
-      return this.renderInfo(value, field, suffix);
+      return this.renderInfo(value, this.props, suffix);
     }
     const className = [errorMsg ? style.errorMsg : style.noerror, style.upfile].join(' ');
 
