@@ -137,7 +137,9 @@ class ShopSelectItem extends PureComponent {
       }
     >
       {value ? (
-        <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
+        <div style={{ height: '100%', overflow: 'hidden' }}>
+          {multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}
+        </div>
       ) : (
         ''
       )}

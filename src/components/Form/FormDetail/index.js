@@ -1,3 +1,5 @@
+/* eslint no-param-reassign:0 */
+
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import {
@@ -15,12 +17,16 @@ import {
 } from '../index';
 import style from './index.less';
 
+const yRatio = 50;
+const xRatio = 75;
 @connect(({ start }) => ({ startDetails: start.startDetails }))
 class EditForm extends PureComponent {
   constructor(props) {
     super(props);
     const { startflow } = props;
     this.dealStartForm(startflow);
+    this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+
     const formData = startflow ? this.initFormData() : {};
     this.state = {
       formData,
@@ -32,6 +38,7 @@ class EditForm extends PureComponent {
     const { startflow } = props;
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
+      this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
         formData: newFormData,
@@ -90,6 +97,58 @@ class EditForm extends PureComponent {
       forms,
       fields,
     };
+  };
+
+  makeFormInSameRows = visibleForm => {
+    const rows = {};
+    visibleForm.forEach(item => {
+      const { y } = item;
+      if (rows[y]) {
+        rows[y].push(item);
+      } else rows[y] = this.makeNewRow(item, y);
+    });
+    visibleForm.forEach(item => {
+      const { y, row } = item;
+      if (row > 1) {
+        this.mergeRows(rows, y, row);
+      }
+    });
+    return this.rearrangementRows(rows);
+  };
+
+  mergeRows = (rows, y, row) => {
+    let count = 0;
+    while (count < row - 1) {
+      count += 1;
+      rows[y] = rows[y].concat(rows[count + y] || []);
+      delete rows[count + y];
+    }
+  };
+
+  makeNewRow = item => {
+    const currentRow = [];
+    currentRow.push(item);
+    return currentRow;
+  };
+
+  rearrangementRows = rows => {
+    const newRows = { ...rows };
+    Object.keys(rows).forEach(row => {
+      let hasBase = false;
+      const rowItem = rows[row].map(item => {
+        const obj = { ...item };
+        if (item.row > 1) {
+          obj.base = true;
+          hasBase = true;
+        }
+        return obj;
+      });
+      if (!hasBase) {
+        rowItem[0].base = true;
+      }
+      newRows[row] = rowItem;
+    });
+    return newRows;
   };
 
   initFormData = () => {
@@ -283,12 +342,56 @@ class EditForm extends PureComponent {
 
   renderGridItem = (grid, curValue, keyInfo) => {
     const { visibleFields, key, name } = grid;
+    if (template !== undefined) {
+      const gridItemRows = this.makeFormInSameRows(visibleFields);
+      return Object.keys(gridItemRows || {}).map(row => {
+        const items = gridItemRows[row];
+        const content = items.map(field => {
+          const formInfo = {
+            ...{
+              key: field.key,
+              value: curValue[field.key].value,
+              readonly: true,
+              template: true,
+              ratio: { smXRatio: xRatio, smYRatio: yRatio },
+            },
+          };
+          const newKeyInfo = {
+            ...keyInfo,
+            childKey: field.key,
+            isGrid: true,
+            gridName: name,
+            domKey: `${key}${keyInfo.index}${field.key}`,
+          };
+          return (
+            <div
+              style={{
+                position: field.base ? 'relative' : 'absolute',
+                minHeight: `${field.row * yRatio}px`,
+                width: `${field.col * xRatio}px`,
+                top: `${(field.y - row) * yRatio}px`,
+                left: `${field.x * xRatio}px`,
+              }}
+              key={field.key}
+            >
+              {this.renderFormItem(field, formInfo, newKeyInfo)}
+            </div>
+          );
+        });
+        return (
+          <div key={row} style={template ? { position: 'relative' } : null}>
+            {content}
+          </div>
+        );
+      });
+    }
     const forms = visibleFields.map(field => {
       const formInfo = {
         ...{
           key: field.key,
           value: curValue[field.key].value,
           readonly: true,
+          ratio: { smXRatio: xRatio, smYRatio: yRatio },
         },
       };
       const newKeyInfo = {
@@ -304,8 +407,19 @@ class EditForm extends PureComponent {
     return forms;
   };
 
-  renderFormContent = () => {
-    const items = this.visibleForm.concat(this.availableGridItem);
+  renderRowsItem = rows =>
+    Object.keys(rows || {}).map(row => {
+      const items = rows[row];
+      const content = this.renderFormContent(items, row);
+      return (
+        <div key={row} style={{ position: 'relative', width: '900px' }}>
+          {content}
+        </div>
+      );
+    });
+
+  renderFormContent = (items, row) => {
+    // const items = this.visibleForm.concat(this.availableGridItem);
     const newForm = items.map(item => {
       const { formData } = this.state;
       const curValue = formData[item.key];
@@ -322,7 +436,7 @@ class EditForm extends PureComponent {
                   index: i,
                 };
                 const key = `${itemFormData.key}${i}`;
-                const content = this.renderGridItem(item, { ...itemFormData }, keyInfo);
+                const content = this.renderGridItem(item, { ...itemFormData }, keyInfo, row);
                 return (
                   <div className={style.grid_content} key={key}>
                     {content}
@@ -338,13 +452,47 @@ class EditForm extends PureComponent {
         domKey: item.key,
         name: item.name,
       };
-      return this.renderFormItem(item, curValue || {}, keyInfo);
+      // return this.renderFormItem(item, curValue || {}, keyInfo);
+      return (
+        <div
+          key={item.key}
+          style={
+            row !== undefined
+              ? {
+                  position: item.base ? 'relative' : 'absolute',
+                  minHeight: `${item.row * yRatio}px`,
+                  width: `${item.col * xRatio}px`,
+                  top: `${(item.y - row) * yRatio}px`,
+                  left: `${item.x * xRatio}px`,
+                }
+              : {}
+          }
+        >
+          {this.renderFormItem(
+            item,
+            {
+              ...(curValue || {}),
+              template: !(row === undefined),
+              ratio: { smXRatio: xRatio, smYRatio: yRatio },
+            },
+            keyInfo
+          )}
+        </div>
+      );
     });
     return newForm;
   };
 
   render() {
-    const newForm = this.state.startflow ? this.renderFormContent() : null;
+    // const newForm = this.state.startflow ? this.renderFormContent() : null;
+    // return <div>{newForm}</div>;
+    if (!this.state.startflow) {
+      return null;
+    }
+    let newForm = null;
+    if (this.state.startflow.flow.form.pc_template) {
+      newForm = this.renderRowsItem(this.rows);
+    } else newForm = this.renderFormContent(this.visibleForm.concat(this.availableGridItem));
     return <div>{newForm}</div>;
   }
 }

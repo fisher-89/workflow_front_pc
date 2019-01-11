@@ -3,6 +3,8 @@ import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
 
+const yRatio = 75;
+const xRatio = 75;
 class FormItem extends PureComponent {
   state = {};
 
@@ -26,8 +28,8 @@ class FormItem extends PureComponent {
     const itemStyle = {
       ...(template
         ? {
-            width: `${col * 75}px`,
-            height: `${row * 75}px`,
+            width: `${col * xRatio}px`,
+            height: `${row * yRatio}px`,
           }
         : {}),
       ...extraStyle,

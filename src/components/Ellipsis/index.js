@@ -39,16 +39,12 @@ export const cutStrByFullLength = (str = '', maxLength) => {
 };
 
 const getTooltip = ({ tooltip, overlayStyle, title, children }) => {
-  if(tooltip) {
+  if (tooltip) {
     const props = tooltip === true ? { overlayStyle, title } : { ...tooltip, overlayStyle, title };
-    return (
-      <Tooltip {...props}>
-        {children}
-      </Tooltip>
-    )
+    return <Tooltip {...props}>{children}</Tooltip>;
   }
   return children;
-}
+};
 
 const EllipsisText = ({ text, length, tooltip, fullWidthRecognition, ...other }) => {
   if (typeof text !== 'string') {
@@ -67,18 +63,17 @@ const EllipsisText = ({ text, length, tooltip, fullWidthRecognition, ...other })
   }
 
   const spanAttrs = tooltip ? {} : { ...other };
-  return getTooltip(
-    {
-      tooltip,
-      overlayStyle:TooltipOverlayStyle,
-      title: text,
-      children: (
-        <span {...spanAttrs}>
-          {displayText}
-          {tail}
-        </span>
-      )
-    });
+  return getTooltip({
+    tooltip,
+    overlayStyle: TooltipOverlayStyle,
+    title: text,
+    children: (
+      <span {...spanAttrs}>
+        {displayText}
+        {tail}
+      </span>
+    ),
+  });
 };
 
 export default class Ellipsis extends Component {
@@ -202,7 +197,6 @@ export default class Ellipsis extends Component {
       [styles.lines]: lines && !isSupportLineClamp,
       [styles.lineClamp]: lines && isSupportLineClamp,
     });
-
     if (!lines && !length) {
       return (
         <span className={cls} {...restProps}>
@@ -238,7 +232,12 @@ export default class Ellipsis extends Component {
         </div>
       );
 
-      return getTooltip({ tooltip, overlayStyle:TooltipOverlayStyle, title: children, children: node });
+      return getTooltip({
+        tooltip,
+        overlayStyle: TooltipOverlayStyle,
+        title: children,
+        children: node,
+      });
     }
 
     const childNode = (
@@ -248,13 +247,15 @@ export default class Ellipsis extends Component {
       </span>
     );
 
-
     return (
       <div {...restProps} ref={this.handleRoot} className={cls}>
         <div ref={this.handleContent}>
-          {
-            getTooltip({ tooltip, overlayStyle:TooltipOverlayStyle, title: text, children: childNode })
-          }
+          {getTooltip({
+            tooltip,
+            overlayStyle: TooltipOverlayStyle,
+            title: text,
+            children: childNode,
+          })}
           <div className={styles.shadow} ref={this.handleShadowChildren}>
             {children}
           </div>

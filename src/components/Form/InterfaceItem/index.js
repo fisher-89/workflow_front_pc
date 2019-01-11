@@ -82,12 +82,22 @@ class InterfaceItem extends Component {
     } else callback();
   };
 
-  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+  renderInfo = (
+    value,
+    { field, template, field: { row }, ratio: { smYRatio, smXRatio } },
+    multiple
+  ) => (
     <DetailItem
       {...field}
       template={template}
       extraStyle={
-        multiple ? { height: 'auto', minHeight: template ? `${row * 50}px` : '50px' } : {}
+        multiple
+          ? {
+              height: 'auto',
+              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
+              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
+            }
+          : {}
       }
     >
       <span>{multiple ? (value || []).join('，') : value}</span>
@@ -99,6 +109,7 @@ class InterfaceItem extends Component {
       field,
       field: { id, row },
       required,
+      ratio: { yRatio, xRatio },
       disabled,
       readonly,
     } = this.props;
@@ -133,7 +144,7 @@ class InterfaceItem extends Component {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
+        extraStyle={{ height: 'auto', minWidth: `${4 * xRatio}px`, minHeight: `${row * yRatio}px` }}
       >
         <div className={className} id={newId}>
           <Select

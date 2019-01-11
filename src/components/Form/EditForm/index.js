@@ -16,10 +16,11 @@ import {
   SelectDepItem,
   ShopSelectItem,
 } from '../index';
-import { makeMergeSort } from '../../../utils/utils';
 import style from './index.less';
 import styles from '../index.less';
 
+const yRatio = 75;
+const xRatio = 75;
 @connect(({ start }) => ({ startDetails: start.startDetails }))
 class EditForm extends PureComponent {
   constructor(props) {
@@ -569,7 +570,7 @@ class EditForm extends PureComponent {
 
   renderGridItem = (grid, curValue, keyInfo, template) => {
     const { visibleFields, key, name } = grid;
-    if (template) {
+    if (template !== undefined) {
       const gridItemRows = this.makeFormInSameRows(visibleFields);
       return Object.keys(gridItemRows || {}).map(row => {
         const items = gridItemRows[row];
@@ -581,6 +582,8 @@ class EditForm extends PureComponent {
               value: curValue[field.key].value,
               required: field.required,
               disabled: field.disabled,
+              template: true,
+              ratio: { xRatio, yRatio },
             },
           };
           const newKeyInfo = {
@@ -594,10 +597,10 @@ class EditForm extends PureComponent {
             <div
               style={{
                 position: field.base ? 'relative' : 'absolute',
-                minHeight: `${field.row * 75}px`,
-                width: `${field.col * 75}px`,
-                top: `${(field.y - row) * 75}px`,
-                left: `${field.x * 75}px`,
+                minHeight: `${field.row * yRatio}px`,
+                width: `${field.col * xRatio}px`,
+                top: `${(field.y - row) * yRatio}px`,
+                left: `${field.x * xRatio}px`,
               }}
               key={field.key}
             >
@@ -620,6 +623,7 @@ class EditForm extends PureComponent {
           value: curValue[field.key].value,
           required: field.required,
           disabled: field.disabled,
+          ratio: { xRatio, yRatio },
         },
       };
       const newKeyInfo = {
@@ -648,7 +652,6 @@ class EditForm extends PureComponent {
     });
 
   renderFormContent = (items, row) => {
-    // const items = this.visibleForm.concat(this.availableGridItem);
     const newForm = items.map(item => {
       const { formData } = this.state;
       const curValue = formData[item.key];
@@ -665,7 +668,7 @@ class EditForm extends PureComponent {
                   index: i,
                 };
                 const key = `${itemFormData.key}${i}`;
-                const content = this.renderGridItem(item, { ...itemFormData }, keyInfo, false);
+                const content = this.renderGridItem(item, { ...itemFormData }, keyInfo, row);
                 return (
                   <div className={style.grid_content} key={key}>
                     <span onClick={() => this.deleteGridItem(item, curValue, i)} />
@@ -695,15 +698,15 @@ class EditForm extends PureComponent {
             row !== undefined
               ? {
                   position: item.base ? 'relative' : 'absolute',
-                  minHeight: `${item.row * 75}px`,
-                  width: `${item.col * 75}px`,
-                  top: `${(item.y - row) * 75}px`,
-                  left: `${item.x * 75}px`,
+                  minHeight: `${item.row * yRatio}px`,
+                  width: `${item.col * xRatio}px`,
+                  top: `${(item.y - row) * yRatio}px`,
+                  left: `${item.x * xRatio}px`,
                 }
               : {}
           }
         >
-          {this.renderFormItem(item, curValue || {}, keyInfo)}
+          {this.renderFormItem(item, { ...(curValue || {}), ratio: { xRatio, yRatio } }, keyInfo)}
         </div>
       );
     });
@@ -711,10 +714,13 @@ class EditForm extends PureComponent {
   };
 
   render() {
-    // this.renderRowsItem(this.rows)
-    const newForm = this.state.startflow
-      ? this.renderFormContent(this.visibleForm.concat(this.availableGridItem))
-      : null;
+    if (!this.state.startflow) {
+      return null;
+    }
+    let newForm = null;
+    if (this.state.startflow.flow.form.pc_template) {
+      newForm = this.renderRowsItem(this.rows);
+    } else newForm = this.renderFormContent(this.visibleForm.concat(this.availableGridItem));
     return <div>{newForm}</div>;
   }
 }

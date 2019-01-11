@@ -67,7 +67,11 @@ class SelectStaffItem extends PureComponent {
     );
   };
 
-  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+  renderInfo = (
+    value,
+    { field, template, field: { row }, ratio: { smXRtio, smYRtio } },
+    multiple
+  ) => (
     <DetailItem
       {...field}
       template={template}
@@ -75,8 +79,8 @@ class SelectStaffItem extends PureComponent {
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * 50}px` : '50px',
-              minWidth: template ? '600px' : '300px',
+              minHeight: template ? `${row * smYRtio}px` : `${smYRtio}px`,
+              minWidth: template ? `${8 * smXRtio}px` : `${4 * smXRtio}px`,
             }
           : {}
       }
@@ -94,6 +98,7 @@ class SelectStaffItem extends PureComponent {
       field,
       field: { id, description, name, col, row },
       required,
+      ratio: { xRtio, yRtio },
       disabled,
       asideStyle,
     } = this.props;
@@ -133,7 +138,11 @@ class SelectStaffItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
+        extraStyle={{
+          height: 'auto',
+          minWidth: `${8 * xRtio}px`,
+          minHeight: `${row * yRtio}px`,
+        }}
       >
         <div className={className} id={newId}>
           <Select
@@ -158,6 +167,7 @@ class SelectStaffItem extends PureComponent {
       field,
       field: { max, min, description, name, row },
       required,
+      ratio: { xRtio, yRtio },
       disabled,
       defaultValue,
       rightStyle,
@@ -184,8 +194,8 @@ class SelectStaffItem extends PureComponent {
         required={required}
         extraStyle={{
           height: 'auto',
-          minHeight: `${row * 75}px`,
-          ...(multiple ? { minWidth: '600px' } : null),
+          minHeight: `${row * yRtio}px`,
+          ...(multiple ? { minWidth: `${8 * xRtio}px` } : null),
         }}
       >
         <div className={className}>

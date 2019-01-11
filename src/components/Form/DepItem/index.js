@@ -87,6 +87,7 @@ class SelectDepItem extends PureComponent {
       field,
       field: { id, description, name, row },
       required,
+      ratio: { xRatio, yRatio },
       disabled,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -124,7 +125,11 @@ class SelectDepItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
+        extraStyle={{
+          height: 'auto',
+          minWidth: `${4 * xRatio}px`,
+          minHeight: `${row * yRatio}px`,
+        }}
       >
         <div className={className} id={newId}>
           <Select
@@ -144,7 +149,11 @@ class SelectDepItem extends PureComponent {
     );
   };
 
-  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+  renderInfo = (
+    value,
+    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
+    multiple
+  ) => (
     <DetailItem
       {...field}
       template={template}
@@ -152,8 +161,8 @@ class SelectDepItem extends PureComponent {
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * 50}px` : '50px',
-              minWidth: template ? '600px' : '300px',
+              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
+              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
             }
           : {}
       }
@@ -172,6 +181,7 @@ class SelectDepItem extends PureComponent {
       field: { name, description },
       required,
       department,
+      ratio: { xRatio },
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -199,7 +209,7 @@ class SelectDepItem extends PureComponent {
           height="auto"
           errorMsg={errorMsg}
           required={required}
-          extraStyle={{ height: 'auto', minWidth: '600px' }}
+          extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px` }}
         >
           <div className={className}>
             <TreeSelect

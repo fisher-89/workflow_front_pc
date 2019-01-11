@@ -60,14 +60,15 @@ class SelectItem extends PureComponent {
     return newOpts;
   };
 
-  renderInfo = (value, { field, template, field: { row } }) => (
+  renderInfo = (value, { field, template, field: { row }, ratio, ratio: { smXRtio, smYRtio } }) => (
     <DetailItem
       {...field}
       template={template}
+      ratio={ratio}
       extraStyle={{
         height: 'auto',
-        minHeight: template ? `${row * 50}px` : '50px',
-        minWidth: template ? '600px' : '300px',
+        minHeight: template ? `${row * smYRtio}px` : `${smYRtio}px`,
+        minWidth: template ? `${8 * smXRtio}px` : `${4 * smXRtio}px`,
       }}
     >
       <span>{(value || []).join('，')}</span>
@@ -80,6 +81,7 @@ class SelectItem extends PureComponent {
       required,
       disabled,
       readonly,
+      ratio: { xRtio },
       field: { max, min },
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -92,7 +94,7 @@ class SelectItem extends PureComponent {
         {...field}
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        extraStyle={{ height: 'auto', minWidth: `${8 * xRtio}px` }}
       >
         <div className={className}>
           <TagGroup

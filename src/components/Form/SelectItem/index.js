@@ -69,15 +69,19 @@ class SelectItem extends Component {
     return newOpts;
   };
 
-  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+  renderInfo = (
+    value,
+    { field, template, field: { row }, ratio: { smXRtio, smYRtio } },
+    multiple
+  ) => (
     <DetailItem
       {...field}
       extraStyle={
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * 50}px` : '50px',
-              minWidth: template ? '600px' : '300px',
+              minHeight: template ? `${row * smYRtio}px` : `${smYRtio}px`,
+              minWidth: template ? `${8 * smXRtio}px` : `${4 * smXRtio}px`,
             }
           : {}
       }
@@ -93,6 +97,7 @@ class SelectItem extends Component {
       field: { id, name, description, row },
       required,
       disabled,
+      ratio: { xRtio, yRtio },
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -130,7 +135,11 @@ class SelectItem extends Component {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
+        extraStyle={{
+          height: 'auto',
+          minWidth: `${8 * xRtio}px`,
+          minHeight: `${row * yRtio}px`,
+        }}
       >
         <div className={className} id={newId}>
           <Select

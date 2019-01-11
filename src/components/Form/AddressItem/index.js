@@ -72,7 +72,13 @@ class AddressItem extends Component {
   };
 
   render() {
-    const { field, required, disabled, readonly } = this.props;
+    const {
+      field,
+      required,
+      disabled,
+      readonly,
+      ratio: { xRatio, yRatio },
+    } = this.props;
     const { value, errorMsg } = this.state;
     if (readonly) {
       return this.renderAddress();
@@ -83,7 +89,7 @@ class AddressItem extends Component {
         {...field}
         required={required}
         errorMsg={errorMsg}
-        extraStyle={{ minWidth: '600px', height: '150px' }}
+        extraStyle={{ minWidth: `${8 * xRatio}px`, height: `${2 * yRatio}px` }}
       >
         <div className={errorMsg ? style.errorMsg : style.noerror}>
           <Address
