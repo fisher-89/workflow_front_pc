@@ -201,6 +201,8 @@ class EditForm extends PureComponent {
       };
       const value = this.startflow.form_data[key];
       if (availableFields) {
+        console.log('value', this.startflow.form_data, value);
+
         const gridValue = value.map(its => {
           const gridformData = {};
           availableFields.forEach(it => {
@@ -645,7 +647,7 @@ class EditForm extends PureComponent {
       const items = rows[row];
       const content = this.renderFormContent(items, row);
       return (
-        <div key={row} style={{ position: 'relative', width: '900px' }}>
+        <div key={row} style={{ position: 'relative', width: `${12 * xRatio}px` }}>
           {content}
         </div>
       );
@@ -719,7 +721,7 @@ class EditForm extends PureComponent {
       return null;
     }
     let newForm = null;
-    if (this.state.startflow.flow.form.pc_template) {
+    if (this.props.template) {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.availableGridItem));
     return <div>{newForm}</div>;

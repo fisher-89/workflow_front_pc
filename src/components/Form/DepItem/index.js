@@ -186,6 +186,7 @@ class SelectDepItem extends PureComponent {
       template,
       ratio: { xRatio },
       readonly,
+      disabled,
     } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
@@ -217,6 +218,7 @@ class SelectDepItem extends PureComponent {
         >
           <div className={className}>
             <TreeSelect
+              disabled={disabled}
               dropdownClassName={style.dropdown}
               placeholder={desc}
               showSearch

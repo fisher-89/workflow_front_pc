@@ -89,6 +89,26 @@
   .step2_item {
     border: 1px solid #ccc;
     margin-bottom: 20px;
+    position: relative;
+    .icon {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      right: 20px;
+      top: 20px;
+      &.checked {
+        background: url('/muChecked.png') no-repeat center center;
+        background-size: 16px;
+      }
+      &.singelchecked {
+        background: url('/singleChecked.png') no-repeat center center;
+        background-size: 16px;
+      }
+      &.disabed_checked {
+        background: url('/defaultChecked.png') no-repeat center center;
+        background-size: 16px;
+      }
+    }
     &.checked {
       background: url('/muChecked.png') no-repeat 550px 22px;
       background-size: 16px;

@@ -110,6 +110,7 @@ class TextItem extends Component {
       <Input.TextArea
         value={value}
         autosize={false}
+        style={{ resize: 'none' }}
         placeholder={desc}
         disabled={disabled}
         onChange={this.inputOnChange}
@@ -140,6 +141,7 @@ class TextItem extends Component {
     } = this.props;
     const { errorMsg } = this.state;
     const extraStyle = type !== 'int' && (max || 31) > 30 ? { minWidth: `${8 * xRatio}px` } : null;
+    console.log('extraStyle', extraStyle);
     const props = {
       ...field,
       required,

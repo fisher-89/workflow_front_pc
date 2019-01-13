@@ -96,10 +96,11 @@ class SelectStaffItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id, description, name, col, row },
+      field: { id, description, name, row },
       required,
       ratio: { xRatio, yRatio },
       disabled,
+      extraStyle,
       template,
       asideStyle,
     } = this.props;
@@ -115,7 +116,13 @@ class SelectStaffItem extends PureComponent {
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required} asideStyle={asideStyle}>
+        <FormItem
+          {...field}
+          errorMsg={errorMsg}
+          required={required}
+          asideStyle={asideStyle}
+          extraStyle={extraStyle}
+        >
           <div className={className} id={newId}>
             <Select
               disabled={disabled}
@@ -144,6 +151,7 @@ class SelectStaffItem extends PureComponent {
           height: 'auto',
           minWidth: `${8 * xRatio}px`,
           minHeight: `${row * yRatio}px`,
+          ...extraStyle,
         }}
       >
         <div className={className} id={newId}>
@@ -175,6 +183,7 @@ class SelectStaffItem extends PureComponent {
       defaultValue,
       rightStyle,
       asideStyle,
+      extraStyle,
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -198,11 +207,15 @@ class SelectStaffItem extends PureComponent {
         template={template}
         extraStyle={{
           height: 'auto',
-          minHeight: `${row * yRatio}px`,
+          minHeight: template ? `${row * yRatio}px` : '75px',
           ...(multiple ? { minWidth: `${8 * xRatio}px` } : null),
+          ...extraStyle,
         }}
       >
-        <div className={className}>
+        <div
+          className={className}
+          style={disabled ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed' } : {}}
+        >
           <SelectStaff
             multiple={multiple}
             description={desc}
@@ -221,6 +234,7 @@ class SelectStaffItem extends PureComponent {
 }
 SelectStaffItem.defaultProps = {
   onChange: () => {},
+  ratio: {},
   formName: { realname: 'text', staff_sn: 'value' },
 };
 export default SelectStaffItem;

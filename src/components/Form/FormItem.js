@@ -12,8 +12,6 @@ class FormItem extends PureComponent {
     const {
       children,
       className,
-      width,
-      height,
       col,
       template,
       row,
@@ -31,7 +29,7 @@ class FormItem extends PureComponent {
             width: `${col * xRatio}px`,
             height: `${row * yRatio}px`,
           }
-        : {}),
+        : { width: '600px' }),
       ...extraStyle,
     };
     // const minWidth = (width || 300) - 140;

@@ -753,7 +753,9 @@ export function analysisData(dataSource, key, keyIndex, name, dataSourceIndex) {
 
 // 转换时间差为天小时分钟
 export function convertTimeDis(t1, t2) {
+  console.log(t1, t2);
   const minutes = moment(t1).diff(moment(t2), 'minutes');
+
   var day = parseInt(minutes / 60 / 24);
   var hour = parseInt((minutes / 60) % 24);
   var min = parseInt(minutes % 60);

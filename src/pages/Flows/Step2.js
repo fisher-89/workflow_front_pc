@@ -146,21 +146,21 @@ class Step2 extends PureComponent {
 
   makeProps = () => ({
     name: '步骤名称',
-    width: '410',
+    extraStyle: { width: '420px' },
   });
 
   makeApproProps = (item, i) => {
     const field = {
       is_checkbox: false,
       available_options: [],
-      width: 300,
       name: '审批人',
     };
     return {
       required: item.checked,
       field,
       asideStyle: { width: '90px' },
-      itemStyle: { width: '290px' },
+      extraStyle: { width: '300px' },
+      // itemStyle: { width: '290px' },
       formName: { realname: 'approver_name', staff_sn: 'approver_sn' },
       value: item.approvers.value,
       errorMsg: item.approvers.errorMsg,
@@ -513,7 +513,6 @@ class Step2 extends PureComponent {
     const { formData } = this.state;
     const { preStepData } = this.props;
     const concurrentType = preStepData.concurrent_type;
-
     const stepItem = { ...this.makeProps(), asideStyle: { width: '90px' } };
     const isEnd = !(preStepData.available_steps.length && preStepData.step_end === 0);
     if (isEnd) {
@@ -525,14 +524,18 @@ class Step2 extends PureComponent {
           name: '执行步骤',
           errorMsg: formData.next_step.errorMsg,
           required: true,
-          width: 690,
           extraStyle: { height: 'auto' },
           asideStyle: { width: '90px' },
           rightStyle: { width: '600px', minWidth: '600px' },
         }}
       >
         {formData.next_step.value.map((step, i) => {
-          const cls = classNames(style.step2_item, {
+          // const cls = classNames(style.step2_item, {
+          //   [style.checked]: step.checked && concurrentType === 1,
+          //   [style.disabed_checked]: step.checked && concurrentType === 2,
+          //   [style.singelchecked]: step.checked && concurrentType === 0,
+          // });
+          const iconCls = classNames(style.icon, {
             [style.checked]: step.checked && concurrentType === 1,
             [style.disabed_checked]: step.checked && concurrentType === 2,
             [style.singelchecked]: step.checked && concurrentType === 0,
@@ -540,11 +543,12 @@ class Step2 extends PureComponent {
           const key = i;
           const curStep = preStepData.available_steps[i];
           return (
-            <div className={cls} key={key} onClick={e => this.handleClick(step, i, e)}>
+            <div className={style.step2_item} key={key} onClick={e => this.handleClick(step, i, e)}>
               <FormItem name="步骤名称" {...stepItem}>
                 <div style={{ lineHeight: '40px' }}>{curStep.name}</div>
               </FormItem>
               <SelectStaffItem {...this.makeApproProps(step, i)} />
+              <span className={iconCls} />
             </div>
           );
         })}

@@ -50,7 +50,7 @@ class CCDetail extends PureComponent {
             <span className={style.flow_title}> 流程名称</span>
             <span className={style.flow_des}> {startflow.flow_run.name}</span>
           </div>
-          <FormDetail startflow={startflow} />
+          <FormDetail startflow={startflow} template={startflow.form.pc_template} />
           <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
         </div>
       </Spin>

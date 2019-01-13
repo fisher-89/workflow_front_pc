@@ -24,7 +24,8 @@ class SelectShop extends Component {
       request('/api/oa/shops', {
         method: 'GET',
         body: { filters: `shop_sn=[${sNo}]` },
-      }).then(res => {
+      }).then(response => {
+        const res = response || [];
         this.setState({
           source: res,
           value: res.length
@@ -184,9 +185,10 @@ class SelectShop extends Component {
     );
     return (
       <div className={style.single_result}>
-        {this.props.disabled ? null : (
-          <span className={style.search_icon} onClick={this.handleClick} />
-        )}
+        <span
+          className={style.search_icon}
+          onClick={this.props.disabled ? this.handleClick : () => {}}
+        />
         <div className={style.single_search}>
           <AutoComplete
             onSearch={this.searchChange}

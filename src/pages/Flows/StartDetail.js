@@ -20,20 +20,20 @@ class StartDetail extends PureComponent {
       },
     } = this.props;
     this.id = 6;
-    // dispatch({
-    //   type: 'start/fetchStepInfo',
-    //   payload: {
-    //     id,
-    //     cb: detail => {
-    //       dispatch({
-    //         type: 'start/fetchFlowSteps',
-    //         payload: {
-    //           id: detail.step_run.id,
-    //         },
-    //       });
-    //     },
-    //   },
-    // });
+    dispatch({
+      type: 'start/fetchStepInfo',
+      payload: {
+        id,
+        cb: detail => {
+          dispatch({
+            type: 'start/fetchFlowSteps',
+            payload: {
+              id: detail.step_run.id,
+            },
+          });
+        },
+      },
+    });
   }
 
   withDraw = e => {
@@ -67,9 +67,9 @@ class StartDetail extends PureComponent {
         <div style={{ paddingBottom: '20px', width: '902px' }}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}>流程名称</span>
-            {/* <span className={style.flow_des}>{startflow.flow_run.name}</span> */}
+            <span className={style.flow_des}>{startflow.flow_run.name}</span>
           </div>
-          <FormDetail startflow={startflow} />
+          <FormDetail startflow={startflow} template={startflow.step.flow.form.pc_template} />
           {/* <FlowChart dataSource={flowChart} status={startflow.flow_run.status} /> */}
           {flowRun && flowRun.status === 0 ? (
             <div style={{ paddingLeft: '120px', marginTop: '20px' }}>

@@ -214,6 +214,7 @@ class ApproveForm extends PureComponent {
               ref={r => {
                 this.form = r;
               }}
+              template={startflow.step.flow.form.pc_template}
               formData={this.state.formData}
               onChange={data => this.setState({ formData: data })}
             />

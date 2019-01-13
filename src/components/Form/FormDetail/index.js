@@ -340,7 +340,7 @@ class EditForm extends PureComponent {
     );
   };
 
-  renderGridItem = (grid, curValue, keyInfo) => {
+  renderGridItem = (grid, curValue, keyInfo, template) => {
     const { visibleFields, key, name } = grid;
     if (template !== undefined) {
       const gridItemRows = this.makeFormInSameRows(visibleFields);
@@ -490,7 +490,7 @@ class EditForm extends PureComponent {
       return null;
     }
     let newForm = null;
-    if (this.state.startflow.flow.form.pc_template) {
+    if (this.props.template) {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.availableGridItem));
     return <div>{newForm}</div>;

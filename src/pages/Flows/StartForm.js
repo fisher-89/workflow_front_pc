@@ -27,12 +27,12 @@ class StartForm extends PureComponent {
       dispatch,
     } = this.props.parProps;
     this.id = id;
-    // dispatch({
-    //   type: 'start/getFlowInfo',
-    //   payload: {
-    //     id,
-    //   },
-    // });
+    dispatch({
+      type: 'start/getFlowInfo',
+      payload: {
+        id,
+      },
+    });
   }
 
   handleSubmit = e => {
@@ -200,6 +200,7 @@ class StartForm extends PureComponent {
             ref={r => {
               this.form = r;
             }}
+            template={startflow.flow.form.pc_template}
             formData={this.state.formData}
             onChange={data => this.setState({ formData: data })}
           />

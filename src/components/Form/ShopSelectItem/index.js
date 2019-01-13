@@ -67,6 +67,7 @@ class ShopSelectItem extends PureComponent {
     const {
       field,
       field: { id, row },
+      extraStyle,
       required,
       ratio: { xRatio, yRatio },
       disabled,
@@ -81,7 +82,7 @@ class ShopSelectItem extends PureComponent {
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required}>
+        <FormItem {...field} errorMsg={errorMsg} required={required} extraStyle={extraStyle}>
           <div className={className} id={newId}>
             <Select
               showSearch
@@ -104,7 +105,12 @@ class ShopSelectItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px`, minHeight: `${row * yRatio}px` }}
+        extraStyle={{
+          height: 'auto',
+          minWidth: `${8 * xRatio}px`,
+          minHeight: `${row * yRatio}px`,
+          ...extraStyle,
+        }}
       >
         <div className={className} id={newId}>
           <Select
@@ -157,8 +163,10 @@ class ShopSelectItem extends PureComponent {
       field: { max, min, row },
       required,
       disabled,
+      template,
       ratio: { xRatio, yRatio },
       readonly,
+      extraStyle,
       defaultValue,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -177,13 +185,18 @@ class ShopSelectItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
+        template={template}
         extraStyle={{
           height: 'auto',
-          minHeight: `${row * yRatio}px`,
+          minHeight: template ? `${row * yRatio}px` : '75px',
           ...(multiple ? { minWidth: `${8 * xRatio}px` } : null),
+          ...extraStyle,
         }}
       >
-        <div className={className}>
+        <div
+          className={className}
+          style={disabled ? { background: '#f5f5f5', cursor: 'not-allowed' } : {}}
+        >
           <SelectShop
             multiple={multiple}
             defaultValue={defaultValue}
@@ -198,5 +211,9 @@ class ShopSelectItem extends PureComponent {
     );
   }
 }
-
+ShopSelectItem.defaultProps = {
+  onChange: () => {},
+  ratio: {},
+  formName: { name: 'text', shop_sn: 'value' },
+};
 export default ShopSelectItem;

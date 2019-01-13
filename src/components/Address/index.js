@@ -174,6 +174,7 @@ export default class Address extends PureComponent {
             const address = e.target.value;
             this.setState({ value: { ...value, address } }, this.setPropsValue);
           }}
+          style={{ resize: 'none' }}
           value={value.address}
           placeholder="详细地址，请输入0-30个字符"
         />
