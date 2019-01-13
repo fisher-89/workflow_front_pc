@@ -593,6 +593,7 @@ class EditForm extends PureComponent {
             gridName: name,
             domKey: `${key}${keyInfo.index}${field.key}`,
           };
+
           return (
             <div
               style={{
@@ -633,7 +634,6 @@ class EditForm extends PureComponent {
         gridName: name,
         domKey: `${key}${keyInfo.index}${field.key}`,
       };
-
       return <div key={field.key}>{this.renderFormItem(field, formInfo, newKeyInfo)}</div>;
     });
 
@@ -691,6 +691,7 @@ class EditForm extends PureComponent {
         domKey: item.key,
         name: item.name,
       };
+
       return (
         <div
           key={item.key}

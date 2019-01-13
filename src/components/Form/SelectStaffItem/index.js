@@ -69,7 +69,7 @@ class SelectStaffItem extends PureComponent {
 
   renderInfo = (
     value,
-    { field, template, field: { row }, ratio: { smXRtio, smYRtio } },
+    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
     multiple
   ) => (
     <DetailItem
@@ -79,8 +79,8 @@ class SelectStaffItem extends PureComponent {
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * smYRtio}px` : `${smYRtio}px`,
-              minWidth: template ? `${8 * smXRtio}px` : `${4 * smXRtio}px`,
+              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
+              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
             }
           : {}
       }
@@ -98,8 +98,9 @@ class SelectStaffItem extends PureComponent {
       field,
       field: { id, description, name, col, row },
       required,
-      ratio: { xRtio, yRtio },
+      ratio: { xRatio, yRatio },
       disabled,
+      template,
       asideStyle,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -138,10 +139,11 @@ class SelectStaffItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
+        template={template}
         extraStyle={{
           height: 'auto',
-          minWidth: `${8 * xRtio}px`,
-          minHeight: `${row * yRtio}px`,
+          minWidth: `${8 * xRatio}px`,
+          minHeight: `${row * yRatio}px`,
         }}
       >
         <div className={className} id={newId}>
@@ -167,7 +169,8 @@ class SelectStaffItem extends PureComponent {
       field,
       field: { max, min, description, name, row },
       required,
-      ratio: { xRtio, yRtio },
+      template,
+      ratio: { xRatio, yRatio },
       disabled,
       defaultValue,
       rightStyle,
@@ -192,10 +195,11 @@ class SelectStaffItem extends PureComponent {
         asideStyle={asideStyle}
         rightStyle={rightStyle}
         required={required}
+        template={template}
         extraStyle={{
           height: 'auto',
-          minHeight: `${row * yRtio}px`,
-          ...(multiple ? { minWidth: `${8 * xRtio}px` } : null),
+          minHeight: `${row * yRatio}px`,
+          ...(multiple ? { minWidth: `${8 * xRatio}px` } : null),
         }}
       >
         <div className={className}>

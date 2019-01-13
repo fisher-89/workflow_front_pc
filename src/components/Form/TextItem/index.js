@@ -134,16 +134,19 @@ class TextItem extends Component {
       field,
       required,
       asideStyle,
+      template,
+      ratio: { xRatio },
       field: { max, type },
     } = this.props;
     const { errorMsg } = this.state;
-    const extraStyle = type !== 'int' && (max || 31) > 30 ? { minWidth: '600px' } : null;
+    const extraStyle = type !== 'int' && (max || 31) > 30 ? { minWidth: `${8 * xRatio}px` } : null;
     const props = {
       ...field,
       required,
       errorMsg,
       asideStyle,
       extraStyle,
+      template,
     };
     return props;
   };

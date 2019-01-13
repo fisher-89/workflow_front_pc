@@ -71,7 +71,7 @@ class TimeItem extends PureComponent {
       return this.renderInfo(value, field, template);
     }
     return (
-      <FormItem {...field} errorMsg={errorMsg} required={required}>
+      <FormItem {...field} errorMsg={errorMsg} required={required} template={template}>
         <div className={className}>
           <TimePicker
             value={newValue}

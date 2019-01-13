@@ -68,6 +68,7 @@ class ShopSelectItem extends PureComponent {
       field,
       field: { id, row },
       required,
+      ratio: { xRatio, yRatio },
       disabled,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -103,7 +104,7 @@ class ShopSelectItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
-        extraStyle={{ height: 'auto', minWidth: '600px', minHeight: `${row * 75}px` }}
+        extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px`, minHeight: `${row * yRatio}px` }}
       >
         <div className={className} id={newId}>
           <Select
@@ -122,7 +123,11 @@ class ShopSelectItem extends PureComponent {
     );
   };
 
-  renderInfo = (value, { field, template, field: { row } }, multiple) => (
+  renderInfo = (
+    value,
+    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
+    multiple
+  ) => (
     <DetailItem
       {...field}
       template={template}
@@ -130,8 +135,8 @@ class ShopSelectItem extends PureComponent {
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * 50}px` : '50px',
-              minWidth: template ? '600px' : '300px',
+              minHeight: template ? `${row * smYRatio}px` : '50px',
+              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
             }
           : {}
       }
@@ -152,6 +157,7 @@ class ShopSelectItem extends PureComponent {
       field: { max, min, row },
       required,
       disabled,
+      ratio: { xRatio, yRatio },
       readonly,
       defaultValue,
     } = this.props;
@@ -173,8 +179,8 @@ class ShopSelectItem extends PureComponent {
         required={required}
         extraStyle={{
           height: 'auto',
-          minHeight: `${row * 75}px`,
-          ...(multiple ? { minWidth: '600px' } : null),
+          minHeight: `${row * yRatio}px`,
+          ...(multiple ? { minWidth: `${8 * xRatio}px` } : null),
         }}
       >
         <div className={className}>

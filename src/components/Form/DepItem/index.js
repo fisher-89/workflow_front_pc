@@ -87,6 +87,7 @@ class SelectDepItem extends PureComponent {
       field,
       field: { id, description, name, row },
       required,
+      template,
       ratio: { xRatio, yRatio },
       disabled,
     } = this.props;
@@ -102,7 +103,7 @@ class SelectDepItem extends PureComponent {
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required}>
+        <FormItem {...field} template={template} errorMsg={errorMsg} required={required}>
           <div className={className} id={newId}>
             <Select
               disabled={disabled}
@@ -125,9 +126,10 @@ class SelectDepItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
+        template={template}
         extraStyle={{
           height: 'auto',
-          minWidth: `${4 * xRatio}px`,
+          minWidth: `${8 * xRatio}px`,
           minHeight: `${row * yRatio}px`,
         }}
       >
@@ -181,6 +183,7 @@ class SelectDepItem extends PureComponent {
       field: { name, description },
       required,
       department,
+      template,
       ratio: { xRatio },
       readonly,
     } = this.props;
@@ -209,6 +212,7 @@ class SelectDepItem extends PureComponent {
           height="auto"
           errorMsg={errorMsg}
           required={required}
+          template={template}
           extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px` }}
         >
           <div className={className}>

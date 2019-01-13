@@ -71,7 +71,7 @@ class SelectItem extends Component {
 
   renderInfo = (
     value,
-    { field, template, field: { row }, ratio: { smXRtio, smYRtio } },
+    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
     multiple
   ) => (
     <DetailItem
@@ -80,8 +80,8 @@ class SelectItem extends Component {
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * smYRtio}px` : `${smYRtio}px`,
-              minWidth: template ? `${8 * smXRtio}px` : `${4 * smXRtio}px`,
+              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
+              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
             }
           : {}
       }
@@ -97,7 +97,8 @@ class SelectItem extends Component {
       field: { id, name, description, row },
       required,
       disabled,
-      ratio: { xRtio, yRtio },
+      template,
+      ratio: { xRatio, yRatio },
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -111,7 +112,7 @@ class SelectItem extends Component {
     if (!field.is_checkbox) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required}>
+        <FormItem {...field} errorMsg={errorMsg} template={template} required={required}>
           <div className={className} id={newId}>
             <Select
               disabled={disabled}
@@ -135,10 +136,11 @@ class SelectItem extends Component {
         height="auto"
         errorMsg={errorMsg}
         required={required}
+        template={template}
         extraStyle={{
           height: 'auto',
-          minWidth: `${8 * xRtio}px`,
-          minHeight: `${row * yRtio}px`,
+          minWidth: `${8 * xRatio}px`,
+          minHeight: `${row * yRatio}px`,
         }}
       >
         <div className={className} id={newId}>

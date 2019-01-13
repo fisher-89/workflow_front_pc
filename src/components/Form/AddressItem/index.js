@@ -77,6 +77,7 @@ class AddressItem extends Component {
       required,
       disabled,
       readonly,
+      template,
       ratio: { xRatio, yRatio },
     } = this.props;
     const { value, errorMsg } = this.state;
@@ -89,6 +90,7 @@ class AddressItem extends Component {
         {...field}
         required={required}
         errorMsg={errorMsg}
+        template={template}
         extraStyle={{ minWidth: `${8 * xRatio}px`, height: `${2 * yRatio}px` }}
       >
         <div className={errorMsg ? style.errorMsg : style.noerror}>

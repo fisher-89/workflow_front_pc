@@ -91,11 +91,17 @@ class UploadItem extends PureComponent {
     return unique;
   };
 
-  renderInfo = (value, { field, template, field: { row } }, suffix) => (
+  renderInfo = (
+    value,
+    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
+    suffix
+  ) => (
     <DetailItem
       {...field}
       template={template}
-      extraStyle={template ? { minHeight: `${row * 100}px`, minWidth: '600px' } : {}}
+      extraStyle={
+        template ? { minHeight: `${row * smYRatio}px`, minWidth: `${8 * smXRatio}px` } : {}
+      }
     >
       <div className={style.filelist}>
         {value && value.length ? (
@@ -111,6 +117,8 @@ class UploadItem extends PureComponent {
       field: { validator, max, min },
       required,
       disabled,
+      template,
+      ratio: { xRatio },
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -127,7 +135,8 @@ class UploadItem extends PureComponent {
         required={required}
         errorMsg={errorMsg}
         className="file"
-        extraStyle={{ height: 'auto', minWidth: '600px' }}
+        template={template}
+        extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px` }}
       >
         <div className={className}>
           <FileUpload
