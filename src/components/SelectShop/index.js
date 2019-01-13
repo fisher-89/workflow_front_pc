@@ -187,7 +187,7 @@ class SelectShop extends Component {
       <div className={style.single_result}>
         <span
           className={style.search_icon}
-          onClick={this.props.disabled ? this.handleClick : () => {}}
+          onClick={!this.props.disabled ? this.handleClick : () => {}}
         />
         <div className={style.single_search}>
           <AutoComplete

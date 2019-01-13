@@ -65,9 +65,7 @@ class Processing extends Component {
       {
         title: '历时',
         render: a => {
-          const disTime = a.created_at
-            ? convertTimeDis(moment().format('YYYY-MM-DD h:mm:ss'), a.created_at)
-            : '';
+          const disTime = a.created_at ? convertTimeDis(a.created_at) : '';
           return disTime;
         },
       },

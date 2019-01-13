@@ -28,6 +28,7 @@ class Exception extends React.PureComponent {
       redirect,
       ...rest
     } = this.props;
+    console.log('type', type);
     const pageType = type in config ? type : '404';
     const clsString = classNames(styles.exception, className);
     return (

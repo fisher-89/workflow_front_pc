@@ -136,18 +136,19 @@ class TextItem extends Component {
       required,
       asideStyle,
       template,
+      extraStyle,
       ratio: { xRatio },
       field: { max, type },
     } = this.props;
     const { errorMsg } = this.state;
-    const extraStyle = type !== 'int' && (max || 31) > 30 ? { minWidth: `${8 * xRatio}px` } : null;
+    const extraStyles = type !== 'int' && (max || 31) > 30 ? { minWidth: `${8 * xRatio}px` } : null;
     console.log('extraStyle', extraStyle);
     const props = {
       ...field,
       required,
       errorMsg,
       asideStyle,
-      extraStyle,
+      extraStyle: { ...extraStyles, ...extraStyle },
       template,
     };
     return props;
@@ -184,5 +185,6 @@ class TextItem extends Component {
 
 TextItem.defaultProps = {
   onChange: () => {},
+  ratio: {},
 };
 export default TextItem;

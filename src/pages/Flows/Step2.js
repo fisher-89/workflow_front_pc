@@ -181,7 +181,6 @@ class Step2 extends PureComponent {
     const field = {
       is_checkbox: 1,
       available_options: [],
-      width: 600,
       name: '抄送人',
     };
     return {
@@ -191,6 +190,7 @@ class Step2 extends PureComponent {
       formName: { realname: 'staff_name', staff_sn: 'staff_sn' },
       field,
       asideStyle: { width: '90px' },
+      extraStyle: { width: '600px' },
       onChange: (value, errorMsg) => this.approverChange(value, errorMsg, { formKey: 'cc_person' }),
     };
   };
@@ -199,7 +199,6 @@ class Step2 extends PureComponent {
     const { formData } = this.state;
     const person = formData.deliver;
     const field = {
-      width: 600,
       name: '转交人',
     };
     return {
@@ -208,6 +207,7 @@ class Step2 extends PureComponent {
       required: true,
       formName: { realname: 'approver_name', staff_sn: 'approver_sn' },
       field,
+      extraStyle: { width: '300px' },
       asideStyle: { width: '90px' },
       onChange: (value, errorMsg) => this.approverChange(value, errorMsg, { formKey: 'deliver' }),
     };
@@ -215,7 +215,6 @@ class Step2 extends PureComponent {
 
   makeRemarkProps = () => {
     const field = {
-      width: 600,
       name: '备注',
       max: 200,
       type: 'text',
@@ -224,6 +223,7 @@ class Step2 extends PureComponent {
     return {
       field,
       asideStyle: { width: '90px' },
+      extraStyle: { width: '600px', height: '150px' },
       onChange: (value, errorMsg) => this.approverChange(value, errorMsg, { formKey: 'remark' }),
     };
   };
@@ -604,7 +604,7 @@ class Step2 extends PureComponent {
         <div className={style.step2}>
           <div>
             {type !== 'deliver' && type !== 'reject' ? this.renderSteps() : null}
-            {type === 'start' && type === 'approve' && preStepData.is_cc === '1' ? (
+            {(type === 'start' || type === 'approve') && preStepData.is_cc === '1' ? (
               <SelectStaffItem {...this.makeCCProps()} />
             ) : null}
             {type === 'deliver' ? <SelectStaffItem {...this.makeDeliverProps()} /> : null}

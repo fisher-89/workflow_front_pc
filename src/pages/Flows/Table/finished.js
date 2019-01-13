@@ -88,7 +88,7 @@ class StartList extends Component {
       {
         title: '历时',
         render: a => {
-          const disTime = a.end_at ? convertTimeDis(a.end_at, a.created_at) : '';
+          const disTime = a.end_at ? convertTimeDis(a.created_at, a.end_at) : '';
           return disTime;
         },
       },

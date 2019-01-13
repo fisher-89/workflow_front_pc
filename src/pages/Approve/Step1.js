@@ -11,6 +11,7 @@ import style from '../Flows/index.less';
   approveDetails: approve.approveDetails,
   startLoading: loading.effects['approve/getFlowInfo'],
   presetSubmit: loading.effects['start/preSet'],
+  chartLoading: loading.effects['start/fetchFlowSteps'],
   flowChart: start.flowChart,
 }))
 class ApproveForm extends PureComponent {
@@ -194,6 +195,7 @@ class ApproveForm extends PureComponent {
       flowChart,
       approveDetails,
       startLoading,
+      chartLoading,
       presetSubmit,
       parProps: { handleSubmit },
     } = this.props;
@@ -202,12 +204,12 @@ class ApproveForm extends PureComponent {
       return null;
     }
     return (
-      <Spin spinning={startLoading || presetSubmit === true}>
-        <div style={{ paddingBottom: '20px', width: '902px' }}>
+      <div style={{ paddingBottom: '20px', width: '902px' }}>
+        <Spin spinning={startLoading || presetSubmit === true}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}> 流程名称</span>
             <span className={style.flow_des}> {startflow.flow_run.name}</span>
-          </div>{' '}
+          </div>
           {startflow.step_run.action_type === 0 ? (
             <EditForm
               startflow={startflow}
@@ -221,21 +223,19 @@ class ApproveForm extends PureComponent {
           ) : (
             <FormDetail startflow={startflow} />
           )}
-          <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
-          <div style={{ paddingLeft: '120px' }}>
-            {' '}
+          <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
             {startflow.step_run.action_type === 0 && (
               <Button type="primary" onClick={this.handleSubmit}>
                 通过
               </Button>
-            )}{' '}
-            <span style={{ marginRight: '20px' }} />{' '}
+            )}
+            <span style={{ marginRight: '20px' }} />
             {startflow.step_run.action_type === 0 && (
               <Button type="primary" onClick={() => handleSubmit('deliver')}>
                 转交
               </Button>
-            )}{' '}
-            <span style={{ marginRight: '20px' }} />{' '}
+            )}
+            <span style={{ marginRight: '20px' }} />
             {startflow.step.reject_type !== 0 &&
               startflow.step_run.action_type === 0 && (
                 <Button type="primary" onClick={() => handleSubmit('reject')}>
@@ -243,8 +243,11 @@ class ApproveForm extends PureComponent {
                 </Button>
               )}
           </div>
-        </div>
-      </Spin>
+        </Spin>
+        <Spin spinning={chartLoading || false}>
+          <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
+        </Spin>
+      </div>
     );
   }
 }

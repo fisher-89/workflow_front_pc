@@ -9,6 +9,7 @@ import style from './index.less';
   startDetails: start.startDetails,
   startLoading: loading.effects['start/getFlowInfo'],
   presetSubmit: loading.effects['start/preSet'],
+  chartLoading: loading.effects['start/fetchFlowSteps'],
   flowChart: start.flowChart,
 }))
 class StartDetail extends PureComponent {
@@ -19,7 +20,7 @@ class StartDetail extends PureComponent {
         params: { id },
       },
     } = this.props;
-    this.id = 6;
+    this.id = id;
     dispatch({
       type: 'start/fetchStepInfo',
       payload: {
@@ -55,7 +56,7 @@ class StartDetail extends PureComponent {
   };
 
   render() {
-    const { startDetails, startLoading, presetSubmit, flowChart } = this.props;
+    const { startDetails, startLoading, presetSubmit, flowChart, chartLoading } = this.props;
     const startflow = startDetails[this.id] || null;
     if (!startflow || !Object.keys(startflow).length) {
       return null;
@@ -63,14 +64,13 @@ class StartDetail extends PureComponent {
     const flowRun = startflow.flow_run;
 
     return (
-      <Spin spinning={startLoading || presetSubmit === true}>
-        <div style={{ paddingBottom: '20px', width: '902px' }}>
+      <div style={{ paddingBottom: '20px', width: '902px' }}>
+        <Spin spinning={startLoading || presetSubmit === true}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}>流程名称</span>
             <span className={style.flow_des}>{startflow.flow_run.name}</span>
           </div>
           <FormDetail startflow={startflow} template={startflow.step.flow.form.pc_template} />
-          {/* <FlowChart dataSource={flowChart} status={startflow.flow_run.status} /> */}
           {flowRun && flowRun.status === 0 ? (
             <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
               <Button type="primary" onClick={this.withDraw}>
@@ -78,8 +78,11 @@ class StartDetail extends PureComponent {
               </Button>
             </div>
           ) : null}
-        </div>
-      </Spin>
+        </Spin>
+        <Spin spinning={chartLoading || false}>
+          <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
+        </Spin>
+      </div>
     );
   }
 }

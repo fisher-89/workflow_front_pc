@@ -35,17 +35,17 @@ class CCList extends Component {
         key: 'id',
         sorter: true,
       },
-      {
-        title: '流程类型',
-        dataIndex: 'flow_type_id',
-        key: 'flow_type_id',
-        filters: availableFlows.map(item => ({ text: item.name, value: item.id })),
-        render: a => {
-          // const { availableFlows } = this.props;
-          const flow = (availableFlows || []).find(item => item.id === a);
-          return flow ? flow.name : '';
-        },
-      },
+      // {
+      //   title: '流程类型',
+      //   dataIndex: 'flow_type_id',
+      //   key: 'flow_type_id',
+      //   filters: availableFlows.map(item => ({ text: item.name, value: item.id })),
+      //   render: a => {
+      //     // const { availableFlows } = this.props;
+      //     const flow = (availableFlows || []).find(item => `${item.id} `=== `${a}`);
+      //     return flow ? flow.name : '';
+      //   },
+      // },
       {
         title: '流程名称',
         dataIndex: 'flow_name',
@@ -69,9 +69,7 @@ class CCList extends Component {
       {
         title: '历时',
         render: a => {
-          const disTime = a.updated_at
-            ? convertTimeDis(moment().format('YYYY-MM-DD h:mm:ss'), a.updated_at)
-            : '';
+          const disTime = a.updated_at ? convertTimeDis(a.updated_at) : '';
           return disTime;
         },
       },

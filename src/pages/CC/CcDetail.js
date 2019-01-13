@@ -9,6 +9,7 @@ import style from '../Flows/index.less';
 @connect(({ cc, loading, start }) => ({
   ccDetails: cc.ccDetails,
   startLoading: loading.effects['cc/getFlowInfo'],
+  chartLoading: loading.effects['start/fetchFlowSteps'],
   flowChart: start.flowChart,
 }))
 class CCDetail extends PureComponent {
@@ -37,23 +38,25 @@ class CCDetail extends PureComponent {
   }
 
   render() {
-    const { ccDetails, startLoading, flowChart } = this.props;
+    const { ccDetails, startLoading, flowChart, chartLoading } = this.props;
     const startflow = ccDetails[this.id] || null;
     if (!startflow || !Object.keys(startflow).length) {
       return null;
     }
 
     return (
-      <Spin spinning={startLoading || false}>
-        <div style={{ paddingBottom: '20px', width: '902px' }}>
+      <div style={{ paddingBottom: '20px', width: '902px' }}>
+        <Spin spinning={startLoading || false}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}> 流程名称</span>
             <span className={style.flow_des}> {startflow.flow_run.name}</span>
           </div>
           <FormDetail startflow={startflow} template={startflow.form.pc_template} />
+        </Spin>
+        <Spin spinning={chartLoading || false}>
           <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
-        </div>
-      </Spin>
+        </Spin>
+      </div>
     );
   }
 }
