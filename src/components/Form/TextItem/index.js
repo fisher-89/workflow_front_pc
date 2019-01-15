@@ -142,13 +142,13 @@ class TextItem extends Component {
     } = this.props;
     const { errorMsg } = this.state;
     const extraStyles = type !== 'int' && (max || 31) > 30 ? { minWidth: `${8 * xRatio}px` } : null;
-    console.log('extraStyle', extraStyle);
     const props = {
       ...field,
       required,
       errorMsg,
       asideStyle,
       extraStyle: { ...extraStyles, ...extraStyle },
+      rightStyle: type === 'int' ? { overflowY: 'hidden' } : null,
       template,
     };
     return props;

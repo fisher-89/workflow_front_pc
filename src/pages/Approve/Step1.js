@@ -20,29 +20,30 @@ class ApproveForm extends PureComponent {
     this.state = {
       formData: {},
     };
+    this.id = props.parProps.id;
   }
 
-  componentWillMount() {
-    const {
-      match: {
-        params: { id },
-      },
-      dispatch,
-    } = this.props.parProps;
-    this.id = id;
-    dispatch({
-      type: 'approve/fetchStepInfo',
-      payload: {
-        id,
-      },
-    });
-    dispatch({
-      type: 'start/fetchFlowSteps',
-      payload: {
-        id,
-      },
-    });
-  }
+  // componentWillMount() {
+  //   const {
+  //     match: {
+  //       params: { id },
+  //     },
+  //     dispatch,
+  //   } = this.props.parProps;
+  //   this.id = id;
+  //   dispatch({
+  //     type: 'approve/fetchStepInfo',
+  //     payload: {
+  //       id,
+  //     },
+  //   });
+  //   dispatch({
+  //     type: 'start/fetchFlowSteps',
+  //     payload: {
+  //       id,
+  //     },
+  //   });
+  // }
 
   handleSubmit = e => {
     e.preventDefault();
@@ -200,6 +201,7 @@ class ApproveForm extends PureComponent {
       parProps: { handleSubmit },
     } = this.props;
     const startflow = approveDetails[this.id] || null;
+    console.log(approveDetails, this.id);
     if (!startflow || !Object.keys(startflow).length) {
       return null;
     }

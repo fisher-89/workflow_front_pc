@@ -122,6 +122,7 @@ class SelectStaffItem extends PureComponent {
           required={required}
           asideStyle={asideStyle}
           extraStyle={extraStyle}
+          template={template}
         >
           <div className={className} id={newId}>
             <Select
@@ -143,14 +144,13 @@ class SelectStaffItem extends PureComponent {
       <FormItem
         {...field}
         asideStyle={asideStyle}
-        height="auto"
         errorMsg={errorMsg}
         required={required}
         template={template}
         extraStyle={{
-          height: 'auto',
+          // height: 'auto',
           minWidth: `${8 * xRatio}px`,
-          minHeight: `${row * yRatio}px`,
+          // minHeight: `${row * yRatio}px`,
           ...extraStyle,
         }}
       >
@@ -202,12 +202,12 @@ class SelectStaffItem extends PureComponent {
         {...field}
         errorMsg={errorMsg}
         asideStyle={asideStyle}
-        rightStyle={rightStyle}
+        rightStyle={{ overflowY: multiple ? 'scroll' : 'hidden', ...rightStyle }}
         required={required}
         template={template}
         extraStyle={{
-          height: 'auto',
-          minHeight: template ? `${row * yRatio}px` : '75px',
+          // height: 'auto',
+          // minHeight: template ? `${row * yRatio}px` : '75px',
           ...(multiple ? { minWidth: `${8 * xRatio}px` } : null),
           ...extraStyle,
         }}

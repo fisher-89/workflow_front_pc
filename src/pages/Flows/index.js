@@ -66,7 +66,7 @@ class Sumbit extends PureComponent {
       },
     ];
     return (
-      <div style={{ maxWidth: '900px' }}>
+      <div style={{ maxWidth: '926px', paddingRight: '24px', paddingBottom: '20px' }}>
         <Steps size="small" current={current}>
           {steps.map(step => (
             <Step key={step.title} title={step.title} />

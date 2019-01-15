@@ -79,8 +79,18 @@ class UploadCropper extends React.Component {
     const uploadState = { fileList, value: newValue };
     if (!cropper) uploadState.fileItem = file;
 
-    this.setState({ ...uploadState }, () => {
-      if (file.status === 'removed') onChange(newValue.map(item => item.url));
+    this.setState({ ...uploadState, fileList, value: newValue }, () => {
+      const newImgs = newValue.map(its => {
+        let img = its.url;
+        const isPic = isImage(img);
+        if (isPic) {
+          img = rebackImg(its.url, `${UPLOAD_PATH}`, '_thumb');
+        } else {
+          img = rebackImg(img, `${UPLOAD_PATH}`, '.');
+        }
+        return img;
+      });
+      if (file.status === 'removed') onChange(newImgs);
     });
   };
 
@@ -91,11 +101,29 @@ class UploadCropper extends React.Component {
     });
   };
 
+  // handlePreview = file => {
+  //   this.setState({
+  //     previewImage: file.url || file.thumbUrl,
+  //     previewVisible: true,
+  //   });
+  // };
+
   handlePreview = file => {
-    this.setState({
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: true,
-    });
+    const previewSrc = file.url;
+    const isPic = isImage(previewSrc);
+    if (!isPic) {
+      const a = document.createElement('a');
+      a.href = previewSrc;
+      a.download = '';
+      a.target = '_blank';
+      a.click();
+    } else {
+      const bigImgs = reAgainImg(previewSrc, '_thumb');
+      this.setState({
+        previewVisible: true,
+        previewImage: bigImgs,
+      });
+    }
   };
 
   beforeUpload = file => {
@@ -148,8 +176,6 @@ class UploadCropper extends React.Component {
   };
 
   customRequest = file => {
-    const { fileItem } = this.state;
-    // if (!fileItem) return;
     const { url, id } = this.props;
     const formData = new FormData();
     formData.append('upFile', file.file);
@@ -157,33 +183,42 @@ class UploadCropper extends React.Component {
     request(url, {
       method: 'POST',
       body: formData,
-    }).then(res => {
-      this.afterCallBack(res, 'done');
-    });
-    // .catch(error => {
-    //   this.afterCallBack(res.url, 'error');
-    // });
+    })
+      .then(res => {
+        if (res.status === 422) {
+          const { errors } = res;
+          const msgs = errors[Object.keys(errors)[0]].join(';');
+          this.afterCallBack(msgs, 'error', file.file);
+        } else {
+          this.afterCallBack(res, 'done', file.file);
+        }
+      })
+      .catch(error => {
+        this.afterCallBack(error, 'error', file.file);
+      });
   };
 
-  afterCallBack = (response, status = 'done') => {
-    const { fileItem, value, fileList } = this.state;
-    const { name, onChange } = this.props;
-    const newFileList = fileList.map(item => {
-      if (item.uid === fileItem.uid) {
-        return {
-          ...item,
-          status,
-        };
-      }
-      return item;
-    });
+  afterCallBack = (response, status = 'done', file) => {
+    const { value, fileList } = this.state;
+    const { onChange } = this.props;
+    const newFileList = fileList
+      .map(item => {
+        if (item.uid === file.uid) {
+          return {
+            ...item,
+            status,
+          };
+        }
+        return item;
+      })
+      .filter(item => item.status !== 'error');
     if (status === 'done') {
       value.push({
-        ...fileItem,
+        ...file,
         url: response.thumb_url || response.url,
       });
     }
-    if (status === 'error') message.error(`上传失败：${response[name]}`);
+    if (status === 'error') message.error(`上传失败：${response}`);
     this.setState({ value, fileList: newFileList, fileItem: null }, () => {
       if (status === 'done') {
         // const params = value.map(item => item.url);
@@ -226,9 +261,16 @@ class UploadCropper extends React.Component {
     const className = classNames(style.upload, {
       [style.disabled]: disabled,
     });
-    console.log(fileList);
+
     return (
-      <div style={{ position: 'relative' }} className={className}>
+      <div
+        style={{ position: 'relative' }}
+        className={className}
+        ref={ref => {
+          this.ref = ref;
+        }}
+        id={`upload${this.props.id}`}
+      >
         <Upload
           fileList={fileList}
           listType="picture-card"
@@ -242,7 +284,12 @@ class UploadCropper extends React.Component {
         >
           {uploadButton}
         </Upload>
-        <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+        <Modal
+          visible={previewVisible}
+          footer={null}
+          onCancel={this.handleCancel}
+          getContainer={() => document.getElementById(`upload${this.props.id}`)}
+        >
           <img alt="example" style={{ width: '100%' }} src={previewImage} />{' '}
         </Modal>
       </div>

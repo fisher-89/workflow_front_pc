@@ -202,7 +202,6 @@ class SelectShop extends Component {
             dataSource={searchResult.length ? children : [children]}
             placeholder={value[name.name] || description}
             onSelect={this.onSelect}
-            style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}
           />
         </div>

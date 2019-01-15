@@ -68,6 +68,7 @@ class ShopSelectItem extends PureComponent {
       field,
       field: { id, row },
       extraStyle,
+      template,
       required,
       ratio: { xRatio, yRatio },
       disabled,
@@ -82,7 +83,13 @@ class ShopSelectItem extends PureComponent {
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required} extraStyle={extraStyle}>
+        <FormItem
+          {...field}
+          errorMsg={errorMsg}
+          required={required}
+          template={template}
+          extraStyle={extraStyle}
+        >
           <div className={className} id={newId}>
             <Select
               showSearch
@@ -105,10 +112,11 @@ class ShopSelectItem extends PureComponent {
         height="auto"
         errorMsg={errorMsg}
         required={required}
+        template={template}
         extraStyle={{
-          height: 'auto',
+          // height: 'auto',
           minWidth: `${8 * xRatio}px`,
-          minHeight: `${row * yRatio}px`,
+          // minHeight: `${row * yRatio}px`,
           ...extraStyle,
         }}
       >
@@ -137,6 +145,7 @@ class ShopSelectItem extends PureComponent {
     <DetailItem
       {...field}
       template={template}
+      text={multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}
       extraStyle={
         multiple
           ? {
@@ -147,13 +156,7 @@ class ShopSelectItem extends PureComponent {
           : {}
       }
     >
-      {value ? (
-        <div style={{ height: '100%', overflow: 'hidden' }}>
-          {multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}
-        </div>
-      ) : (
-        ''
-      )}
+      <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
     </DetailItem>
   );
 
@@ -186,9 +189,10 @@ class ShopSelectItem extends PureComponent {
         errorMsg={errorMsg}
         required={required}
         template={template}
+        rightStyle={{ overflowY: multiple ? 'scroll' : 'hidden' }}
         extraStyle={{
-          height: 'auto',
-          minHeight: template ? `${row * yRatio}px` : '75px',
+          // height: 'auto',
+          // minHeight: template ? `${row * yRatio}px` : '75px',
           ...(multiple ? { minWidth: `${8 * xRatio}px` } : null),
           ...extraStyle,
         }}

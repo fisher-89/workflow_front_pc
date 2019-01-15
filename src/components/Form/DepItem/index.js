@@ -214,7 +214,7 @@ class SelectDepItem extends PureComponent {
           errorMsg={errorMsg}
           required={required}
           template={template}
-          extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px` }}
+          extraStyle={{ minWidth: `${8 * xRatio}px` }}
         >
           <div className={className}>
             <TreeSelect

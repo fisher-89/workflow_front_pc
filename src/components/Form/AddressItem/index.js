@@ -65,7 +65,7 @@ class AddressItem extends Component {
     const address = `${prov.name || ''}${county.name || ''}${city.name || ''}${value.address ||
       ''}`;
     return (
-      <DetailItem {...field} template={template}>
+      <DetailItem {...field} template={template} text={address}>
         <span>{address}</span>
       </DetailItem>
     );
@@ -91,6 +91,7 @@ class AddressItem extends Component {
         required={required}
         errorMsg={errorMsg}
         template={template}
+        rightStyle={{ overflowY: 'hidden' }}
         extraStyle={{ minWidth: `${8 * xRatio}px`, height: `${2 * yRatio}px` }}
       >
         <div className={errorMsg ? style.errorMsg : style.noerror}>

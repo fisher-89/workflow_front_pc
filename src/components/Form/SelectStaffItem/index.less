@@ -11,9 +11,10 @@
     }
     .ant-select-selection {
       height: 100%;
+      border-color: transparent;
     }
     .ant-select-selection__rendered {
-      line-height: inherit;
+      line-height: 36px;
     }
   }
 }
@@ -27,6 +28,9 @@
     .ant-select {
       width: 100%;
     }
+    .ant-select-selection {
+      border-color: transparent;
+    }
     .ant-select-selection--multiple .ant-select-selection__rendered > ul > li {
       height: 30px;
       line-height: 30px;
@@ -37,19 +41,19 @@
 .errorMsg {
   :global {
     .ant-select {
-      border-color: #fff;
+      border-color: transparent;
       outline: none;
     }
     .ant-select-selection:hover {
-      border-color: #fff;
+      border-color: transparent;
       box-shadow: 0 0 8px @error-color;
     }
     .ant-select-selection:focus {
-      border-color: #fff;
+      border-color: transparent;
       box-shadow: 0 0 8px @error-color;
     }
     .ant-select-open .ant-select-selection {
-      border-color: #fff;
+      border-color: transparent;
       box-shadow: 0 0 8px @error-color;
     }
   }

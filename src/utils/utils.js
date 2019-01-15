@@ -688,7 +688,6 @@ export function getFieldValue(value, keys, name, include) {
     const newKey = name[key];
     delete newValue[key];
     newValue[newKey] = value[key];
-    console.log(name, key, newKey, value[key], key);
   });
   return newValue;
 }
@@ -832,5 +831,28 @@ export function merge(left, right, name) {
   }
   while (left.length) result.push(left.shift());
   while (right.length) result.push(right.shift());
+  return result;
+}
+
+export function textSize(fontSize, fontFamily, text) {
+  const span = document.createElement('span');
+  const result = {};
+  result.width = span.offsetWidth;
+  result.height = span.offsetHeight;
+  span.style.visibility = 'hidden';
+  span.style.fontSize = fontSize;
+  span.style.fontFamily = fontFamily;
+  span.style.display = 'inline-block';
+
+  span.style.whiteSpace = 'nowrap';
+  document.body.appendChild(span);
+  if (typeof span.textContent !== 'undefined') {
+    span.textContent = text;
+  } else {
+    span.innerText = text;
+  }
+  result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
+  result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
+  document.body.removeChild(span);
   return result;
 }

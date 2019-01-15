@@ -205,7 +205,7 @@ class SelectStaff extends Component {
             }}
             placeholder={value[name.realname] || description}
             onSelect={this.onSelect}
-            style={{ border: '1px solid #d9d9d9' }}
+            // style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}
             dataSource={searchResult.length ? children : [children]}
           />

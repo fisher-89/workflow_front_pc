@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import styles from './detail.less';
+import Ellipsis from '../Ellipsis';
 
+const smXRatio = 75;
+const smYRatio = 40;
 class DetailItem extends PureComponent {
   state = {};
 
@@ -8,6 +11,7 @@ class DetailItem extends PureComponent {
     const {
       children,
       className,
+      text,
       col,
       row,
       template,
@@ -19,21 +23,52 @@ class DetailItem extends PureComponent {
     const itemStyle = {
       ...(template
         ? {
-            width: `${col * 50}px`,
-            height: `${row * 50}px`,
+            width: `${col * smXRatio}px`,
+            height: `${row * smYRatio}px`,
           }
-        : { height: 'auto' }),
+        : { height: 'auto', width: `${8 * smXRatio}px` }),
       ...extraStyle,
+      // borderBottom:'1px solid #ccc'
     };
+
     const classnames = [styles.form_item, className].join(' ');
+    const rightSty = {
+      ...(template
+        ? { height: `${row * smYRatio}px`, overflowX: 'hidden', overflowY: 'scroll' }
+        : null),
+    };
+    // {/* {children} */}
+    // <div style={{ backgroundColor:'rgba(153,153,153,0.1)',
+    // backgroundOrigin:'padding-box'}}
+
     return (
       <div className={classnames} style={itemStyle}>
         <div className={styles.item}>
           <div className={styles.aside} style={asideStyle}>
             {name}：
           </div>
-          <div className={styles.right} style={{ ...rightStyle }}>
-            {children}
+          <div className={styles.right} style={{ ...rightSty, ...rightStyle }}>
+            <div
+              style={{
+                padding: '5px 0',
+                height: '100%',
+                backgroundColor: 'rgba(153,153,153,0.1)',
+                backgroundOrigin: 'padding-box',
+              }}
+            >
+              <Ellipsis
+                tooltip={{ placement: 'topLeft' }}
+                lines={Math.floor((row * smYRatio - 20) / 20)}
+              >
+                {children}
+              </Ellipsis>
+            </div>
+            {/* <div
+              id={`rightcontent${this.props.id}`} 
+              style={{maxHeight:`${Math.floor((row * smYRatio - 30) / 20) * 20}px`,position:'relative',overflow:'hidden'}}
+            >
+              {m}{textOver ?<span style={{position:'absolute',height:'20px',lineHeight:'20px',right:0,bottom:0,zIndex:10,background:'#fff'}}>...</span>:null}
+            </div> */}
           </div>
         </div>
       </div>

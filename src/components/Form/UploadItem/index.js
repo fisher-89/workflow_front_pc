@@ -25,10 +25,14 @@ class UploadItem extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    const { errorMsg } = props;
-    if (errorMsg !== this.props.errorMsg) {
+    const { errorMsg, value } = props;
+    if (
+      errorMsg !== this.props.errorMsg ||
+      JSON.stringify(value) !== JSON.stringify(this.props.value)
+    ) {
       this.setState({
         errorMsg,
+        value: value.map(its => this.dealFiles(its)),
       });
     }
   }
@@ -39,7 +43,6 @@ class UploadItem extends PureComponent {
       required,
       field: { name },
     } = this.props;
-    console.log(value);
     let files = [...value];
     if (deal) {
       files = (value || []).map((its, i) => {
@@ -72,12 +75,12 @@ class UploadItem extends PureComponent {
     if (f) {
       const isPic = isImage(f);
       if (isPic) {
-        file = { url: `${UPLOAD_PATH}${dealThumbImg(f, '_thumb')}`, uid: i };
+        // file = { url: `${UPLOAD_PATH}${dealThumbImg(f, '_thumb')}`, uid: i };
+        file = `${UPLOAD_PATH}${dealThumbImg(f, '_thumb')}`;
       } else {
-        file = { url: `${UPLOAD_PATH}${f}`, uid: i };
+        // file = { url: `${UPLOAD_PATH}${f}`, uid: i };
+        file = `${UPLOAD_PATH}${f}`;
       }
-    } else {
-      file = { url: '', uid: i };
     }
     return file;
   };

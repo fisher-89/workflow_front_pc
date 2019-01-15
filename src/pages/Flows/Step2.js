@@ -444,11 +444,13 @@ class Step2 extends PureComponent {
         parProps: { handleSubmit },
         preStepData,
       } = this.props;
+
       dispatch({
         type: 'approve/getThrough',
         payload: {
           params: {
             ...submitFormData,
+            next_step: submitFormData.next_step || [],
             host: `${window.location.origin}/approve?source=dingtalk`,
             step_run_id: preStepData.step_run_id,
             timestamp: preStepData.timestamp,

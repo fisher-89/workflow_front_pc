@@ -673,7 +673,9 @@ class EditForm extends PureComponent {
                 const content = this.renderGridItem(item, { ...itemFormData }, keyInfo, row);
                 return (
                   <div className={style.grid_content} key={key}>
-                    <span onClick={() => this.deleteGridItem(item, curValue, i)} />
+                    {!item.disabled && (
+                      <span onClick={() => this.deleteGridItem(item, curValue, i)} />
+                    )}
                     {content}
                   </div>
                 );
@@ -682,9 +684,11 @@ class EditForm extends PureComponent {
             <Tooltip placement="topLeft" title={curValue.errorMsg}>
               <div className={styles.error}>{curValue.errorMsg}</div>
             </Tooltip>
-            <div className={style.grid_add}>
-              <p className={style.btn} onClick={() => this.gridAdd(item, curValue)} />
-            </div>
+            {!item.disabled && (
+              <div className={style.grid_add}>
+                <p className={style.btn} onClick={() => this.gridAdd(item, curValue)} />
+              </div>
+            )}
           </div>
         );
       }
@@ -709,7 +713,11 @@ class EditForm extends PureComponent {
               : {}
           }
         >
-          {this.renderFormItem(item, { ...(curValue || {}), ratio: { xRatio, yRatio } }, keyInfo)}
+          {this.renderFormItem(
+            item,
+            { ...(curValue || {}), ratio: { xRatio, yRatio }, template: !(row === undefined) },
+            keyInfo
+          )}
         </div>
       );
     });

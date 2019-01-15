@@ -39,7 +39,6 @@ class StartForm extends PureComponent {
     e.preventDefault();
     const data = this.submitValidator();
     const { hasError, submitFormData } = data;
-    console.log('submitFormData:', submitFormData);
 
     if (!hasError) {
       const {
@@ -189,7 +188,7 @@ class StartForm extends PureComponent {
       return null;
     }
     return (
-      <Spin spinning={startLoading || presetSubmit === true}>
+      <Spin spinning={startLoading || presetSubmit === true || false}>
         <div style={{ paddingBottom: '20px', width: '902px' }}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}>流程名称</span>

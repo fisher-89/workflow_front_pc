@@ -8,11 +8,16 @@
   min-width: 300px; // position: absolute;
   display: flex;
   flex-direction: column;
+  &:hover {
+    .right {
+      border-color: @primary-color;
+    }
+  }
   :global {
     .ant-form-explain {
       height: 20px;
       line-height: 18px;
-      color: #f5222d;
+      color: @error-color;
       padding-top: 2px;
       flex-shrink: 0;
       flex-grow: 0;
@@ -69,7 +74,7 @@
     .ant-input-number {
       width: 100%;
       height: 100%;
-      line-height: 38px;
+      line-height: 36px;
     }
     .ant-input {
       padding: 10px;
@@ -106,7 +111,7 @@
   .right {
     flex-grow: 1;
     min-width: 160px;
-    border: 1px solid transparent;
+    border: 1px solid #d9d9d9;
     :global {
       .ant-select-selection.ant-select-selection--single {
         background: url('/drop_down.png') no-repeat right center;
@@ -161,12 +166,7 @@
         .ant-select-selection,
         .ant-select-selection:focus {
           box-shadow: none;
-          border-color: #ccc;
-        }
-        .ant-select-selection,
-        .ant-select-selection:focus {
-          border-color: #ccc;
-          box-shadow: none;
+          border-color: transparent;
         }
       }
     }

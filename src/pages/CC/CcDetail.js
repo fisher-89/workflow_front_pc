@@ -45,7 +45,9 @@ class CCDetail extends PureComponent {
     }
 
     return (
-      <div style={{ paddingBottom: '20px', width: '902px' }}>
+      <div
+        style={{ paddingBottom: '20px', width: '902px', maxWidth: '926px', paddingRight: '24px' }}
+      >
         <Spin spinning={startLoading || false}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}> 流程名称</span>

@@ -65,7 +65,7 @@ class SelectItem extends PureComponent {
       {...field}
       template={template}
       extraStyle={{
-        height: 'auto',
+        // height: 'auto',
         minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
         minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
       }}
@@ -95,7 +95,8 @@ class SelectItem extends PureComponent {
         errorMsg={errorMsg}
         required={required}
         template={template}
-        extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px` }}
+        extraStyle={{ minWidth: `${8 * xRatio}px` }}
+        rightStyle={{ paddingLeft: '10px' }}
       >
         <div className={className}>
           <TagGroup

@@ -32,11 +32,13 @@ class FormItem extends PureComponent {
         : { width: '600px' }),
       ...extraStyle,
     };
-    // const minWidth = (width || 300) - 140;
     const classnames = [styles.form_item, className].join(' ');
     const cls = classNames(styles.right, {
       [styles.has_error]: errorMsg,
     });
+    const rightSty = template
+      ? { height: `${row * yRatio - 35}px`, overflowX: 'hidden', overflowY: 'scroll' }
+      : null;
     return (
       <div className={classnames} style={itemStyle}>
         <div className={styles.item}>
@@ -44,7 +46,7 @@ class FormItem extends PureComponent {
             {required && <span style={{ color: '#d9333f' }}>*</span>}
             {name}：
           </div>
-          <div className={cls} style={{ ...rightStyle }}>
+          <div className={cls} style={{ ...rightSty, ...rightStyle }}>
             {children}
           </div>
         </div>

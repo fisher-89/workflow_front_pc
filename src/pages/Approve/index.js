@@ -7,16 +7,39 @@ import Result from '../../components/Result/index';
 
 const { Step } = Steps;
 
-@connect(({ start, loading }) => ({
-  startDetails: start.flowDetails,
-  startLoading: loading.effects['start/getFlowInfo'],
-  presetSubmit: loading.effects['start/preSet'],
+@connect(({ approve }) => ({
+  approveDetails: approve.approveDetails,
 }))
 class Sumbit extends PureComponent {
-  state = {
-    current: 0,
-    type: 'approve',
-  };
+  constructor(props) {
+    super(props);
+    const {
+      match: {
+        params: { id },
+      },
+    } = props;
+    this.state = {
+      current: 0,
+      type: 'approve',
+    };
+    this.id = id;
+  }
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'approve/fetchStepInfo',
+      payload: {
+        id: this.id,
+      },
+    });
+    dispatch({
+      type: 'start/fetchFlowSteps',
+      payload: {
+        id: this.id,
+      },
+    });
+  }
 
   stepChange = current => {
     this.setState({
@@ -26,6 +49,7 @@ class Sumbit extends PureComponent {
 
   makeStep1Props = () => ({
     ...this.props,
+    id: this.id,
     handleSubmit: type => {
       this.setState(
         {
@@ -69,13 +93,16 @@ class Sumbit extends PureComponent {
         ),
       },
     ];
+    const startflow = this.props.approveDetails[this.id] || null;
     return (
-      <div style={{ maxWidth: '900px' }}>
-        <Steps size="small" current={current}>
-          {steps.map(step => (
-            <Step key={step.title} title={step.title} />
-          ))}
-        </Steps>
+      <div style={{ maxWidth: '926px', paddingRight: '24px', paddingBottom: '20px' }}>
+        {startflow && startflow.step_run.action_type === 0 ? (
+          <Steps size="small" current={current}>
+            {steps.map(step => (
+              <Step key={step.title} title={step.title} />
+            ))}
+          </Steps>
+        ) : null}
         <div style={{ marginTop: '20px' }}>{steps[current].content}</div>
       </div>
     );
