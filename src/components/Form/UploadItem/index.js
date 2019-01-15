@@ -102,6 +102,7 @@ class UploadItem extends PureComponent {
     <DetailItem
       {...field}
       template={template}
+      tooltip={false}
       extraStyle={
         template ? { minHeight: `${row * smYRatio}px`, minWidth: `${8 * smXRatio}px` } : {}
       }

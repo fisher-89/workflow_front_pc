@@ -201,8 +201,6 @@ class EditForm extends PureComponent {
       };
       const value = this.startflow.form_data[key];
       if (availableFields) {
-        console.log('value', this.startflow.form_data, value);
-
         const gridValue = value.map(its => {
           const gridformData = {};
           availableFields.forEach(it => {

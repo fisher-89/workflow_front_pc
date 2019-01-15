@@ -13,6 +13,7 @@ class DetailItem extends PureComponent {
       className,
       text,
       col,
+      tooltip,
       row,
       template,
       name,
@@ -50,14 +51,13 @@ class DetailItem extends PureComponent {
           <div className={styles.right} style={{ ...rightSty, ...rightStyle }}>
             <div
               style={{
-                padding: '5px 0',
+                padding: '5px 0 5px 10px',
                 height: '100%',
                 backgroundColor: 'rgba(153,153,153,0.1)',
-                backgroundOrigin: 'padding-box',
               }}
             >
               <Ellipsis
-                tooltip={{ placement: 'topLeft' }}
+                tooltip={tooltip ? { placement: 'topLeft' } : false}
                 lines={Math.floor((row * smYRatio - 20) / 20)}
               >
                 {children}
@@ -78,5 +78,6 @@ class DetailItem extends PureComponent {
 DetailItem.defaultProps = {
   asideStyle: {},
   rightStyle: {},
+  tooltip: true,
 };
 export default DetailItem;
