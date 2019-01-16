@@ -150,7 +150,8 @@ class TextItem extends Component {
       disabled,
       asideStyle,
       extraStyle: { ...extraStyles, ...extraStyle },
-      rightStyle: type === 'int' ? { overflowY: 'hidden' } : null,
+      rightStyle:
+        type === 'int' || (type === 'text' && (max || 31) > 30) ? { overflowY: 'hidden' } : null,
       template,
     };
     return props;
