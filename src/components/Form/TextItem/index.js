@@ -137,6 +137,7 @@ class TextItem extends Component {
       asideStyle,
       template,
       extraStyle,
+      disabled,
       ratio: { xRatio },
       field: { max, type },
     } = this.props;
@@ -146,6 +147,7 @@ class TextItem extends Component {
       ...field,
       required,
       errorMsg,
+      disabled,
       asideStyle,
       extraStyle: { ...extraStyles, ...extraStyle },
       rightStyle: type === 'int' ? { overflowY: 'hidden' } : null,

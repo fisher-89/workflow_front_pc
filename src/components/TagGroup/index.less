@@ -2,6 +2,11 @@
 .contain {
   display: flex;
   flex-wrap: wrap;
+  :global {
+    .ant-tag {
+      color: @text-color;
+    }
+  }
 }
 
 .item {

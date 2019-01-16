@@ -175,10 +175,10 @@ class SelectStaffItem extends PureComponent {
   render() {
     const {
       field,
-      field: { max, min, description, name, row },
+      field: { max, min, description, name },
       required,
       template,
-      ratio: { xRatio, yRatio },
+      ratio: { xRatio },
       disabled,
       defaultValue,
       rightStyle,
@@ -201,6 +201,7 @@ class SelectStaffItem extends PureComponent {
       <FormItem
         {...field}
         errorMsg={errorMsg}
+        disabled={disabled}
         asideStyle={asideStyle}
         rightStyle={{ overflowY: multiple ? 'scroll' : 'hidden', ...rightStyle }}
         required={required}
@@ -214,7 +215,7 @@ class SelectStaffItem extends PureComponent {
       >
         <div
           className={className}
-          style={disabled ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed' } : {}}
+          style={{ ...(disabled ? { backgroundColor: '#fbfbfb', cursor: 'not-allowed' } : {}) }}
         >
           <SelectStaff
             multiple={multiple}

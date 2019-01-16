@@ -214,6 +214,7 @@ class SelectDepItem extends PureComponent {
           errorMsg={errorMsg}
           required={required}
           template={template}
+          disabled={disabled}
           extraStyle={{ minWidth: `${8 * xRatio}px` }}
         >
           <div className={className}>
@@ -238,7 +239,13 @@ class SelectDepItem extends PureComponent {
     const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
     const newValue = value ? value.value : undefined;
     return (
-      <FormItem {...field} height="auto" errorMsg={errorMsg} required={required}>
+      <FormItem
+        {...field}
+        height="auto"
+        errorMsg={errorMsg}
+        required={required}
+        disabled={disabled}
+      >
         <div className={className}>
           <TreeSelect
             dropdownClassName={style.dropdown}

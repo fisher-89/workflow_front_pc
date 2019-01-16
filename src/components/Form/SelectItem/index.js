@@ -112,7 +112,13 @@ class SelectItem extends Component {
     if (!field.is_checkbox) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} template={template} required={required}>
+        <FormItem
+          {...field}
+          errorMsg={errorMsg}
+          template={template}
+          required={required}
+          disabled={disabled}
+        >
           <div className={className} id={newId}>
             <Select
               disabled={disabled}
@@ -137,6 +143,7 @@ class SelectItem extends Component {
         errorMsg={errorMsg}
         required={required}
         template={template}
+        disabled={disabled}
         extraStyle={{
           height: 'auto',
           minWidth: `${8 * xRatio}px`,

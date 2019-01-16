@@ -201,7 +201,6 @@ class ApproveForm extends PureComponent {
       parProps: { handleSubmit },
     } = this.props;
     const startflow = approveDetails[this.id] || null;
-    console.log(approveDetails, this.id);
     if (!startflow || !Object.keys(startflow).length) {
       return null;
     }
@@ -223,27 +222,31 @@ class ApproveForm extends PureComponent {
               onChange={data => this.setState({ formData: data })}
             />
           ) : (
-            <FormDetail startflow={startflow} />
+            <FormDetail startflow={startflow} template={startflow.step.flow.form.pc_template} />
           )}
-          <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
-            {startflow.step_run.action_type === 0 && (
-              <Button type="primary" onClick={this.handleSubmit}>
-                通过
-              </Button>
-            )}
-            <span style={{ marginRight: '20px' }} />
-            {startflow.step_run.action_type === 0 && (
-              <Button type="primary" onClick={() => handleSubmit('deliver')}>
-                转交
-              </Button>
-            )}
-            <span style={{ marginRight: '20px' }} />
-            {startflow.step.reject_type !== 0 &&
-              startflow.step_run.action_type === 0 && (
-                <Button type="primary" onClick={() => handleSubmit('reject')}>
-                  驳回
+          <div style={{ paddingLeft: '120px', marginTop: '20px', height: '40px' }}>
+            <div style={{ width: '150px', float: 'left' }}>
+              {startflow.step_run.action_type === 0 && (
+                <Button type="primary" onClick={this.handleSubmit} block>
+                  通过
                 </Button>
               )}
+            </div>
+            <div style={{ width: '150px', float: 'left', marginLeft: '20px' }}>
+              {startflow.step_run.action_type === 0 && (
+                <Button type="primary" onClick={() => handleSubmit('deliver')} block>
+                  转交
+                </Button>
+              )}
+            </div>
+            <div style={{ width: '150px', float: 'left', marginLeft: '20px' }}>
+              {startflow.step.reject_type !== 0 &&
+                startflow.step_run.action_type === 0 && (
+                  <Button type="primary" onClick={() => handleSubmit('reject')} block>
+                    驳回
+                  </Button>
+                )}
+            </div>
           </div>
         </Spin>
         <Spin spinning={chartLoading || false}>

@@ -13,6 +13,7 @@ class FormItem extends PureComponent {
       children,
       className,
       col,
+      disabled,
       template,
       row,
       name,
@@ -46,7 +47,10 @@ class FormItem extends PureComponent {
             {required && <span style={{ color: '#d9333f' }}>*</span>}
             {name}：
           </div>
-          <div className={cls} style={{ ...rightSty, ...rightStyle }}>
+          <div
+            className={cls}
+            style={{ background: disabled ? '#fbfbfb' : '#fff', ...rightSty, ...rightStyle }}
+          >
             {children}
           </div>
         </div>

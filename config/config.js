@@ -90,6 +90,10 @@ export default {
   theme: {
     // ...theme,
     'primary-color': defaultSettings.primaryColor,
+    'disabled-color': defaultSettings.disabledColor,
+    'disabled-bg': defaultSettings.disabledBg,
+    'disabled-color-dark': defaultSettings.disabledColorDark,
+    'input-color': defaultSettings.inputColor,
     'border-radius-base': 0,
   },
   externals: {

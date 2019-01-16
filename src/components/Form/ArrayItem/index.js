@@ -93,6 +93,7 @@ class SelectItem extends PureComponent {
       <FormItem
         {...field}
         errorMsg={errorMsg}
+        disabled={disabled}
         required={required}
         template={template}
         extraStyle={{ minWidth: `${8 * xRatio}px` }}

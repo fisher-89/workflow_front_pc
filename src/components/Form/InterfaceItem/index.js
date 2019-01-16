@@ -123,7 +123,13 @@ class InterfaceItem extends Component {
     if (!field.is_checkbox) {
       const className = [style.inteface, errorMsg ? style.errorMsg : ''].join(' ');
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required} template={template}>
+        <FormItem
+          {...field}
+          errorMsg={errorMsg}
+          required={required}
+          template={template}
+          disabled={disabled}
+        >
           <div className={className} id={newId}>
             <Select
               disabled={disabled}
@@ -146,6 +152,7 @@ class InterfaceItem extends Component {
         errorMsg={errorMsg}
         required={required}
         template={template}
+        disabled={disabled}
         extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px`, minHeight: `${row * yRatio}px` }}
       >
         <div className={className} id={newId}>

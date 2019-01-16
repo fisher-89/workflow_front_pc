@@ -73,9 +73,11 @@ class StartDetail extends PureComponent {
           <FormDetail startflow={startflow} template={startflow.step.flow.form.pc_template} />
           {flowRun && flowRun.status === 0 ? (
             <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
-              <Button type="primary" onClick={this.withDraw}>
-                撤回
-              </Button>
+              <div style={{ width: '150px', height: '40px' }}>
+                <Button type="primary" onClick={this.withDraw} block>
+                  撤回
+                </Button>
+              </div>
             </div>
           ) : null}
         </Spin>

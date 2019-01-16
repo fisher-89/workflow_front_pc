@@ -74,7 +74,13 @@ class SelectItem extends PureComponent {
     const desc = description || `${defaultInfo}${name}`;
     if (type === 'datetime') {
       return (
-        <FormItem {...field} errorMsg={errorMsg} required={required} template={template}>
+        <FormItem
+          {...field}
+          errorMsg={errorMsg}
+          required={required}
+          template={template}
+          disabled={disabled}
+        >
           <div className={className}>
             <DatePicker
               disabled={disabled}
@@ -91,7 +97,13 @@ class SelectItem extends PureComponent {
       );
     }
     return (
-      <FormItem {...field} errorMsg={errorMsg} required={required} template={template}>
+      <FormItem
+        {...field}
+        errorMsg={errorMsg}
+        required={required}
+        template={template}
+        disabled={disabled}
+      >
         <div className={className}>
           <DatePicker
             disabled={disabled}

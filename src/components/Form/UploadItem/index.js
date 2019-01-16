@@ -70,7 +70,7 @@ class UploadItem extends PureComponent {
     );
   };
 
-  dealFiles = (f, i) => {
+  dealFiles = f => {
     let file = '';
     if (f) {
       const isPic = isImage(f);
@@ -104,12 +104,14 @@ class UploadItem extends PureComponent {
       template={template}
       tooltip={false}
       extraStyle={
-        template ? { minHeight: `${row * smYRatio}px`, minWidth: `${8 * smXRatio}px` } : {}
+        template
+          ? { minHeight: `${row * smYRatio}px`, overflowY: 'scroll', minWidth: `${8 * smXRatio}px` }
+          : {}
       }
     >
       <div className={style.filelist}>
         {value && value.length ? (
-          <FileUpload suffix={suffix} id={`${field.id}`} value={value} disabled />
+          <FileUpload suffix={suffix} id={`${field.id}`} value={value} readonly />
         ) : null}
       </div>
     </DetailItem>
@@ -122,7 +124,7 @@ class UploadItem extends PureComponent {
       required,
       disabled,
       template,
-      ratio: { xRatio },
+      ratio: { xRatio, yRatio },
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -132,15 +134,16 @@ class UploadItem extends PureComponent {
       return this.renderInfo(value, this.props, suffix);
     }
     const className = [errorMsg ? style.errorMsg : style.noerror, style.upfile].join(' ');
-
     return (
       <FormItem
         {...field}
         required={required}
         errorMsg={errorMsg}
+        disabled={disabled}
         className="file"
         template={template}
-        extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px` }}
+        extraStyle={{ minWidth: `${8 * xRatio}px`, minHeight: `${2 * yRatio}px` }}
+        rightStyle={{ padding: '10px 0 0 10px' }}
       >
         <div className={className}>
           <FileUpload
@@ -151,7 +154,8 @@ class UploadItem extends PureComponent {
             range={{ max, min }}
             max={10}
             onChange={this.onChange}
-            disabled={disabled || readonly}
+            disabled={disabled}
+            readonly={readonly}
           />
         </div>
       </FormItem>

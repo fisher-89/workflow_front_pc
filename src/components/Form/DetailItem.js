@@ -11,7 +11,6 @@ class DetailItem extends PureComponent {
     const {
       children,
       className,
-      text,
       col,
       tooltip,
       row,
@@ -53,7 +52,7 @@ class DetailItem extends PureComponent {
               style={{
                 padding: '5px 0 5px 10px',
                 height: '100%',
-                backgroundColor: 'rgba(153,153,153,0.1)',
+                backgroundColor: 'rgba(153,153,153,0.05)',
               }}
             >
               <Ellipsis

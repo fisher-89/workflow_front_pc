@@ -204,9 +204,11 @@ class StartForm extends PureComponent {
             onChange={data => this.setState({ formData: data })}
           />
           <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
-            <Button type="primary" onClick={this.handleSubmit}>
-              确定
-            </Button>
+            <div style={{ width: '150px', height: '40px' }}>
+              <Button type="primary" onClick={this.handleSubmit} block>
+                确定
+              </Button>
+            </div>
           </div>
         </div>
       </Spin>

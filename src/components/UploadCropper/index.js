@@ -127,6 +127,8 @@ class UploadCropper extends React.Component {
   };
 
   beforeUpload = file => {
+    const { disabled } = this.props;
+    if (disabled) return;
     const fr = new FileReader();
     fr.readAsDataURL(file);
     fr.onload = () => {
@@ -145,7 +147,6 @@ class UploadCropper extends React.Component {
         },
       });
     };
-    return true;
   };
 
   cropperChange = (blob, file) => {
@@ -240,7 +241,7 @@ class UploadCropper extends React.Component {
 
   render() {
     const { fileList, visible, cropperSrc, previewVisible, previewImage } = this.state;
-    const { cropperProps, max, placeholder, cropper, disabled } = this.props;
+    const { cropperProps, max, placeholder, cropper, disabled, readonly } = this.props;
 
     const disableUploadStyle = {
       width: '104px',
@@ -252,12 +253,13 @@ class UploadCropper extends React.Component {
       zIndex: 1000,
     };
     const uploadButton =
-      disabled || fileList.length >= (max || 10) ? null : (
+      readonly || fileList.length >= (max || 10) ? null : (
         <div>
           <Icon type="plus" />
           <div className={style.ant_upload_text}> 上传 </div>{' '}
         </div>
       );
+
     const className = classNames(style.upload, {
       [style.disabled]: disabled,
     });

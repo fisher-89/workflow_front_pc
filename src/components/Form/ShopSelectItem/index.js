@@ -66,11 +66,11 @@ class ShopSelectItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id, row },
+      field: { id },
       extraStyle,
       template,
       required,
-      ratio: { xRatio, yRatio },
+      ratio: { xRatio },
       disabled,
     } = this.props;
     const { errorMsg, value } = this.state;
@@ -85,6 +85,7 @@ class ShopSelectItem extends PureComponent {
       return (
         <FormItem
           {...field}
+          disabled={disabled}
           errorMsg={errorMsg}
           required={required}
           template={template}
@@ -113,6 +114,7 @@ class ShopSelectItem extends PureComponent {
         errorMsg={errorMsg}
         required={required}
         template={template}
+        disabled={disabled}
         extraStyle={{
           // height: 'auto',
           minWidth: `${8 * xRatio}px`,
@@ -150,7 +152,7 @@ class ShopSelectItem extends PureComponent {
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * smYRatio}px` : '50px',
+              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
               minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
             }
           : {}
@@ -187,6 +189,7 @@ class ShopSelectItem extends PureComponent {
         {...field}
         height="auto"
         errorMsg={errorMsg}
+        disabled={disabled}
         required={required}
         template={template}
         rightStyle={{ overflowY: multiple ? 'scroll' : 'hidden' }}
@@ -199,7 +202,7 @@ class ShopSelectItem extends PureComponent {
       >
         <div
           className={className}
-          style={disabled ? { background: '#f5f5f5', cursor: 'not-allowed' } : {}}
+          style={{ ...(disabled ? { backgroundColor: '#fbfbfb', cursor: 'not-allowed' } : {}) }}
         >
           <SelectShop
             multiple={multiple}

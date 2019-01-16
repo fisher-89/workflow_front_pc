@@ -515,7 +515,11 @@ class Step2 extends PureComponent {
     const { formData } = this.state;
     const { preStepData } = this.props;
     const concurrentType = preStepData.concurrent_type;
-    const stepItem = { ...this.makeProps(), asideStyle: { width: '90px' } };
+    const stepItem = {
+      ...this.makeProps(),
+      asideStyle: { width: '90px' },
+      rightStyle: { borderColor: 'transparent' },
+    };
     const isEnd = !(preStepData.available_steps.length && preStepData.step_end === 0);
     if (isEnd) {
       return null;
@@ -528,7 +532,7 @@ class Step2 extends PureComponent {
           required: true,
           extraStyle: { height: 'auto' },
           asideStyle: { width: '90px' },
-          rightStyle: { width: '600px', minWidth: '600px' },
+          rightStyle: { width: '600px', minWidth: '600px', borderColor: 'transparent' },
         }}
       >
         {formData.next_step.value.map((step, i) => {

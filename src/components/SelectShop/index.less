@@ -1,3 +1,5 @@
+@import '../../utils/utils.less';
+
 .result {
   height: 100%;
   // min-height: 40px;
@@ -25,8 +27,8 @@
       line-height: 36px;
     }
     .ant-select-auto-complete.ant-select .ant-input {
-      height: 36px;
-      line-height: 36px;
+      height: 38px;
+      line-height: 38px;
     }
     .ant-select-combobox .ant-select-search__field {
       border: none;
@@ -47,6 +49,11 @@
 .tagItem {
   padding-top: 3px;
   display: inline-block;
+  :global {
+    .ant-tag {
+      color: @text-color;
+    }
+  }
 }
 
 .tag_container {
