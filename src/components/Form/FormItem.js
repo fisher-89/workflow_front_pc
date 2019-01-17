@@ -49,7 +49,7 @@ class FormItem extends PureComponent {
           </div>
           <div
             className={cls}
-            style={{ background: disabled ? '#fbfbfb' : '#fff', ...rightSty, ...rightStyle }}
+            style={{ background: disabled ? '#f0f0f0' : '#fff', ...rightSty, ...rightStyle }}
           >
             {children}
           </div>

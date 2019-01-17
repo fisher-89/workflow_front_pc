@@ -2,7 +2,7 @@ module.exports = {
   navTheme: 'light',
   primaryColor: '#1890ff',
   disabledColor: '#666',
-  disabledBg: '#fbfbfb',
+  disabledBg: '#f0f0f0',
   disabledColorDark: '#666',
   inputColor: '#666',
   layout: 'sidemenu',

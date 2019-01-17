@@ -55,12 +55,16 @@ class DetailItem extends PureComponent {
                 backgroundColor: 'rgba(153,153,153,0.05)',
               }}
             >
-              <Ellipsis
-                tooltip={tooltip ? { placement: 'topLeft' } : false}
-                lines={Math.floor((row * smYRatio - 20) / 20)}
-              >
-                {children}
-              </Ellipsis>
+              {template ? (
+                <Ellipsis
+                  tooltip={tooltip ? { placement: 'topLeft' } : false}
+                  lines={Math.floor((row * smYRatio - 20) / 20)}
+                >
+                  {children}
+                </Ellipsis>
+              ) : (
+                children
+              )}
             </div>
             {/* <div
               id={`rightcontent${this.props.id}`} 

@@ -215,7 +215,7 @@ class SelectStaffItem extends PureComponent {
       >
         <div
           className={className}
-          style={{ ...(disabled ? { backgroundColor: '#fbfbfb', cursor: 'not-allowed' } : {}) }}
+          style={{ ...(disabled ? { backgroundColor: '#f0f0f0', cursor: 'not-allowed' } : {}) }}
         >
           <SelectStaff
             multiple={multiple}

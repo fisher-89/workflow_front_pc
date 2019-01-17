@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Tag, AutoComplete } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
+
 import request from '../../utils/request';
 import { makeFieldValue, judgeIsNothing } from '../../utils/utils';
 
@@ -100,7 +102,12 @@ class SelectShop extends Component {
     const { searchResult } = this.state;
     const { name, onChange } = this.props;
     const result = searchResult.find(item => `${item.id}` === `${v}`);
-    const newValue = makeFieldValue(result, { shop_sn: name.id, name: name.name }, false, false);
+    const newValue = makeFieldValue(
+      result,
+      { shop_sn: name.shop_sn, name: name.name },
+      false,
+      false
+    );
     this.setState(
       {
         value: newValue,
@@ -169,6 +176,7 @@ class SelectShop extends Component {
     }).then(res => {
       this.setState({
         searchResult: res.data,
+        fetch: true,
       });
     });
   };
@@ -227,7 +235,12 @@ class SelectShop extends Component {
           >
             <div className={style.tagItem}>
               {source.map(item => (
-                <Tag closable key={item.shop_sn} onClose={e => this.onDelete(e, item)}>
+                <Tag
+                  closable
+                  key={item.shop_sn}
+                  onClose={e => this.onDelete(e, item)}
+                  title={item.name}
+                >
                   {item.name}
                 </Tag>
               ))}

@@ -109,20 +109,22 @@ class UploadCropper extends React.Component {
   // };
 
   handlePreview = file => {
-    const previewSrc = file.url;
-    const isPic = isImage(previewSrc);
-    if (!isPic) {
-      const a = document.createElement('a');
-      a.href = previewSrc;
-      a.download = '';
-      a.target = '_blank';
-      a.click();
-    } else {
-      const bigImgs = reAgainImg(previewSrc, '_thumb');
-      this.setState({
-        previewVisible: true,
-        previewImage: bigImgs,
-      });
+    const previewSrc = file.url || file.thumbUrl;
+    if (previewSrc) {
+      const isPic = isImage(previewSrc);
+      if (!isPic) {
+        const a = document.createElement('a');
+        a.href = previewSrc;
+        a.download = '';
+        a.target = '_blank';
+        a.click();
+      } else {
+        const bigImgs = file.status === 'done' ? reAgainImg(previewSrc, '_thumb') : previewSrc;
+        this.setState({
+          previewVisible: true,
+          previewImage: bigImgs,
+        });
+      }
     }
   };
 
@@ -208,6 +210,7 @@ class UploadCropper extends React.Component {
           return {
             ...item,
             status,
+            url: status === 'done' ? response.thumb_url || response.url : null,
           };
         }
         return item;
@@ -240,9 +243,8 @@ class UploadCropper extends React.Component {
   };
 
   render() {
-    const { fileList, visible, cropperSrc, previewVisible, previewImage } = this.state;
+    const { fileList, visible, cropperSrc, previewVisible, previewImage, value } = this.state;
     const { cropperProps, max, placeholder, cropper, disabled, readonly } = this.props;
-
     const disableUploadStyle = {
       width: '104px',
       height: '104px',

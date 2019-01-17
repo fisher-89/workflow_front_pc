@@ -99,7 +99,6 @@ class SelectStaff extends Component {
       false,
       false
     );
-    console.log('newValue', newValue);
     this.setState(
       {
         value: newValue,
@@ -231,7 +230,12 @@ class SelectStaff extends Component {
           >
             <div className={style.tagItem}>
               {(source || []).map(item => (
-                <Tag closable={!disabled} key={item.staff_sn} onClose={e => this.onDelete(e, item)}>
+                <Tag
+                  closable={!disabled}
+                  key={item.staff_sn}
+                  onClose={e => this.onDelete(e, item)}
+                  title={item.realname}
+                >
                   {item.realname}
                 </Tag>
               ))}

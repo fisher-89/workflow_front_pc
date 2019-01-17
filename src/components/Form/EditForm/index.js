@@ -659,7 +659,10 @@ class EditForm extends PureComponent {
         // 如果是列表控件
         return (
           <div key={item.key}>
-            <div className={style.grid_name}>{item.name}</div>
+            <div className={style.grid_name}>
+              {item.required && <span style={{ color: 'rgb(217, 51, 63)' }}>*</span>}
+              {item.name}
+            </div>
             <div>
               {curValue.value.map((itemFormData, i) => {
                 const keyInfo = {
