@@ -8,7 +8,7 @@ import style from '../Flows/index.less';
 
 @connect(({ cc, loading, start }) => ({
   ccDetails: cc.ccDetails,
-  startLoading: loading.effects['cc/getFlowInfo'],
+  startLoading: loading.effects['cc/fetchStepInfo'],
   chartLoading: loading.effects['start/fetchFlowSteps'],
   flowChart: start.flowChart,
 }))

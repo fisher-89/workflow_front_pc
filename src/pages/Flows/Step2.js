@@ -9,7 +9,6 @@ import style from './index.less';
 @connect(({ start, loading, approve }) => ({
   preStepData: start.preStepData,
   approveDetails: approve.approveDetails,
-  startDetails: start.approveDetails,
   loading,
   submitLoading:
     loading.effects['start/stepStart'] ||
@@ -569,28 +568,28 @@ class Step2 extends PureComponent {
     let btn = '';
     if (type === 'start') {
       btn = (
-        <Button onClick={this.handleSubmit} type="primary">
+        <Button onClick={this.handleSubmit} type="primary" block>
           提交
         </Button>
       );
     }
     if (type === 'approve') {
       btn = (
-        <Button onClick={this.pass} type="primary">
+        <Button onClick={this.pass} type="primary" block>
           通过
         </Button>
       );
     }
     if (type === 'reject') {
       btn = (
-        <Button onClick={this.reject} type="primary">
+        <Button onClick={this.reject} type="primary" block>
           驳回
         </Button>
       );
     }
     if (type === 'deliver') {
       btn = (
-        <Button onClick={this.deliver} type="primary">
+        <Button onClick={this.deliver} type="primary" block>
           转交
         </Button>
       );
@@ -616,9 +615,15 @@ class Step2 extends PureComponent {
             {type === 'deliver' ? <SelectStaffItem {...this.makeDeliverProps()} /> : null}
             {type !== 'start' ? <TextItem {...this.makeRemarkProps()} /> : null}
             <div style={{ marginLeft: '90px' }}>
-              {this.renderBtn()}
-              <span style={{ marginRight: '20px' }} />
-              <Button onClick={this.handlePrev}>上一步</Button>
+              <div style={{ float: 'left', marginRight: '20px', width: '150px' }}>
+                {this.renderBtn()}
+              </div>
+              <div style={{ float: 'left', width: '150px' }}>
+                <Button onClick={this.handlePrev} block>
+                  上一步
+                </Button>
+              </div>
+              <div style={{ clear: 'left' }} />
             </div>
           </div>
         </div>

@@ -7,8 +7,8 @@ import style from './index.less';
 
 @connect(({ start, loading }) => ({
   startDetails: start.startDetails,
-  startLoading: loading.effects['start/getFlowInfo'],
-  presetSubmit: loading.effects['start/preSet'],
+  startLoading: loading.effects['start/fetchStepInfo'],
+  presetSubmit: loading.effects['start/doWithDraw'],
   chartLoading: loading.effects['start/fetchFlowSteps'],
   flowChart: start.flowChart,
 }))
@@ -65,7 +65,7 @@ class StartDetail extends PureComponent {
 
     return (
       <div style={{ paddingBottom: '20px', width: '902px' }}>
-        <Spin spinning={startLoading || presetSubmit === true}>
+        <Spin spinning={startLoading || presetSubmit || false}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}>流程名称</span>
             <span className={style.flow_des}>{startflow.flow_run.name}</span>

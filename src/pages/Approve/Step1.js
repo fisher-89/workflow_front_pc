@@ -9,7 +9,7 @@ import style from '../Flows/index.less';
 
 @connect(({ approve, loading, start }) => ({
   approveDetails: approve.approveDetails,
-  startLoading: loading.effects['approve/getFlowInfo'],
+  startLoading: loading.effects['approve/fetchStepInfo'],
   presetSubmit: loading.effects['start/preSet'],
   chartLoading: loading.effects['start/fetchFlowSteps'],
   flowChart: start.flowChart,
@@ -206,7 +206,7 @@ class ApproveForm extends PureComponent {
     }
     return (
       <div style={{ paddingBottom: '20px', width: '902px' }}>
-        <Spin spinning={startLoading || presetSubmit === true}>
+        <Spin spinning={startLoading || presetSubmit || false}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
             <span className={style.flow_title}> 流程名称</span>
             <span className={style.flow_des}> {startflow.flow_run.name}</span>
