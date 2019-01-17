@@ -1935,11 +1935,7 @@ export default {
   subscriptions: {},
 
   effects: {
-    *getFlows(_, { call, put, select }) {
-      const { availableFlows } = yield select(model => model.start);
-      if (availableFlows.length) {
-        return;
-      }
+    *getFlows(_, { call, put }) {
       const data = yield call(getFlowList);
       if (data && !data.error) {
         yield put({
