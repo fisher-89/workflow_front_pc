@@ -189,7 +189,7 @@ class SelectShop extends Component {
           className={style.search_icon}
           onClick={!this.props.disabled ? this.handleClick : () => {}}
         />
-        <div className={style.single_search}>
+        <div className={style.single_search} title={serachValue}>
           <AutoComplete
             onSearch={this.searchChange}
             onFocus={() => {

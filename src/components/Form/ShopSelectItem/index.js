@@ -165,11 +165,11 @@ class ShopSelectItem extends PureComponent {
   render() {
     const {
       field,
-      field: { max, min, row },
+      field: { max, min },
       required,
       disabled,
       template,
-      ratio: { xRatio, yRatio },
+      ratio: { xRatio },
       readonly,
       extraStyle,
       defaultValue,

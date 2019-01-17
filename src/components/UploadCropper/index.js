@@ -261,7 +261,7 @@ class UploadCropper extends React.Component {
       );
 
     const className = classNames(style.upload, {
-      [style.disabled]: disabled,
+      [style.disabled]: disabled || readonly,
     });
 
     return (

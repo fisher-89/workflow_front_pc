@@ -1,5 +1,4 @@
 @import '../../../utils/utils.less';
-
 .file {
   height: auto;
   min-height: 150px;
@@ -12,15 +11,16 @@
 .upfile {
   :global {
     .ant-upload.ant-upload-select-picture-card {
+      float: left;
       height: 103px;
       width: 103px;
-      margin-right: 10px;
+      margin-right: 5px;
       margin-bottom: 10px;
     }
     .ant-upload-list-picture-card .ant-upload-list-item {
       height: 103px;
       width: 103px;
-      margin-right: 10px;
+      margin-right: 5px;
       margin-bottom: 10px;
     }
     .ant-upload-list-picture-card {
@@ -28,8 +28,12 @@
     }
   }
 }
+
 .filelist {
   :global {
+    .anticon-delete {
+      display: none;
+    }
     .ant-upload-list-picture .ant-upload-list-item,
     .ant-upload-list-picture-card .ant-upload-list-item {
       padding: 0;
@@ -39,15 +43,13 @@
       height: 60px;
       width: 60px;
       margin-right: 10px;
-      margin-bottom: 10px;
-      // margin-top: 10px;
+      margin-bottom: 10px; // margin-top: 10px;
     }
     .ant-upload-list-picture-card .ant-upload-list-item {
       height: 60px;
       width: 60px;
       margin-right: 10px;
-      margin-bottom: 10px;
-      // margin-top: 10px;
+      margin-bottom: 10px; // margin-top: 10px;
     }
     .ant-upload-list-picture-card {
       float: none;

@@ -77,9 +77,9 @@ class Tag extends React.Component {
         </div>
         {!onEditing && (
           <div className={cls}>
-            <Tooltip placement="topLeft" title={inputValue}>
-              <p onClick={!disabled ? this.showInput : null}>{inputValue}</p>
-            </Tooltip>
+            <p onClick={!disabled ? this.showInput : null} title={inputValue}>
+              {inputValue}
+            </p>
             {!disabled && <span onClick={() => handleClose(inputValue)} />}
           </div>
         )}
