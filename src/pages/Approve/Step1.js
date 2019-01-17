@@ -242,7 +242,7 @@ class ApproveForm extends PureComponent {
             <div style={{ width: '150px', float: 'left', marginLeft: '20px' }}>
               {startflow.step.reject_type !== 0 &&
                 startflow.step_run.action_type === 0 && (
-                  <Button type="primary" onClick={() => handleSubmit('reject')} block>
+                  <Button type="danger" onClick={() => handleSubmit('reject')} block>
                     驳回
                   </Button>
                 )}

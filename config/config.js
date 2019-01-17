@@ -94,6 +94,9 @@ export default {
     'disabled-bg': defaultSettings.disabledBg,
     'disabled-color-dark': defaultSettings.disabledColorDark,
     'input-color': defaultSettings.inputColor,
+    'btn-danger-color': defaultSettings.errorColor,
+    'btn-danger-bg': defaultSettings.btnDangerBg,
+    'btn-danger-border': defaultSettings.errorColor,
     'border-radius-base': 0,
   },
   externals: {

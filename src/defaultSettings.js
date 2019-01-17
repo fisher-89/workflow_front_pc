@@ -5,6 +5,8 @@ module.exports = {
   disabledBg: '#f0f0f0',
   disabledColorDark: '#666',
   inputColor: '#666',
+  errorColor: '#D9333F',
+  btnDangerBg: '#fff',
   layout: 'sidemenu',
   contentWidth: 'Fluid',
   fixedHeader: false,
