@@ -142,7 +142,7 @@ class TextItem extends Component {
       field: { max, type },
     } = this.props;
     const { errorMsg } = this.state;
-    const extraStyles = type !== 'int' && (max || 31) > 30 ? { minWidth: `${8 * xRatio}px` } : null;
+    const extraStyles = type !== 'int' && (!template ? { minWidth: `${8 * xRatio}px` } : null);
     const props = {
       ...field,
       required,
@@ -150,8 +150,7 @@ class TextItem extends Component {
       disabled,
       asideStyle,
       extraStyle: { ...extraStyles, ...extraStyle },
-      rightStyle:
-        type === 'int' || (type === 'text' && (max || 31) > 30) ? { overflowY: 'hidden' } : null,
+      rightStyle: type === 'int' ? { overflowY: 'hidden' } : null,
       template,
     };
     return props;
@@ -177,9 +176,7 @@ class TextItem extends Component {
     return (
       <FormItem {...this.makeNewProps()}>
         <div className={errorMsg ? style.errorMsg : style.noerror}>
-          {type === 'int' && this.renderNumberInput()}{' '}
-          {!!(type === 'text' && (max || 31) > 30) && this.renderTextArea()}{' '}
-          {!!(type === 'text' && (max || 1) <= 30) && this.renderInput()}
+          {type === 'int' && this.renderNumberInput()} {type === 'text' && this.renderTextArea()}
         </div>
       </FormItem>
     );

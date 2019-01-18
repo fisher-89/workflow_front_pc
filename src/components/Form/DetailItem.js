@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import styles from './detail.less';
 import Ellipsis from '../Ellipsis';
 
-const smXRatio = 75;
+const smXRatio = 60;
 const smYRatio = 40;
 class DetailItem extends PureComponent {
   state = {};

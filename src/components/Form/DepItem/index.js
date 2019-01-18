@@ -215,7 +215,7 @@ class SelectDepItem extends PureComponent {
           required={required}
           template={template}
           disabled={disabled}
-          extraStyle={{ minWidth: `${8 * xRatio}px` }}
+          extraStyle={!template ? { minWidth: `${8 * xRatio}px` } : null}
         >
           <div className={className}>
             <TreeSelect
@@ -241,10 +241,10 @@ class SelectDepItem extends PureComponent {
     return (
       <FormItem
         {...field}
-        height="auto"
         errorMsg={errorMsg}
         required={required}
         disabled={disabled}
+        template={template}
       >
         <div className={className}>
           <TreeSelect
