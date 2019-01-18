@@ -85,7 +85,7 @@ class SelectDepItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id, description, name, row },
+      field: { id, description, row },
       required,
       template,
       ratio: { xRatio, yRatio },
@@ -98,7 +98,7 @@ class SelectDepItem extends PureComponent {
       newValue = muti ? (value || []).map(item => item.value) : value.value;
     }
     const newId = `${id}-select`;
-    const desc = description || `${defaultInfo}${name}`;
+    const desc = description || `${defaultInfo}`;
 
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
@@ -180,7 +180,7 @@ class SelectDepItem extends PureComponent {
   render() {
     const {
       field,
-      field: { name, description },
+      field: { description },
       required,
       department,
       template,
@@ -202,7 +202,7 @@ class SelectDepItem extends PureComponent {
       { value: 'id', label: 'name', parentId: 'parent_id' },
       0
     );
-    const desc = description || `${defaultInfo}${name}`;
+    const desc = description || `${defaultInfo}`;
 
     if (multiple) {
       const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
@@ -210,7 +210,6 @@ class SelectDepItem extends PureComponent {
       return (
         <FormItem
           {...field}
-          height="auto"
           errorMsg={errorMsg}
           required={required}
           template={template}

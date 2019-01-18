@@ -94,7 +94,7 @@ class SelectItem extends Component {
   render() {
     const {
       field,
-      field: { id, name, description, row },
+      field: { id, description, row },
       required,
       disabled,
       template,
@@ -107,8 +107,7 @@ class SelectItem extends Component {
     if (readonly) {
       return this.renderInfo(value, this.props, field.is_checkbox);
     }
-    const desc = description || `${defaultInfo}${name}`;
-
+    const desc = description || `${defaultInfo}`;
     if (!field.is_checkbox) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (

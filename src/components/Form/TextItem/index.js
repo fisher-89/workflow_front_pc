@@ -81,10 +81,10 @@ class TextItem extends Component {
   renderNumberInput = () => {
     const { value } = this.state;
     const {
-      field: { max, min, scale, description, name },
+      field: { max, min, scale, description },
       disabled,
     } = this.props;
-    const desc = description || `${defaultInfo}${name}`;
+    const desc = description || `${defaultInfo}`;
     return (
       <InputNumber
         max={max === '' ? Infinity : max - 0}
@@ -102,9 +102,9 @@ class TextItem extends Component {
     const { value } = this.state;
     const {
       disabled,
-      field: { description, name },
+      field: { description },
     } = this.props;
-    const desc = description || `${defaultInfo}${name}`;
+    const desc = description || `${defaultInfo}`;
 
     return (
       <Input.TextArea
@@ -122,9 +122,9 @@ class TextItem extends Component {
     const { value } = this.state;
     const {
       disabled,
-      field: { description, name },
+      field: { description },
     } = this.props;
-    const desc = description || `${defaultInfo}${name}`;
+    const desc = description || `${defaultInfo}`;
     return (
       <Input value={value} placeholder={desc} onChange={this.inputOnChange} disabled={disabled} />
     );
@@ -139,7 +139,7 @@ class TextItem extends Component {
       extraStyle,
       disabled,
       ratio: { xRatio },
-      field: { max, type },
+      field: { type },
     } = this.props;
     const { errorMsg } = this.state;
     const extraStyles = type !== 'int' && (!template ? { minWidth: `${8 * xRatio}px` } : null);
@@ -175,7 +175,7 @@ class TextItem extends Component {
     }
     return (
       <FormItem {...this.makeNewProps()}>
-        <div className={errorMsg ? style.errorMsg : style.noerror}>
+        <div className={[errorMsg ? style.errorMsg : style.noerror, style.text].join(' ')}>
           {type === 'int' && this.renderNumberInput()} {type === 'text' && this.renderTextArea()}
         </div>
       </FormItem>

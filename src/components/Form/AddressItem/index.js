@@ -91,8 +91,8 @@ class AddressItem extends Component {
         required={required}
         errorMsg={errorMsg}
         template={template}
-        rightStyle={{ overflowY: 'hidden' }}
-        extraStyle={{ minWidth: `${8 * xRatio}px`, height: `${2 * yRatio}px` }}
+        rightStyle={{ overflowY: 'hidden', borderColor: 'transparent' }}
+        extraStyle={!template ? { minWidth: `${8 * xRatio}px`, height: `${2 * yRatio}px` } : null}
       >
         <div className={errorMsg ? style.errorMsg : style.noerror}>
           <Address

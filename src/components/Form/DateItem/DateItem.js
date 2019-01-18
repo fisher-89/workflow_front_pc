@@ -63,7 +63,7 @@ class SelectItem extends PureComponent {
       disabled,
       readonly,
       template,
-      field: { max, min, type, description, name },
+      field: { max, min, type, description },
     } = this.props;
     const { errorMsg, value } = this.state;
     const className = [style.date, errorMsg ? style.errorMsg : ''].join(' ');
@@ -71,7 +71,7 @@ class SelectItem extends PureComponent {
     if (readonly) {
       return this.renderInfo(value, field, template);
     }
-    const desc = description || `${defaultInfo}${name}`;
+    const desc = description || `${defaultInfo}`;
     if (type === 'datetime') {
       return (
         <FormItem

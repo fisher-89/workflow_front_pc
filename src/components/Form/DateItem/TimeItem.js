@@ -8,6 +8,8 @@ import { judgeIsNothing } from '../../../utils/utils';
 
 import style from './index.less';
 
+const defaultInfo = '请选择';
+
 class TimeItem extends PureComponent {
   constructor(props) {
     super(props);
@@ -62,11 +64,13 @@ class TimeItem extends PureComponent {
       disabled,
       readonly,
       template,
-      field: { max, min },
+      field: { max, min, description },
     } = this.props;
     const { errorMsg, value } = this.state;
     const className = [style.date, errorMsg ? style.errorMsg : ''].join(' ');
     const newValue = value ? moment(value, 'HH:mm:ss') : null;
+    const desc = description || `${defaultInfo}`;
+
     if (readonly) {
       return this.renderInfo(value, field, template);
     }
@@ -83,6 +87,7 @@ class TimeItem extends PureComponent {
             value={newValue}
             range={{ min, max }}
             disabled={disabled}
+            placeholder={desc}
             popupClassName={style.time_popup}
             format="HH:mm:ss"
             onChange={this.handleOnChange}

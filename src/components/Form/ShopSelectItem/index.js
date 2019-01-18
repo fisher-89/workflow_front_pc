@@ -7,6 +7,7 @@ import Select from '../../Select';
 import { judgeIsNothing, validValue } from '../../../utils/utils';
 import style from './index.less';
 
+const defaultInfo = '请选择';
 @connect()
 class ShopSelectItem extends PureComponent {
   constructor(props) {
@@ -66,7 +67,7 @@ class ShopSelectItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id },
+      field: { id, description },
       extraStyle,
       template,
       required,
@@ -80,6 +81,8 @@ class ShopSelectItem extends PureComponent {
       newValue = muti ? value.map(item => item.value) : value.value;
     }
     const newId = `${id}-select`;
+    const desc = description || `${defaultInfo}`;
+
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
       return (
@@ -96,6 +99,7 @@ class ShopSelectItem extends PureComponent {
               showSearch
               disabled={disabled}
               options={options}
+              placeholder={desc}
               value={newValue}
               optionFilterProp="children"
               allowClear
@@ -128,6 +132,7 @@ class ShopSelectItem extends PureComponent {
             mode="multiple"
             allowClear={false}
             showSearch
+            placeholder={desc}
             optionFilterProp="children"
             value={newValue}
             onChange={v => this.onSelectChange(v, 1)}
@@ -165,7 +170,7 @@ class ShopSelectItem extends PureComponent {
   render() {
     const {
       field,
-      field: { max, min },
+      field: { max, min, description },
       required,
       disabled,
       template,
@@ -187,7 +192,6 @@ class ShopSelectItem extends PureComponent {
     return (
       <FormItem
         {...field}
-        height="auto"
         errorMsg={errorMsg}
         disabled={disabled}
         required={required}
@@ -208,6 +212,7 @@ class ShopSelectItem extends PureComponent {
             multiple={multiple}
             defaultValue={defaultValue}
             value={value}
+            description={description}
             range={{ max, min }}
             effect="staff/fetchShops"
             onChange={multiple ? this.onMutiChange : this.onSingleChange}

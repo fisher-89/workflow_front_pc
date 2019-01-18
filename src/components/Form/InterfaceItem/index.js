@@ -7,6 +7,8 @@ import Select from '../../Select';
 import { validValue } from '../../../utils/utils';
 import style from './index.less';
 
+const defaultInfo = '请选择';
+
 @connect(({ interfaceApi }) => ({ sourceDetails: interfaceApi.sourceDetails }))
 class InterfaceItem extends Component {
   constructor(props) {
@@ -107,7 +109,7 @@ class InterfaceItem extends Component {
   render() {
     const {
       field,
-      field: { id, row },
+      field: { id, row, description },
       required,
       template,
       ratio: { yRatio, xRatio },
@@ -117,6 +119,8 @@ class InterfaceItem extends Component {
     const { errorMsg, value } = this.state;
     const options = this.getOptions();
     const newId = `${id}-select`;
+    const desc = description || `${defaultInfo}`;
+
     if (readonly) {
       return this.renderInfo(value, this.props, field.is_checkbox);
     }
@@ -135,6 +139,7 @@ class InterfaceItem extends Component {
               disabled={disabled}
               showSearch
               optionFilterProp="children"
+              placeholder={desc}
               options={options}
               value={value}
               getPopupContainer={() => document.getElementById(newId)}
@@ -162,6 +167,7 @@ class InterfaceItem extends Component {
             value={value || []}
             allowClear={false}
             showSearch
+            placeholder={desc}
             optionFilterProp="children"
             mode="multiple"
             getPopupContainer={() => document.getElementById(newId)}

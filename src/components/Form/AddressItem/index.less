@@ -1,3 +1,4 @@
+@import '../../../utils/utils.less';
 .address {
   :global {
     .ant-select-selection {
@@ -25,14 +26,17 @@
     }
     textarea.ant-input {
       flex-grow: 1;
+      &:hover {
+        border-top-color: @primary-color;
+      }
     }
     textarea {
-      border-top: 0;
+      border-top: 1px solid transparent;
     }
     .ant-select-selection,
     .ant-select-selection:focus {
       box-shadow: none;
-      border-color: #ccc !important;
+      // border-color: #ccc !important;
     }
   }
 }
@@ -42,6 +46,18 @@
   display: flex;
   flex-direction: column;
   border-radius: 4px; // border: 1px solid #d9333f;
+  :global {
+    .ant-select-selection {
+      border-color: @error-color !important;
+    }
+    textarea {
+      border-color: @error-color;
+      border-top-color: transparent;
+      &:hover {
+        border-top-color: transparent !important;
+      }
+    }
+  }
 }
 
 .noerror {

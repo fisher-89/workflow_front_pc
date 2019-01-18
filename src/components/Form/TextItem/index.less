@@ -1,4 +1,14 @@
 @import '../../../utils/utils.less';
+.text {
+  :global {
+    .ant-input-number {
+      border-color: transparent;
+    }
+    .ant-input {
+      border-color: transparent;
+    }
+  }
+}
 .errorMsg {
   height: 100%;
   :global {
@@ -20,14 +30,7 @@
     // }
   }
 }
-:global {
-  .ant-input-number {
-    border-color: transparent;
-  }
-  .ant-input {
-    border-color: transparent;
-  }
-}
+
 .noerror {
   height: 100%;
   :global {

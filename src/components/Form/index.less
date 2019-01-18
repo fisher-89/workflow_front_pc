@@ -1,5 +1,4 @@
 @import '../../utils/utils.less';
-
 .form_item {
   min-height: 75px;
   padding-top: 10px;
@@ -136,6 +135,9 @@
     flex-grow: 1;
     min-width: 160px;
     border: 1px solid #d9d9d9;
+    &:hover {
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
     :global {
       .ant-select-selection.ant-select-selection--single {
         background: url('/drop_down.png') no-repeat right center;

@@ -208,7 +208,7 @@ class SelectShop extends Component {
               this.setState({ serachValue: value[name.name] });
             }}
             dataSource={searchResult.length ? children : [children]}
-            placeholder={value[name.name] || description}
+            placeholder={value[name.name] || description || '请输入'}
             onSelect={this.onSelect}
             value={serachValue}
           />
@@ -219,12 +219,10 @@ class SelectShop extends Component {
 
   render() {
     const { selfStyle, multiple, range, disabled } = this.props;
-
     if (!this.state) {
       return null;
     }
     const { source } = this.state;
-
     return (
       <div className={style.tag_container} onClick={e => e.stopPropagation()}>
         {this.multiple ? (

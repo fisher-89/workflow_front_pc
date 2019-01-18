@@ -13,7 +13,6 @@ class SelectComp extends PureComponent {
 
   componentWillReceiveProps(props) {
     const { value, mode } = props;
-
     if (JSON.stringify(value) !== JSON.stringify(this.props.value)) {
       this.setState({
         value: mode === 'multiple' ? (value || []).map(item => `${item || ''}`) : `${value}`,
@@ -43,7 +42,7 @@ class SelectComp extends PureComponent {
   render() {
     const { value } = this.state;
     return (
-      <Select {...this.props} value={value} onChange={this.handleOnChange}>
+      <Select {...this.props} value={value || undefined} onChange={this.handleOnChange}>
         {this.renderOptions()}
       </Select>
     );
