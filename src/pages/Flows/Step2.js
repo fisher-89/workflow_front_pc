@@ -157,7 +157,6 @@ class Step2 extends PureComponent {
     return {
       required: item.checked,
       field,
-      asideStyle: { width: '90px' },
       extraStyle: { width: '300px' },
       // itemStyle: { width: '290px' },
       formName: { realname: 'approver_name', staff_sn: 'approver_sn' },
@@ -517,47 +516,78 @@ class Step2 extends PureComponent {
     const stepItem = {
       ...this.makeProps(),
       asideStyle: { width: '90px' },
-      rightStyle: { borderColor: 'transparent' },
+      rightStyle: { border: 'none' },
     };
     const isEnd = !(preStepData.available_steps.length && preStepData.step_end === 0);
     if (isEnd) {
       return null;
     }
     return (
-      <FormItem
-        {...{
+      <div>
+        <div style={{ display: 'flex' }}>
+          {/* {...{
           name: '执行步骤',
           errorMsg: formData.next_step.errorMsg,
           required: true,
           extraStyle: { height: 'auto' },
           asideStyle: { width: '90px' },
-          rightStyle: { width: '600px', minWidth: '600px', borderColor: 'transparent' },
-        }}
-      >
-        {formData.next_step.value.map((step, i) => {
-          // const cls = classNames(style.step2_item, {
-          //   [style.checked]: step.checked && concurrentType === 1,
-          //   [style.disabed_checked]: step.checked && concurrentType === 2,
-          //   [style.singelchecked]: step.checked && concurrentType === 0,
-          // });
-          const iconCls = classNames(style.icon, {
-            [style.checked]: step.checked && concurrentType === 1,
-            [style.disabed_checked]: step.checked && concurrentType === 2,
-            [style.singelchecked]: step.checked && concurrentType === 0,
-          });
-          const key = i;
-          const curStep = preStepData.available_steps[i];
-          return (
-            <div className={style.step2_item} key={key} onClick={e => this.handleClick(step, i, e)}>
-              <FormItem name="步骤名称" {...stepItem}>
-                <div style={{ lineHeight: '40px' }}>{curStep.name}</div>
-              </FormItem>
-              <SelectStaffItem {...this.makeApproProps(step, i)} />
-              <span className={iconCls} />
-            </div>
-          );
-        })}
-      </FormItem>
+          rightStyle: { width: '600px', minWidth: '600px', border: 'none' },
+        }} */}
+          <span style={{ width: '90px', textAlign: 'right', color: '#000' }}>执行步骤：</span>
+          <div style={{ width: '600px' }}>
+            {formData.next_step.value.map((step, i) => {
+              // const cls = classNames(style.step2_item, {
+              //   [style.checked]: step.checked && concurrentType === 1,
+              //   [style.disabed_checked]: step.checked && concurrentType === 2,
+              //   [style.singelchecked]: step.checked && concurrentType === 0,
+              // });
+              const iconCls = classNames(style.icon, {
+                [style.checked]: step.checked && concurrentType === 1,
+                [style.disabed_checked]: step.checked && concurrentType === 2,
+                [style.singelchecked]: step.checked && concurrentType === 0,
+              });
+              const key = i;
+              const curStep = preStepData.available_steps[i];
+              return (
+                <div
+                  className={style.step2_item}
+                  key={key}
+                  onClick={e => this.handleClick(step, i, e)}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      width: '300px',
+                      height: '40px',
+                      marginBottom: '25px',
+                      lineHeight: '40px',
+                      paddingTop: '10px',
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: '120px',
+                        flexGrow: 0,
+                        flexShrink: 0,
+                        textAlign: 'right',
+                        color: '#000',
+                      }}
+                    >
+                      步骤名称：
+                    </span>
+                    <span>{curStep.name}</span>
+                  </div>
+                  <SelectStaffItem {...this.makeApproProps(step, i)} />
+                  <span className={iconCls} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div style={{ height: '20px', paddingLeft: '90px', color: '#d9333f' }}>
+          {formData.next_step.errorMsg}
+        </div>
+      </div>
     );
   };
 
@@ -614,7 +644,7 @@ class Step2 extends PureComponent {
             ) : null}
             {type === 'deliver' ? <SelectStaffItem {...this.makeDeliverProps()} /> : null}
             {type !== 'start' ? <TextItem {...this.makeRemarkProps()} /> : null}
-            <div style={{ marginLeft: '90px' }}>
+            <div style={{ marginLeft: '90px', marginTop: '20px' }}>
               <div style={{ float: 'left', marginRight: '20px', width: '150px' }}>
                 {this.renderBtn()}
               </div>
