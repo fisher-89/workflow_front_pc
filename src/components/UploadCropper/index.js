@@ -257,8 +257,7 @@ class UploadCropper extends React.Component {
     const uploadButton =
       readonly || fileList.length >= (max || 10) ? null : (
         <div>
-          <Icon type="plus" />
-          <div className={style.ant_upload_text}> 上传 </div>{' '}
+          <div className={style.ant_upload_text}> 拖拽文件或点击上传 </div>{' '}
         </div>
       );
 

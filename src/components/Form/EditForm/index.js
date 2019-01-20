@@ -18,16 +18,18 @@ import {
 } from '../index';
 import style from './index.less';
 import styles from '../index.less';
+import { makeMergeSort } from '../../../utils/utils';
 
-const yRatio = 75;
-const xRatio = 75;
+const yRatio = 60;
+const xRatio = 60;
 @connect(({ start }) => ({ startDetails: start.startDetails }))
 class EditForm extends PureComponent {
   constructor(props) {
     super(props);
     const { startflow, onChange } = props;
     this.dealStartForm(startflow);
-    this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+    // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+    this.rows = this.makeRowGroup();
     const formData = startflow ? this.initFormData() : {};
     onChange(formData);
     this.state = {
@@ -40,7 +42,9 @@ class EditForm extends PureComponent {
     const { startflow, formData } = props;
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
-      this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+      // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+      this.rows = this.makeRowGroup();
+
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
         formData: newFormData,
@@ -101,6 +105,37 @@ class EditForm extends PureComponent {
     });
   };
 
+  makeRowGroup = () => {
+    const rows = {};
+    const addBottmsForm = this.visibleForm.map(item => {
+      const obj = { ...item, bottom: item.y + item.row };
+      return obj;
+    });
+    let sortForms = makeMergeSort(addBottmsForm, 'bottom');
+    if (this.availableGridItem.length) {
+      const sortGrids = makeMergeSort(this.availableGridItem, 'y');
+      sortGrids.forEach(grid => {
+        const { y } = grid;
+        const newRow = sortForms.filter(item => item.y < y);
+        let obj = {};
+        if (newRow.length) {
+          obj = {
+            y: sortForms[0].y,
+            data: newRow,
+          };
+          rows[sortForms[0].y] = { ...obj };
+        }
+        sortForms = sortForms.filter(item => item.y > y);
+        rows[y] = { y, data: [grid], isGrid: true };
+      });
+      rows[sortForms[0].y] = { y: sortForms[0].y, data: sortForms };
+    } else {
+      rows[sortForms[0].y] = { y: sortForms[0].y, data: sortForms };
+    }
+    console.log(rows);
+    return rows;
+  };
+
   makeFormInSameRows = visibleForm => {
     const rows = {};
     visibleForm.forEach(item => {
@@ -151,10 +186,6 @@ class EditForm extends PureComponent {
       newRows[row] = rowItem;
     });
     return newRows;
-  };
-
-  sortRowItem = items => {
-    // 每行的元素排序
   };
 
   dealGridForm = (source, item, startflow, type) => {
@@ -643,9 +674,18 @@ class EditForm extends PureComponent {
   renderRowsItem = rows =>
     Object.keys(rows || {}).map(row => {
       const items = rows[row];
-      const content = this.renderFormContent(items, row);
+      const { data, isGrid } = items;
+      const content = this.renderFormContent(data, row);
+      const lastItem = data[data.length - 1];
       return (
-        <div key={row} style={{ position: 'relative', width: `${12 * xRatio}px` }}>
+        <div
+          key={row}
+          style={{
+            position: 'relative',
+            width: !isGrid ? `${20 * xRatio}px` : `${data[0].col * xRatio}px`,
+            height: !isGrid ? `${(lastItem.y + lastItem.row - data[0].y) * yRatio}px` : 'auto',
+          }}
+        >
           {content}
         </div>
       );
@@ -658,7 +698,7 @@ class EditForm extends PureComponent {
       if (item.visibleFields) {
         // 如果是列表控件
         return (
-          <div key={item.key}>
+          <div key={item.key} style={{ width: row !== undefined ? 'auto' : '482px' }}>
             <div className={style.grid_name}>
               {item.required && <span style={{ color: 'rgb(217, 51, 63)' }}>*</span>}
               {item.name}
@@ -686,9 +726,7 @@ class EditForm extends PureComponent {
               <div className={styles.error}>{curValue.errorMsg}</div>
             </Tooltip>
             {!item.disabled && (
-              <div className={style.grid_add}>
-                <p className={style.btn} onClick={() => this.gridAdd(item, curValue)} />
-              </div>
+              <div className={style.grid_add} onClick={() => this.gridAdd(item, curValue)} />
             )}
           </div>
         );
@@ -705,9 +743,10 @@ class EditForm extends PureComponent {
           style={
             row !== undefined
               ? {
-                  position: item.base ? 'relative' : 'absolute',
-                  minHeight: `${item.row * yRatio}px`,
-                  width: `${item.col * xRatio}px`,
+                  // position: item.base ? 'relative' : 'absolute',
+                  position: 'absolute',
+                  // minHeight: `${item.row * yRatio}px`,
+                  // width: `${item.col * xRatio}px`,
                   top: `${(item.y - row) * yRatio}px`,
                   left: `${item.x * xRatio}px`,
                 }
@@ -730,7 +769,7 @@ class EditForm extends PureComponent {
       return null;
     }
     let newForm = null;
-    if (this.props.template) {
+    if (!this.props.template) {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.availableGridItem));
     return <div>{newForm}</div>;

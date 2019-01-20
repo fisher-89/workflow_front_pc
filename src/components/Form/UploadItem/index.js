@@ -143,7 +143,7 @@ class UploadItem extends PureComponent {
         className="file"
         template={template}
         extraStyle={{ minWidth: `${8 * xRatio}px`, minHeight: `${2 * yRatio}px` }}
-        rightStyle={{ padding: '10px 0 0 10px' }}
+        rightStyle={{ padding: '5px 0 0 0px' }}
       >
         <div className={className}>
           <FileUpload

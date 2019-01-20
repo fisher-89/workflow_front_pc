@@ -138,7 +138,6 @@ class SelectItem extends Component {
     return (
       <FormItem
         {...field}
-        height="auto"
         errorMsg={errorMsg}
         required={required}
         template={template}
@@ -149,7 +148,7 @@ class SelectItem extends Component {
           minHeight: `${row * yRatio}px`,
         }}
       >
-        <div className={className} id={newId}>
+        <div className={className} id={newId} style={{ height: '100%' }}>
           <Select
             options={options}
             mode="multiple"

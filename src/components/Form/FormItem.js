@@ -3,8 +3,8 @@ import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
 
-const yRatio = 75;
-const xRatio = 75;
+const yRatio = 60;
+const xRatio = 60;
 class FormItem extends PureComponent {
   state = {};
 
@@ -30,7 +30,7 @@ class FormItem extends PureComponent {
             width: `${col * xRatio}px`,
             height: `${row * yRatio}px`,
           }
-        : { width: '600px' }),
+        : { width: '300px' }),
       ...extraStyle,
     };
     const classnames = [styles.form_item, className].join(' ');
@@ -38,7 +38,7 @@ class FormItem extends PureComponent {
       [styles.has_error]: errorMsg,
     });
     const rightSty = template
-      ? { height: `${row * yRatio - 35}px`, overflowX: 'hidden', overflowY: 'scroll' }
+      ? { height: `${row * yRatio - 28}px`, overflowX: 'hidden', overflowY: 'scroll' }
       : null;
     return (
       <div className={classnames} style={itemStyle}>
@@ -49,7 +49,12 @@ class FormItem extends PureComponent {
           </div>
           <div
             className={cls}
-            style={{ background: disabled ? '#f0f0f0' : '#fff', ...rightSty, ...rightStyle }}
+            style={{
+              background: disabled ? '#f0f0f0' : '#fff',
+              overflowX: 'hidden',
+              ...rightSty,
+              ...rightStyle,
+            }}
           >
             {children}
           </div>

@@ -18,7 +18,7 @@ import {
 import style from './index.less';
 
 const yRatio = 40;
-const xRatio = 75;
+const xRatio = 60;
 @connect(({ start }) => ({ startDetails: start.startDetails }))
 class EditForm extends PureComponent {
   constructor(props) {

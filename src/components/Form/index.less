@@ -1,11 +1,11 @@
 @import '../../utils/utils.less';
 .form_item {
-  min-height: 75px;
+  min-height: 60px;
   padding-top: 10px;
-  padding-bottom: 5px;
+  // padding-bottom: 5px;
   padding-right: 20px;
   width: 300px;
-  min-width: 300px; // position: absolute;
+  // min-width: 300px; // position: absolute;
   display: flex;
   flex-direction: column;
   &:hover {
@@ -16,6 +16,9 @@
   :global {
     .ant-time-picker-input[disabled]:hover {
       border-color: transparent;
+    }
+    .ant-select-selection__rendered {
+      line-height: 28px;
     }
     .ant-select-disabled .ant-select-selection {
       background-color: @disable-bg-color;
@@ -69,7 +72,7 @@
       white-space: normal;
     }
     .ant-calendar-picker-input.ant-input {
-      height: 38px;
+      height: 30px;
     }
     .ant-form-item {
       width: 100%;
@@ -97,11 +100,11 @@
     .ant-input-number {
       width: 100%;
       height: 100%;
-      line-height: 36px;
+      line-height: 30px;
     }
-    .ant-input {
-      padding: 10px;
-    }
+    // .ant-input {
+    //   padding: 10px;
+    // }
     input.ant-input {
       // padding: 10px;
       line-height: 20px;
@@ -112,8 +115,9 @@
       height: 100%;
     }
     textarea.ant-input {
-      line-height: 16px; // padding: 10px;
+      line-height: 20px; // padding: 10px;
       height: 100%;
+      min-height: 12px;
     }
   }
 }
@@ -124,8 +128,8 @@
   flex-grow: 1;
   .aside {
     width: 120px;
-    height: 40px;
-    line-height: 40px;
+    height: 32px;
+    line-height: 32px;
     flex-grow: 0;
     flex-shrink: 0;
     text-align: right;
@@ -133,7 +137,7 @@
   }
   .right {
     flex-grow: 1;
-    min-width: 160px;
+    // min-width: 160px;
     border: 1px solid #d9d9d9;
     &:hover {
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
@@ -151,12 +155,12 @@
       .ant-select-selection__clear {
         top: 0;
         margin-top: 0;
-        right: 36px;
-        height: 36px;
-        width: 36px;
-        line-height: 36px;
+        right: 30px;
+        height: 28px;
+        width: 30px;
+        line-height: 28px;
         > i {
-          margin-top: 12px;
+          // margin-top: 12px;
         }
       }
     }
@@ -201,8 +205,8 @@
 
 .error {
   margin-left: 120px;
-  height: 20px;
-  line-height: 20px;
+  height: 18px;
+  line-height: 18px;
   flex-shrink: 0;
   .error-text();
   .textOverflow();
