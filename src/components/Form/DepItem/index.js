@@ -151,11 +151,7 @@ class SelectDepItem extends PureComponent {
     );
   };
 
-  renderInfo = (
-    value,
-    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
-    multiple
-  ) => (
+  renderInfo = (value, { field, template, ratio: { smXRatio, smYRatio } }, multiple) => (
     <DetailItem
       {...field}
       template={template}

@@ -67,11 +67,7 @@ class SelectStaffItem extends PureComponent {
     );
   };
 
-  renderInfo = (
-    value,
-    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
-    multiple
-  ) => (
+  renderInfo = (value, { field, template, ratio: { smXRatio, smYRatio } }, multiple) => (
     <DetailItem
       {...field}
       template={template}
@@ -95,9 +91,9 @@ class SelectStaffItem extends PureComponent {
   renderSelect = options => {
     const {
       field,
-      field: { id, description, name, row },
+      field: { id, description, name },
       required,
-      ratio: { xRatio, yRatio },
+      ratio: { xRatio },
       disabled,
       extraStyle,
       template,

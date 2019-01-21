@@ -168,7 +168,7 @@ class TextItem extends Component {
 
   render() {
     const {
-      field: { type, max },
+      field: { type },
       field,
       ratio,
       template,

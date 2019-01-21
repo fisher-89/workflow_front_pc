@@ -94,11 +94,7 @@ class UploadItem extends PureComponent {
     return unique;
   };
 
-  renderInfo = (
-    value,
-    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
-    suffix
-  ) => (
+  renderInfo = (value, { field, template }, suffix) => (
     <DetailItem
       {...field}
       template={template}

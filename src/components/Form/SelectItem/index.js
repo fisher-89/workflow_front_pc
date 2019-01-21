@@ -69,11 +69,7 @@ class SelectItem extends Component {
     return newOpts;
   };
 
-  renderInfo = (
-    value,
-    { field, template, field: { row }, ratio: { smXRatio, smYRatio } },
-    multiple
-  ) => (
+  renderInfo = (value, { field, template, ratio: { smXRatio, smYRatio } }, multiple) => (
     <DetailItem
       {...field}
       extraStyle={
