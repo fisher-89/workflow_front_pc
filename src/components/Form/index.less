@@ -143,6 +143,10 @@
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
     }
     :global {
+      .ant-select-selection.ant-select-selection--multiple {
+        border: none;
+        min-height: auto;
+      }
       .ant-select-selection.ant-select-selection--single {
         background: url('/drop_down.png') no-repeat right center;
         background-size: 16px 16px;
@@ -156,9 +160,9 @@
         top: 0;
         margin-top: 0;
         right: 30px;
-        height: 28px;
+        height: 26px;
         width: 30px;
-        line-height: 28px;
+        line-height: 26px;
         > i {
           // margin-top: 12px;
         }

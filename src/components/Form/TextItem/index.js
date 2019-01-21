@@ -142,7 +142,7 @@ class TextItem extends Component {
       field: { type },
     } = this.props;
     const { errorMsg } = this.state;
-    const extraStyles = type !== 'int' && (!template ? { minWidth: `${8 * xRatio}px` } : null);
+    const extraStyles = type !== 'int' && (!template ? { minWidth: `${10 * xRatio}px` } : null);
     const props = {
       ...field,
       required,
@@ -156,8 +156,12 @@ class TextItem extends Component {
     return props;
   };
 
-  renderInfo = (value, field, template) => (
-    <DetailItem {...field} template={template}>
+  renderInfo = (value, field, template, { smXRatio }) => (
+    <DetailItem
+      {...field}
+      template={template}
+      extraStyle={!template && (field.max || 31) > 30 ? { width: `${10 * smXRatio}px` } : {}}
+    >
       <span> {value}</span>
     </DetailItem>
   );
@@ -166,12 +170,13 @@ class TextItem extends Component {
     const {
       field: { type, max },
       field,
+      ratio,
       template,
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
     if (readonly) {
-      return this.renderInfo(value, field, template);
+      return this.renderInfo(value, field, template, ratio);
     }
     return (
       <FormItem {...this.makeNewProps()}>

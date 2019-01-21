@@ -96,8 +96,8 @@ class InterfaceItem extends Component {
         multiple
           ? {
               height: 'auto',
-              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
-              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
+              minWidth: template ? `auto` : `${10 * smXRatio}px`,
+              minHeight: template ? `auto` : `${smYRatio}px`,
             }
           : {}
       }
@@ -158,7 +158,11 @@ class InterfaceItem extends Component {
         required={required}
         template={template}
         disabled={disabled}
-        extraStyle={{ height: 'auto', minWidth: `${8 * xRatio}px`, minHeight: `${row * yRatio}px` }}
+        extraStyle={{
+          height: 'auto',
+          minWidth: !template ? `${10 * xRatio}px` : 'auto',
+          minHeight: `${row * yRatio}px`,
+        }}
       >
         <div className={className} id={newId}>
           <Select

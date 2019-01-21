@@ -103,11 +103,7 @@ class UploadItem extends PureComponent {
       {...field}
       template={template}
       tooltip={false}
-      extraStyle={
-        template
-          ? { minHeight: `${row * smYRatio}px`, overflowY: 'scroll', minWidth: `${8 * smXRatio}px` }
-          : {}
-      }
+      extraStyle={template ? { overflowY: 'scroll' } : {}}
     >
       <div className={style.filelist}>
         {value && value.length ? (
@@ -142,7 +138,7 @@ class UploadItem extends PureComponent {
         disabled={disabled}
         className="file"
         template={template}
-        extraStyle={{ minWidth: `${8 * xRatio}px`, minHeight: `${2 * yRatio}px` }}
+        extraStyle={!template ? { minWidth: `${10 * xRatio}px`, minHeight: `${2 * yRatio}px` } : {}}
         rightStyle={{ padding: '5px 0 0 0px' }}
       >
         <div className={className}>

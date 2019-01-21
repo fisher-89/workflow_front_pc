@@ -16,6 +16,7 @@ import {
   ShopSelectItem,
 } from '../index';
 import style from './index.less';
+import { makeMergeSort } from '../../../utils/utils';
 
 const yRatio = 40;
 const xRatio = 60;
@@ -25,7 +26,8 @@ class EditForm extends PureComponent {
     super(props);
     const { startflow } = props;
     this.dealStartForm(startflow);
-    this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+    // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+    this.rows = this.makeRowGroup();
 
     const formData = startflow ? this.initFormData() : {};
     this.state = {
@@ -38,7 +40,9 @@ class EditForm extends PureComponent {
     const { startflow } = props;
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
-      this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+      // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
+      this.rows = this.makeRowGroup();
+
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
         formData: newFormData,
@@ -46,6 +50,38 @@ class EditForm extends PureComponent {
       });
     }
   }
+
+  makeRowGroup = () => {
+    const rows = {};
+    const addBottmsForm = this.visibleForm.map(item => {
+      const obj = { ...item, bottom: item.y + item.row };
+      return obj;
+    });
+    let sortForms = makeMergeSort(addBottmsForm, 'bottom');
+    if (this.availableGridItem.length) {
+      const sortGrids = makeMergeSort(this.availableGridItem, 'y');
+      sortGrids.forEach(grid => {
+        const { y } = grid;
+        const newRow = sortForms.filter(item => item.y < y);
+        let obj = {};
+        if (newRow.length) {
+          obj = {
+            y: sortForms[0].y,
+            data: newRow,
+          };
+          rows[sortForms[0].y] = { ...obj };
+        }
+        sortForms = sortForms.filter(item => item.y > y);
+        rows[y] = { y, data: [grid], isGrid: true };
+      });
+      if (sortForms.length) {
+        rows[sortForms[0].y] = { y: sortForms[0].y, data: sortForms };
+      }
+    } else {
+      rows[sortForms[0].y] = { y: sortForms[0].y, data: sortForms };
+    }
+    return rows;
+  };
 
   dealStartForm = startflow => {
     if (!startflow) {
@@ -410,9 +446,19 @@ class EditForm extends PureComponent {
   renderRowsItem = rows =>
     Object.keys(rows || {}).map(row => {
       const items = rows[row];
-      const content = this.renderFormContent(items, row);
+      const { data, isGrid } = items;
+      const content = this.renderFormContent(data, row);
+      const lastItem = data[data.length - 1];
+
       return (
-        <div key={row} style={{ position: 'relative', width: '900px' }}>
+        <div
+          key={row}
+          style={{
+            position: 'relative',
+            width: !isGrid ? `${20 * xRatio}px` : `${data[0].col * xRatio}px`,
+            height: !isGrid ? `${(lastItem.y + lastItem.row - data[0].y) * yRatio}px` : 'auto',
+          }}
+        >
           {content}
         </div>
       );
@@ -426,7 +472,7 @@ class EditForm extends PureComponent {
       if (item.visibleFields) {
         // 如果是列表控件
         return (
-          <div key={item.key}>
+          <div key={item.key} style={{ width: row !== undefined ? 'auto' : '482px' }}>
             <div className={style.grid_name}>{item.name}</div>
             <div>
               {curValue.value.map((itemFormData, i) => {
@@ -459,9 +505,10 @@ class EditForm extends PureComponent {
           style={
             row !== undefined
               ? {
-                  position: item.base ? 'relative' : 'absolute',
-                  minHeight: `${item.row * yRatio}px`,
-                  width: `${item.col * xRatio}px`,
+                  // position: item.base ? 'relative' : 'absolute',
+                  position: 'absolute',
+                  // minHeight: `${item.row * yRatio}px`,
+                  // width: `${item.col * xRatio}px`,
                   top: `${(item.y - row) * yRatio}px`,
                   left: `${item.x * xRatio}px`,
                 }

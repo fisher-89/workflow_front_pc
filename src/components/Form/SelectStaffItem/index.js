@@ -78,9 +78,8 @@ class SelectStaffItem extends PureComponent {
       extraStyle={
         multiple
           ? {
-              height: 'auto',
-              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
-              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
+              minHeight: template ? `auto` : `${smYRatio}px`,
+              minWidth: template ? `auto` : `${10 * smXRatio}px`,
             }
           : {}
       }
@@ -149,7 +148,7 @@ class SelectStaffItem extends PureComponent {
         template={template}
         extraStyle={{
           // height: 'auto',
-          minWidth: `${8 * xRatio}px`,
+          minWidth: !template ? `${10 * xRatio}px` : 'auto',
           // minHeight: `${row * yRatio}px`,
           ...extraStyle,
         }}

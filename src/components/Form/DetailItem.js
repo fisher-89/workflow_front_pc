@@ -26,7 +26,7 @@ class DetailItem extends PureComponent {
             width: `${col * smXRatio}px`,
             height: `${row * smYRatio}px`,
           }
-        : { height: 'auto', width: `${8 * smXRatio}px` }),
+        : { height: 'auto', width: `${5 * smXRatio}px` }),
       ...extraStyle,
       // borderBottom:'1px solid #ccc'
     };

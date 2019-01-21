@@ -1,8 +1,14 @@
 @import '../../../utils/utils.less';
 .date {
+  height: 100%;
   :global {
     .ant-calendar-picker:hover .ant-calendar-picker-input:not(.ant-input-disabled) {
       border-color: transparent;
+    }
+    .ant-time-picker-large .ant-time-picker-input {
+      font-size: 14px;
+      padding: 0 10px;
+      height: 100%;
     }
     .ant-time-picker-input {
       border-color: transparent;
@@ -15,12 +21,13 @@
     }
     .ant-time-picker {
       width: 100% !important;
+      height: 100%;
     }
     .input.ant-calendar-picker-input {
-      height: 38px !important;
+      height: 100%;
     }
     input.ant-time-picker-input {
-      height: 38px !important;
+      height: 100%;
     }
   }
 }

@@ -112,6 +112,7 @@ class EditForm extends PureComponent {
       return obj;
     });
     let sortForms = makeMergeSort(addBottmsForm, 'bottom');
+
     if (this.availableGridItem.length) {
       const sortGrids = makeMergeSort(this.availableGridItem, 'y');
       sortGrids.forEach(grid => {
@@ -128,11 +129,12 @@ class EditForm extends PureComponent {
         sortForms = sortForms.filter(item => item.y > y);
         rows[y] = { y, data: [grid], isGrid: true };
       });
-      rows[sortForms[0].y] = { y: sortForms[0].y, data: sortForms };
+      if (sortForms.length) {
+        rows[sortForms[0].y] = { y: sortForms[0].y, data: sortForms };
+      }
     } else {
       rows[sortForms[0].y] = { y: sortForms[0].y, data: sortForms };
     }
-    console.log(rows);
     return rows;
   };
 
@@ -769,7 +771,7 @@ class EditForm extends PureComponent {
       return null;
     }
     let newForm = null;
-    if (!this.props.template) {
+    if (this.props.template) {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.availableGridItem));
     return <div>{newForm}</div>;

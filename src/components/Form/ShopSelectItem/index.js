@@ -121,7 +121,7 @@ class ShopSelectItem extends PureComponent {
         disabled={disabled}
         extraStyle={{
           // height: 'auto',
-          minWidth: `${8 * xRatio}px`,
+          minWidth: !template ? `${10 * xRatio}px` : 'auto',
           // minHeight: `${row * yRatio}px`,
           ...extraStyle,
         }}
@@ -158,7 +158,7 @@ class ShopSelectItem extends PureComponent {
           ? {
               height: 'auto',
               minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
-              minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
+              minWidth: template ? `${10 * smXRatio}px` : `auto`,
             }
           : {}
       }

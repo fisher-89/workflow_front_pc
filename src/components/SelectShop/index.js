@@ -243,6 +243,7 @@ class SelectShop extends Component {
                 </Tag>
               ))}
             </div>
+            {!source.length ? <span className={style.placeholder}>请选择</span> : null}
           </div>
         ) : (
           this.renderSingle()
