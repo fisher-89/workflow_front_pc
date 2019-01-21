@@ -72,7 +72,7 @@ class Sumbit extends PureComponent {
             <Step key={step.title} title={step.title} />
           ))}
         </Steps>
-        <div style={{ marginTop: '20px' }}>{steps[current].content}</div>
+        <div style={{ marginTop: '30px' }}>{steps[current].content}</div>
       </div>
     );
   }

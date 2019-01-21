@@ -157,8 +157,8 @@ class ShopSelectItem extends PureComponent {
         multiple
           ? {
               height: 'auto',
-              minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
-              minWidth: template ? `${10 * smXRatio}px` : `auto`,
+              minHeight: template ? `auto` : `${smYRatio}px`,
+              minWidth: !template ? `${10 * smXRatio}px` : `auto`,
             }
           : {}
       }

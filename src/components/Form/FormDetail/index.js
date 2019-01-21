@@ -27,7 +27,7 @@ class EditForm extends PureComponent {
     const { startflow } = props;
     this.dealStartForm(startflow);
     // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
-    this.rows = this.makeRowGroup();
+    this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
 
     const formData = startflow ? this.initFormData() : {};
     this.state = {
@@ -41,7 +41,7 @@ class EditForm extends PureComponent {
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
       // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
-      this.rows = this.makeRowGroup();
+      this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
 
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
@@ -51,15 +51,15 @@ class EditForm extends PureComponent {
     }
   }
 
-  makeRowGroup = () => {
+  makeRowGroup = (visibleForm, gridForm) => {
     const rows = {};
-    const addBottmsForm = this.visibleForm.map(item => {
+    const addBottmsForm = visibleForm.map(item => {
       const obj = { ...item, bottom: item.y + item.row };
       return obj;
     });
     let sortForms = makeMergeSort(addBottmsForm, 'bottom');
-    if (this.availableGridItem.length) {
-      const sortGrids = makeMergeSort(this.availableGridItem, 'y');
+    if (gridForm.length) {
+      const sortGrids = makeMergeSort(gridForm, 'y');
       sortGrids.forEach(grid => {
         const { y } = grid;
         const newRow = sortForms.filter(item => item.y < y);
@@ -379,10 +379,11 @@ class EditForm extends PureComponent {
   renderGridItem = (grid, curValue, keyInfo, template) => {
     const { visibleFields, key, name } = grid;
     if (template !== undefined) {
-      const gridItemRows = this.makeFormInSameRows(visibleFields);
+      const gridItemRows = this.makeRowGroup(visibleFields, []);
       return Object.keys(gridItemRows || {}).map(row => {
-        const items = gridItemRows[row];
-        const content = items.map(field => {
+        const { data } = gridItemRows[row];
+        const lastItem = data[data.length - 1];
+        const content = data.map(field => {
           const formInfo = {
             ...{
               key: field.key,
@@ -402,9 +403,10 @@ class EditForm extends PureComponent {
           return (
             <div
               style={{
-                position: field.base ? 'relative' : 'absolute',
-                minHeight: `${field.row * yRatio}px`,
-                width: `${field.col * xRatio}px`,
+                // position: field.base ? 'relative' : 'absolute',
+                // minHeight: `${field.row * yRatio}px`,
+                // width: `${field.col * xRatio}px`,
+                position: 'absolute',
                 top: `${(field.y - row) * yRatio}px`,
                 left: `${field.x * xRatio}px`,
               }}
@@ -415,7 +417,17 @@ class EditForm extends PureComponent {
           );
         });
         return (
-          <div key={row} style={template ? { position: 'relative' } : null}>
+          <div
+            key={row}
+            style={
+              template
+                ? {
+                    position: 'relative',
+                    height: `${(lastItem.y + lastItem.row - data[0].y) * yRatio}px`,
+                  }
+                : null
+            }
+          >
             {content}
           </div>
         );
@@ -449,7 +461,6 @@ class EditForm extends PureComponent {
       const { data, isGrid } = items;
       const content = this.renderFormContent(data, row);
       const lastItem = data[data.length - 1];
-
       return (
         <div
           key={row}

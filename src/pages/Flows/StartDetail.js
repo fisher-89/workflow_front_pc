@@ -66,7 +66,7 @@ class StartDetail extends PureComponent {
     return (
       <div style={{ paddingBottom: '20px', width: '902px' }}>
         <Spin spinning={startLoading || presetSubmit || false}>
-          <div className={style.clearfix} style={{ marginBottom: '20px' }}>
+          <div className={style.clearfix} style={{ marginBottom: '30px' }}>
             <span className={style.flow_title}>流程名称</span>
             <span className={style.flow_des}>{startflow.flow_run.name}</span>
           </div>

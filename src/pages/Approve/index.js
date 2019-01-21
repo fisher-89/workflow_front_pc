@@ -103,7 +103,9 @@ class Sumbit extends PureComponent {
             ))}
           </Steps>
         ) : null}
-        <div style={{ marginTop: '20px' }}>{steps[current].content}</div>
+        <div style={{ marginTop: startflow && startflow.step_run.action_type === 0 ? '30px' : 0 }}>
+          {steps[current].content}
+        </div>
       </div>
     );
   }

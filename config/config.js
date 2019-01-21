@@ -67,6 +67,9 @@ const proxy = {
     target: `http://112.74.177.132:8006/api`,
     pathRewrite: { '^/api': '' },
   },
+  '/storage/uploads': {
+    target: 'http://112.74.177.132:8006',
+  },
 };
 
 export default {

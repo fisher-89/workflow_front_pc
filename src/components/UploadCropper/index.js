@@ -110,12 +110,15 @@ class UploadCropper extends React.Component {
 
   handlePreview = file => {
     const previewSrc = file.url || file.thumbUrl;
+
     if (previewSrc) {
       const isPic = isImage(previewSrc);
+
       if (!isPic) {
+        const f = rebackImg(previewSrc, `${UPLOAD_PATH}`, '.');
         const a = document.createElement('a');
-        a.href = previewSrc;
-        a.download = '';
+        a.href = f;
+        a.download = f;
         a.target = '_blank';
         a.click();
       } else {

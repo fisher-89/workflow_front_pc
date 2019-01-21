@@ -224,7 +224,7 @@ class ApproveForm extends PureComponent {
           ) : (
             <FormDetail startflow={startflow} template={startflow.step.flow.form.pc_template} />
           )}
-          <div style={{ paddingLeft: '120px', marginTop: '20px', height: '40px' }}>
+          <div style={{ paddingLeft: '120px', marginTop: '30px', height: '40px' }}>
             <div style={{ width: '150px', float: 'left' }}>
               {startflow.step_run.action_type === 0 && (
                 <Button type="primary" onClick={this.handleSubmit} block>
