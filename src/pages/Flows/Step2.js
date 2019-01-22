@@ -546,6 +546,7 @@ class Step2 extends PureComponent {
                 [style.disabed_checked]: step.checked && concurrentType === 2,
                 [style.singelchecked]: step.checked && concurrentType === 0,
               });
+
               const key = i;
               const curStep = preStepData.available_steps[i];
               return (
@@ -577,7 +578,7 @@ class Step2 extends PureComponent {
                     </span>
                     <span>{curStep.name}</span>
                   </div>
-                  <SelectStaffItem {...this.makeApproProps(step, i)} />
+                  <SelectStaffItem {...this.makeApproProps(step, i)} disabled={!step.checked} />
                   <span className={iconCls} />
                 </div>
               );

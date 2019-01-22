@@ -21,7 +21,7 @@ class Index extends PureComponent {
 
   render() {
     return (
-      <div style={{ marginRight: '50px' }}>
+      <div>
         <Tabs defaultActiveKey="processing">
           <Tabs.TabPane key="processing" tab="处理中">
             <ProcessingTable />
