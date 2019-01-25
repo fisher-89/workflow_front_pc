@@ -218,6 +218,7 @@ class BasicLayout extends React.PureComponent {
     return {
       margin: '0px 50px 0 24px',
       paddingTop: fixedHeader ? 64 : 0,
+      paddingLeft: '1px',
       overflow: 'auto',
       minHeight: `calc(100vh - 158px)`,
       // maxWidth: '1920px',
