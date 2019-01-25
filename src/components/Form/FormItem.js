@@ -27,8 +27,8 @@ class FormItem extends PureComponent {
     const itemStyle = {
       ...(template
         ? {
-            width: `${col * xRatio}px`,
-            height: `${row * yRatio}px`,
+            width: `${col * xRatio - 1}px`,
+            height: `${row * yRatio - 1}px`,
           }
         : { width: '300px' }),
       ...extraStyle,
@@ -38,7 +38,7 @@ class FormItem extends PureComponent {
       [styles.has_error]: errorMsg,
     });
     const rightSty = template
-      ? { height: `${row * yRatio - 28}px`, overflowX: 'hidden', overflowY: 'scroll' }
+      ? { height: `${row * yRatio - 28 - 1}px`, overflowX: 'hidden', overflowY: 'scroll' }
       : null;
     return (
       <div className={classnames} style={itemStyle}>

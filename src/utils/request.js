@@ -118,6 +118,7 @@ export default function request(uri, params) {
         });
       })
       .catch(e => {
+        console.log('e', e);
         const {
           response,
           response: { status, message },

@@ -3,7 +3,7 @@ import { Button, Spin } from 'antd';
 import classNames from 'classnames';
 import { connect } from 'dva';
 import { judgeIsNothing } from '../../utils/utils';
-import { FormItem, SelectStaffItem, TextItem } from '../../components/Form/index';
+import { SelectStaffItem, TextItem } from '../../components/Form/index';
 import style from './index.less';
 
 @connect(({ start, loading, approve }) => ({
@@ -246,6 +246,7 @@ class Step2 extends PureComponent {
           obj = { ...item };
           obj.checked = !item.checked;
           obj.approvers.required = !item.checked;
+          obj.approvers.errorMsg = '';
         } else {
           obj = { ...item };
         }
@@ -259,6 +260,7 @@ class Step2 extends PureComponent {
           obj = { ...item };
           obj.checked = 1;
           obj.approvers.required = true;
+          obj.approvers.errorMsg = item.checked ? item.errorMsg : '';
         }
         return obj;
       });
@@ -553,6 +555,7 @@ class Step2 extends PureComponent {
                 <div
                   className={style.step2_item}
                   key={key}
+                  style={step.checked ? { borderColor: '#1890ff' } : {}}
                   onClick={e => this.handleClick(step, i, e)}
                 >
                   <div

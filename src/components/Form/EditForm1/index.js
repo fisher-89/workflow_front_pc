@@ -3,8 +3,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Tooltip } from 'antd';
-import { last } from 'lodash';
-
 import {
   TextItem,
   AddressItem,
@@ -31,8 +29,7 @@ class EditForm extends PureComponent {
     const { startflow, onChange } = props;
     this.dealStartForm(startflow);
     // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
-    // this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
-    this.rows = this.makeRows(this.visibleForm, this.availableGridItem, this.grouplist);
+    this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
     const formData = startflow ? this.initFormData() : {};
     onChange(formData);
     this.state = {
@@ -46,8 +43,7 @@ class EditForm extends PureComponent {
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
       // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
-      // this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
-      this.rows = this.makeRows(this.visibleForm, this.availableGridItem, this.grouplist);
+      this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
 
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
@@ -70,7 +66,6 @@ class EditForm extends PureComponent {
     const availableForm = startflow.fields.form.filter(
       item => startflow.step.available_fields.indexOf(item.key) > -1
     );
-    this.grouplist = startflow.grouplist;
     this.availableForm = availableForm.map(item => {
       const newItem = { ...item };
       const disabled = startflow.step.editable_fields.indexOf(item.key) === -1;
@@ -108,101 +103,6 @@ class EditForm extends PureComponent {
       obj.visibleFields = [...visible.fields];
       return obj;
     });
-  };
-
-  makeRows = (fieldForm, gridForm, grouplist) => {
-    const visibleForm = fieldForm.concat(gridForm);
-    const rows = {};
-    fieldForm.forEach(item => {
-      const { y, row } = item;
-      const rowItem = rows[item.y] || [];
-      rowItem.push(item);
-      rows[y] = rowItem;
-      if (row > 1) {
-        this.mergeOtherRow(rows, y, row, item);
-      }
-    });
-    grouplist.forEach(item => {
-      const { x1, y1, x2, y2 } = item;
-      const newItem = { isGroup: true, ...item };
-      rows[y1] = (rows[y1] || []).concat(newItem);
-      // this.mergeOtherRow(rows, y1, y2 - y1, newItem);
-    });
-    // const seriaRows = this.serializeRows(rows);
-    return this.sliceOnGrid(rows, gridForm);
-  };
-
-  mergeOtherRow = (rows, y, row, item) => {
-    let count = 1;
-    while (count < row) {
-      rows[y + count] = (rows[y + count] || []).concat(item);
-      count += 1;
-    }
-  };
-
-  serializeRows = rows => {
-    const seriaRows = {};
-    let i = 0;
-    Object.keys(rows).forEach(row => {
-      const rowItem = rows[row];
-      seriaRows[i] = rowItem;
-      i += 1;
-    });
-    return seriaRows;
-  };
-
-  sliceOnGrid = (rows, gridForm) => {
-    // 以列表控件分割
-    const tempRows = { ...rows };
-    const sortGrids = makeMergeSort(gridForm, 'y');
-    const groups = [];
-    if (sortGrids.length) {
-      sortGrids.forEach(grid => {
-        const { y } = grid;
-        let obj = {};
-        Object.keys(tempRows).forEach(startY => {
-          if (startY < y) {
-            obj = { ...obj, [startY]: rows[startY] };
-            delete tempRows[startY];
-          }
-        });
-        groups.push({ data: obj });
-        groups.push({ isGrid: true, data: { [y]: [{ ...grid, isGrid: true }] } });
-      });
-      if (Object.keys(tempRows).length) {
-        groups.push({ data: tempRows });
-      }
-    } else {
-      groups.push({ data: tempRows });
-    }
-    return this.mapGroup(groups);
-  };
-
-  mapGroup = groups => {
-    const newGruops = groups.map(item => {
-      const serilize = this.serializeRows(item.data);
-      return { ...item, data: this.dealSomeRow(serilize) };
-    });
-    console.log(newGruops);
-    return newGruops;
-  };
-
-  dealSomeRow = oldRows => {
-    const newRows = {};
-    Object.keys(oldRows).forEach(y => {
-      const currentRow = oldRows[y];
-      if (y - 0 > 0) {
-        const lastY = y - 1;
-        const lastRowKeys = oldRows[lastY].map(item => `${item.key}`);
-        const newCurRow = currentRow.filter(item => lastRowKeys.indexOf(`${item.key}`) === -1);
-        if (newCurRow.length) {
-          newRows[y] = newCurRow;
-        }
-      } else if (currentRow.length) {
-        newRows[y] = currentRow;
-      }
-    });
-    return newRows;
   };
 
   makeRowGroup = (visibleForm, gridForm) => {
@@ -790,43 +690,19 @@ class EditForm extends PureComponent {
     return forms;
   };
 
-  renderGroupLine = () => {
-    // this.grouplist
-  };
-
   renderRowsItem = rows =>
     Object.keys(rows || {}).map(row => {
       const items = rows[row];
       const { data, isGrid } = items;
-      let content = [];
-      let maxY = 0;
-      let minY = 0;
-      Object.keys(data).forEach(y => {
-        if (y - maxY > 0) {
-          maxY = y;
-        }
-        if (y - minY < 0) {
-          minY = y;
-        }
-        content = content.concat(this.renderFormContent(data[y], y));
-      });
-      const lastItem = last(
-        makeMergeSort(
-          data[maxY].map(item => ({ ...item, bottom: row - 0 + (item.row - 0) })),
-          'bottom'
-        )
-      );
-      const firstItem = makeMergeSort(
-        data[minY].map(item => ({ ...item, bottom: row - 0 + (item.row - 0) })),
-        'bottom'
-      )[0];
+      const content = this.renderFormContent(data, row);
+      const lastItem = data[data.length - 1];
       return (
         <div
           key={row}
           style={{
             position: 'relative',
-            width: !isGrid ? `${20 * xRatio}px` : `${firstItem.col * xRatio}px`,
-            height: !isGrid ? `${(maxY - 0 + (lastItem.row - 0) - minY) * yRatio}px` : 'auto',
+            width: !isGrid ? `${20 * xRatio}px` : `${data[0].col * xRatio}px`,
+            height: !isGrid ? `${(lastItem.y + lastItem.row - data[0].y) * yRatio}px` : 'auto',
           }}
         >
           {content}
@@ -874,35 +750,6 @@ class EditForm extends PureComponent {
           </div>
         );
       }
-      if (item.isGroup) {
-        return (
-          <div
-            style={{
-              position: 'absolute',
-              zIndex: 10,
-              top: `${row * yRatio}px`,
-              left: `${item.x1 * xRatio}px`,
-              border: '1px solid red',
-              boxSizing: 'content-box',
-              margin: '-1px',
-              width: `${(item.x2 - item.x1) * xRatio - 1}px`,
-              height: `${(item.y2 - item.y1) * yRatio - 1}px`,
-            }}
-          >
-            <div
-              style={{
-                height: `${yRatio}px`,
-                borderBottom: '1px solid red',
-                textAlign: 'center',
-                lineHeight: `${yRatio - 1}px`,
-              }}
-            >
-              {item.name}
-            </div>
-          </div>
-        );
-      }
-
       const keyInfo = {
         formKey: item.key,
         domKey: item.key,
@@ -919,7 +766,7 @@ class EditForm extends PureComponent {
                   position: 'absolute',
                   // minHeight: `${item.row * yRatio}px`,
                   // width: `${item.col * xRatio}px`,
-                  top: `${row * yRatio}px`,
+                  top: `${(item.y - row) * yRatio}px`,
                   left: `${item.x * xRatio}px`,
                 }
               : {}

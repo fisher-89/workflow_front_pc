@@ -27,12 +27,12 @@ class StartForm extends PureComponent {
       dispatch,
     } = this.props.parProps;
     this.id = id;
-    dispatch({
-      type: 'start/getFlowInfo',
-      payload: {
-        id,
-      },
-    });
+    // dispatch({
+    //   type: 'start/getFlowInfo',
+    //   payload: {
+    //     id,
+    //   },
+    // });
   }
 
   handleSubmit = e => {

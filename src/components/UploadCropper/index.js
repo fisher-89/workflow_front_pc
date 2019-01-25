@@ -278,6 +278,7 @@ class UploadCropper extends React.Component {
         id={`upload${this.props.id}`}
       >
         <Upload
+          multiple
           fileList={fileList}
           listType="picture-card"
           disabled={disabled}
