@@ -1934,7 +1934,7 @@ const obj = {
         'grid.*.interfaces',
         'grid.*.files',
       ],
-      hidden_fields: [],
+      hidden_fields: ['multi', 'arra', 'grid.*.shop', 'number', 'file', 'staffs'],
       editable_fields: [
         'file',
         'number',
@@ -1953,7 +1953,7 @@ const obj = {
         'date',
         'text',
         'grid',
-        'grid.*.dep',
+        // 'grid.*.dep',
         'grid.*.deps',
         'grid.*.staff',
         'grid.*.staffs',
@@ -2072,41 +2072,41 @@ const obj = {
       date: '2018-11-01',
       text: '4554',
       grid: [
-        // {
-        //   dep: {
-        //     value: 1,
-        //     text: '未分配',
-        //   },
-        //   deps: [
-        //     {
-        //       value: 7,
-        //       text: 'IT部',
-        //     },
-        //   ],
-        //   staff: {
-        //     value: 110001,
-        //     text: '罗刚',
-        //   },
-        //   staffs: [
-        //     {
-        //       value: 110002,
-        //       text: '代涛',
-        //     },
-        //     {
-        //       value: 110001,
-        //       text: '罗刚',
-        //     },
-        //   ],
-        //   shop: {
-        //     value: 'lsw2729',
-        //     text: '河南C02.南阳市ODVS-400A1+C',
-        //   },
-        //   shops: '',
-        //   interface: '4',
-        //   interfaces: '',
-        //   files: [],
-        //   time: '18:12:01',
-        // },
+        {
+          dep: {
+            value: 1,
+            text: '未分配',
+          },
+          deps: [
+            {
+              value: 7,
+              text: 'IT部',
+            },
+          ],
+          staff: {
+            value: 110001,
+            text: '罗刚',
+          },
+          staffs: [
+            {
+              value: 110002,
+              text: '代涛',
+            },
+            {
+              value: 110001,
+              text: '罗刚',
+            },
+          ],
+          shop: {
+            value: 'lsw2729',
+            text: '河南C02.南阳市ODVS-400A1+C',
+          },
+          shops: '',
+          interface: '4',
+          interfaces: '',
+          files: [],
+          time: '18:12:01',
+        },
       ],
     },
     fields: {
@@ -3776,7 +3776,7 @@ export default {
   namespace: 'start',
   state: {
     startDetails: {
-      // ...obj
+      ...obj,
     },
     availableFlows: [],
     flowChart: [],

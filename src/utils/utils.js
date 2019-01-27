@@ -834,7 +834,7 @@ export function merge(left, right, name) {
   return result;
 }
 
-export function textSize(fontSize, fontFamily, text) {
+export function textSize(fontSize, fontFamily, text, fontWeight) {
   const span = document.createElement('span');
   const result = {};
   result.width = span.offsetWidth;
@@ -843,7 +843,7 @@ export function textSize(fontSize, fontFamily, text) {
   span.style.fontSize = fontSize;
   span.style.fontFamily = fontFamily;
   span.style.display = 'inline-block';
-
+  span.style.fontWeight = fontWeight;
   span.style.whiteSpace = 'nowrap';
   document.body.appendChild(span);
   if (typeof span.textContent !== 'undefined') {

@@ -134,7 +134,7 @@ class InterfaceItem extends Component {
           template={template}
           disabled={disabled}
         >
-          <div className={className} id={newId}>
+          <div className={className} id={newId} style={{ height: '100%' }}>
             <Select
               disabled={disabled}
               showSearch

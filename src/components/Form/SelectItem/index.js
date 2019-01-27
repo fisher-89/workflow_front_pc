@@ -113,7 +113,7 @@ class SelectItem extends Component {
           required={required}
           disabled={disabled}
         >
-          <div className={className} id={newId}>
+          <div className={className} id={newId} style={{ height: '100%' }}>
             <Select
               disabled={disabled}
               options={options}
