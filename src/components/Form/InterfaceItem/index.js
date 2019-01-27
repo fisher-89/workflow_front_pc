@@ -164,7 +164,7 @@ class InterfaceItem extends Component {
           minHeight: `${row * yRatio}px`,
         }}
       >
-        <div className={className} id={newId}>
+        <div className={className} id={newId} style={{ height: '100%' }}>
           <Select
             disabled={disabled}
             options={options}

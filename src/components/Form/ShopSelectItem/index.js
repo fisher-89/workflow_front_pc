@@ -94,7 +94,7 @@ class ShopSelectItem extends PureComponent {
           template={template}
           extraStyle={extraStyle}
         >
-          <div className={className} id={newId}>
+          <div className={className} id={newId} style={{ height: '100%' }}>
             <Select
               showSearch
               disabled={disabled}
@@ -126,7 +126,7 @@ class ShopSelectItem extends PureComponent {
           ...extraStyle,
         }}
       >
-        <div className={className} id={newId}>
+        <div className={className} id={newId} style={{ height: '100%' }}>
           <Select
             options={options}
             mode="multiple"

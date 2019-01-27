@@ -119,7 +119,7 @@ class SelectStaffItem extends PureComponent {
           extraStyle={extraStyle}
           template={template}
         >
-          <div className={className} id={newId}>
+          <div className={className} id={newId} style={{ height: '100%' }}>
             <Select
               disabled={disabled}
               options={options}
@@ -149,7 +149,7 @@ class SelectStaffItem extends PureComponent {
           ...extraStyle,
         }}
       >
-        <div className={className} id={newId}>
+        <div className={className} id={newId} style={{ height: '100%' }}>
           <Select
             options={options}
             mode="multiple"
