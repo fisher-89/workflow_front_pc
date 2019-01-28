@@ -434,7 +434,6 @@ class EditForm extends PureComponent {
   renderSelectItem = (item, formInfo, keyInfo) => {
     const { value } = formInfo;
     const { domKey } = keyInfo;
-
     return (
       <div className={style.edit_form} key={domKey}>
         <SelectItem field={item} defaultValue={value} {...formInfo} />

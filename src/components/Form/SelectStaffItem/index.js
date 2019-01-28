@@ -81,7 +81,7 @@ class SelectStaffItem extends PureComponent {
       }
     >
       {value ? (
-        <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
+        <span>{multiple ? (value || []).map(item => item.text).join('、') : value.text || ''}</span>
       ) : (
         ''
       )}

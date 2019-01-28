@@ -204,13 +204,14 @@ class ApproveForm extends PureComponent {
     if (!startflow || !Object.keys(startflow).length) {
       return null;
     }
+    console.log(startLoading, presetSubmit);
     return (
       <div style={{ paddingBottom: '20px', width: '902px' }}>
         <Spin spinning={startLoading || presetSubmit || false}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>
-            <span className={style.flow_title}> 流程名称</span>
+            <span className={style.flow_title}> 流程名称</span>{' '}
             <span className={style.flow_des}> {startflow.flow_run.name}</span>
-          </div>
+          </div>{' '}
           {startflow.step_run.action_type === 0 ? (
             <EditForm
               startflow={startflow}
@@ -223,23 +224,26 @@ class ApproveForm extends PureComponent {
             />
           ) : (
             <FormDetail startflow={startflow} template={startflow.step.flow.form.pc_template} />
-          )}
+          )}{' '}
           <div style={{ paddingLeft: '120px', marginTop: '30px', height: '40px' }}>
             <div style={{ width: '150px', float: 'left' }}>
+              {' '}
               {startflow.step_run.action_type === 0 && (
                 <Button type="primary" onClick={this.handleSubmit} block>
                   通过
                 </Button>
               )}
-            </div>
+            </div>{' '}
             <div style={{ width: '150px', float: 'left', marginLeft: '20px' }}>
+              {' '}
               {startflow.step_run.action_type === 0 && (
                 <Button type="primary" onClick={() => handleSubmit('deliver')} block>
                   转交
                 </Button>
               )}
-            </div>
+            </div>{' '}
             <div style={{ width: '150px', float: 'left', marginLeft: '20px' }}>
+              {' '}
               {startflow.step.reject_type !== 0 &&
                 startflow.step_run.action_type === 0 && (
                   <Button type="danger" onClick={() => handleSubmit('reject')} block>
@@ -248,7 +252,7 @@ class ApproveForm extends PureComponent {
                 )}
             </div>
           </div>
-        </Spin>
+        </Spin>{' '}
         <Spin spinning={chartLoading || false}>
           <FlowChart dataSource={flowChart} status={startflow.flow_run.status} />
         </Spin>

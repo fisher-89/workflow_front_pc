@@ -152,7 +152,7 @@ class ShopSelectItem extends PureComponent {
     <DetailItem
       {...field}
       template={template}
-      text={multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}
+      text={multiple ? (value || []).map(item => item.text).join('、') : value.text || ''}
       extraStyle={
         multiple
           ? {
@@ -163,7 +163,7 @@ class ShopSelectItem extends PureComponent {
           : {}
       }
     >
-      <span>{multiple ? (value || []).map(item => item.text).join('，') : value.text || ''}</span>
+      <span> {multiple ? (value || []).map(item => item.text).join('、') : value.text || ''}</span>
     </DetailItem>
   );
 

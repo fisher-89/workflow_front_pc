@@ -75,14 +75,14 @@ class SelectItem extends Component {
       extraStyle={
         multiple
           ? {
-              minHeight: template ? `$auto` : `${smYRatio}px`,
+              minHeight: template ? `auto` : `${smYRatio}px`,
               minWidth: template ? `auto` : `${10 * smXRatio}px`,
             }
           : {}
       }
       template={template}
     >
-      <span>{multiple ? (value || []).join('，') : value}</span>
+      <span> {multiple ? (value || []).join('、') : value}</span>
     </DetailItem>
   );
 

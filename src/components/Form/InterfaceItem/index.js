@@ -109,7 +109,7 @@ class InterfaceItem extends Component {
             : {}
         }
       >
-        <span> {multiple ? (newValue || []).join('，') : newValue}</span>
+        <span> {multiple ? (newValue || []).join('、') : newValue}</span>
       </DetailItem>
     );
   };
