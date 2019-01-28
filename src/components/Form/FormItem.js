@@ -38,15 +38,15 @@ class FormItem extends PureComponent {
       [styles.has_error]: errorMsg,
     });
     const rightSty = template
-      ? { height: `${row * yRatio - 28 - 1}px`, overflowX: 'hidden', overflowY: 'scroll' }
+      ? { height: `${row * yRatio - 28}px`, overflowX: 'hidden', overflowY: 'scroll' }
       : null;
     return (
       <div className={classnames} style={itemStyle}>
         <div className={styles.item}>
           <div className={styles.aside} style={asideStyle}>
-            {required && <span style={{ color: '#d9333f' }}>*</span>}
-            {name}：
-          </div>
+            {' '}
+            {required && <span style={{ color: '#d9333f' }}> * </span>} {name}：
+          </div>{' '}
           <div
             className={cls}
             style={{
@@ -58,9 +58,9 @@ class FormItem extends PureComponent {
           >
             {children}
           </div>
-        </div>
+        </div>{' '}
         <Tooltip placement="topLeft" title={errorMsg}>
-          <div className={styles.error}>{errorMsg}</div>
+          <div className={styles.error}> {errorMsg}</div>
         </Tooltip>
       </div>
     );

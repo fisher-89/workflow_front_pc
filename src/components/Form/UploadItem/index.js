@@ -100,9 +100,8 @@ class UploadItem extends PureComponent {
       template={template}
       tooltip={false}
       extraStyle={template ? { overflowY: 'scroll' } : {}}
-      rightStyle={{ backgroundColor: 'rgba(153, 153, 153, 0.05)' }}
     >
-      <div className={style.filelist}>
+      <div className={style.filelist} style={{ width: '100%' }}>
         {value && value.length ? (
           <FileUpload suffix={suffix} id={`${field.id}`} value={value} readonly />
         ) : null}

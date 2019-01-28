@@ -19,6 +19,7 @@ class DetailItem extends PureComponent {
       extraStyle,
       asideStyle,
       rightStyle,
+      rightContStyle,
     } = this.props;
     const itemStyle = {
       ...(template
@@ -45,14 +46,16 @@ class DetailItem extends PureComponent {
       <div className={classnames} style={itemStyle}>
         <div className={styles.item}>
           <div className={styles.aside} style={asideStyle}>
+            {' '}
             {name}：
-          </div>
+          </div>{' '}
           <div className={styles.right} style={{ ...rightSty, ...rightStyle }}>
             <div
               style={{
                 padding: '5px 0 5px 10px',
                 height: '100%',
-                backgroundColor: 'rgba(153,153,153,0.05)',
+                background: 'rgba(153,153,153,0.05)',
+                ...rightContStyle,
               }}
             >
               {template ? (
@@ -65,13 +68,13 @@ class DetailItem extends PureComponent {
               ) : (
                 children
               )}
-            </div>
+            </div>{' '}
             {/* <div
-              id={`rightcontent${this.props.id}`} 
-              style={{maxHeight:`${Math.floor((row * smYRatio - 30) / 20) * 20}px`,position:'relative',overflow:'hidden'}}
-            >
-              {m}{textOver ?<span style={{position:'absolute',height:'20px',lineHeight:'20px',right:0,bottom:0,zIndex:10,background:'#fff'}}>...</span>:null}
-            </div> */}
+                              id={`rightcontent${this.props.id}`} 
+                              style={{maxHeight:`${Math.floor((row * smYRatio - 30) / 20) * 20}px`,position:'relative',overflow:'hidden'}}
+                            >
+                              {m}{textOver ?<span style={{position:'absolute',height:'20px',lineHeight:'20px',right:0,bottom:0,zIndex:10,background:'#fff'}}>...</span>:null}
+                            </div> */}
           </div>
         </div>
       </div>

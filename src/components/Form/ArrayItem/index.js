@@ -69,8 +69,23 @@ class SelectItem extends PureComponent {
         minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
         minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
       }}
+      rightContStyle={{ padding: '3px 0 3px 10px' }}
     >
-      <span>{(value || []).join('，')}</span>
+      <div style={{ display: 'flex' }}>
+        {(value || []).map(item => (
+          <div
+            style={{
+              height: '24px',
+              background: '#fff',
+              border: '1px solid #ccc',
+              padding: '0 10px',
+              marginRight: '5px',
+            }}
+          >
+            {item}
+          </div>
+        ))}
+      </div>
     </DetailItem>
   );
 

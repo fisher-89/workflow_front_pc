@@ -27,12 +27,12 @@ class StartForm extends PureComponent {
       dispatch,
     } = this.props.parProps;
     this.id = id;
-    // dispatch({
-    //   type: 'start/getFlowInfo',
-    //   payload: {
-    //     id,
-    //   },
-    // });
+    dispatch({
+      type: 'start/getFlowInfo',
+      payload: {
+        id,
+      },
+    });
   }
 
   handleSubmit = e => {
@@ -191,9 +191,9 @@ class StartForm extends PureComponent {
       <Spin spinning={startLoading || presetSubmit === true || false}>
         <div style={{ paddingBottom: '20px', width: '1202px' }}>
           <div className={style.clearfix} style={{ marginBottom: '30px' }}>
-            <span className={style.flow_title}>流程名称</span>
-            <span className={style.flow_des}>{startflow.flow.name}</span>
-          </div>
+            <span className={style.flow_title}> 流程名称</span>{' '}
+            <span className={style.flow_des}> {startflow.flow.name}</span>
+          </div>{' '}
           <EditForm
             startflow={startflow}
             ref={r => {
@@ -202,7 +202,7 @@ class StartForm extends PureComponent {
             template={startflow.flow.form.pc_template}
             formData={this.state.formData}
             onChange={data => this.setState({ formData: data })}
-          />
+          />{' '}
           <div style={{ paddingLeft: '120px', marginTop: '20px' }}>
             <div style={{ width: '150px', height: '40px' }}>
               <Button type="primary" onClick={this.handleSubmit} block>

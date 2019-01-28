@@ -2,9 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Tooltip } from 'antd';
 import { last } from 'lodash';
-
 import {
   TextItem,
   AddressItem,
@@ -19,8 +17,7 @@ import {
   ShopSelectItem,
 } from '../index';
 import style from './index.less';
-import styles from '../index.less';
-import { makeMergeSort, textSize } from '../../../utils/utils';
+import { makeMergeSort, textSize, judgeIsNothing } from '../../../utils/utils';
 
 const yRatio = 60;
 const xRatio = 60;
@@ -30,8 +27,6 @@ class EditForm extends PureComponent {
     super(props);
     const { startflow, onChange } = props;
     this.dealStartForm(startflow);
-    // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
-    // this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
     this.rows = this.makeRows(this.visibleForm, this.visibleGrid, this.grouplist);
     const formData = startflow ? this.initFormData() : {};
     onChange(formData);
@@ -45,10 +40,7 @@ class EditForm extends PureComponent {
     const { startflow, formData } = props;
     if (startflow && JSON.stringify(startflow) !== JSON.stringify(this.props.startflow)) {
       this.dealStartForm(startflow);
-      // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
-      // this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
       this.rows = this.makeRows(this.visibleForm, this.visibleGrid, this.grouplist);
-
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
         formData: newFormData,
@@ -128,7 +120,6 @@ class EditForm extends PureComponent {
       const { x1, y1, x2, y2 } = item;
       let containRow = {};
       let containFields = [];
-
       Object.keys(rows).forEach(rowY => {
         const rowItem = rows[rowY];
         if (rowY - y1 > 0 && rowY - y2 < 0) {
@@ -146,10 +137,9 @@ class EditForm extends PureComponent {
         const { length } = Object.keys(this.serializeRows(containRow));
         const newItem = { isGroup: true, ...item, containRow, newEndY: y1 + length + 1 };
         rows[y1] = (rows[y1] || []).concat(newItem);
-        this.mergeOtherRow(rows, y1, length + 1, newItem);
+        // this.mergeOtherRow(rows, y1, length + 1, newItem);
       }
     });
-    // const seriaRows = this.serializeRows(rows);
     return this.sliceOnGrid(rows, gridForm);
   };
 
@@ -188,7 +178,12 @@ class EditForm extends PureComponent {
           }
         });
         groups.push({ data: obj });
-        groups.push({ isGrid: true, data: { [y]: [{ ...grid, isGrid: true }] } });
+        groups.push({
+          isGrid: true,
+          data: {
+            [y]: [{ ...grid, isGrid: true }],
+          },
+        });
       });
       if (Object.keys(tempRows).length) {
         groups.push({ data: tempRows });
@@ -724,68 +719,78 @@ class EditForm extends PureComponent {
     const { visibleFields, key, name } = grid;
     if (template !== undefined) {
       const gridItemRows = this.makeRows(visibleFields);
+      return Object.keys(gridItemRows || {}).map(row => {
+        const items = gridItemRows[row];
+        const { data } = items;
+        let content = [];
+        let maxY = 0;
+        let minY = 0;
+        Object.keys(data).forEach(y => {
+          if (y - maxY > 0) {
+            maxY = y;
+          }
+          if (y - minY < 0) {
+            minY = y;
+          }
+          if (data[maxY]) {
+            const cont = data[y].map(field => {
+              const formInfo = {
+                ...{
+                  key: field.key,
+                  errorMsg: curValue[field.key].errorMsg,
+                  value: curValue[field.key].value,
+                  required: field.required,
+                  disabled: field.disabled,
+                  template: true,
+                  ratio: { xRatio, yRatio },
+                },
+              };
+              const newKeyInfo = {
+                ...keyInfo,
+                childKey: field.key,
+                isGrid: true,
+                gridName: name,
+                domKey: `${key}${keyInfo.index}${field.key}`,
+              };
 
-      // return Object.keys(gridItemRows || {}).map(row => {
-      //   const { data } = gridItemRows[row];
-      //   const lastItem = data[data.length - 1];
-      //   const content = data.map(field => {
-      //     const formInfo = {
-      //       ...{
-      //         key: field.key,
-      //         errorMsg: curValue[field.key].errorMsg,
-      //         value: curValue[field.key].value,
-      //         required: field.required,
-      //         disabled: field.disabled,
-      //         template: true,
-      //         ratio: { xRatio, yRatio },
-      //       },
-      //     };
-      //     const newKeyInfo = {
-      //       ...keyInfo,
-      //       childKey: field.key,
-      //       isGrid: true,
-      //       gridName: name,
-      //       domKey: `${key}${keyInfo.index}${field.key}`,
-      //     };
-
-      //     return (
-      //       <div
-      //         style={{
-      //           // position:  'absolute',
-      //           // minHeight: `${field.row * yRatio}px`,
-      //           // width: `${field.col * xRatio}px`,
-      //           // top: `${(field.y - row) * yRatio}px`,
-      //           // left: `${field.x * xRatio}px`,
-      //           position: 'absolute',
-      //           // minHeight: `${item.row * yRatio}px`,
-      //           // width: `${item.col * xRatio}px`,
-      //           top: `${(field.y - row) * yRatio}px`,
-      //           left: `${field.x * xRatio}px`,
-      //         }}
-      //         key={field.key}
-      //       >
-      //         {this.renderFormItem(field, formInfo, newKeyInfo)}
-      //       </div>
-      //     );
-      //   });
-
-      //   return (
-      //     <div
-      //       key={row}
-      //       style={
-      //         template
-      //           ? {
-      //               position: 'relative',
-      //               height: `${(lastItem.y + lastItem.row - data[0].y) * yRatio}px`,
-      //             }
-      //           : null
-      //       }
-      //     >
-      //       {content}
-      //     </div>
-      //   );
-      // });
-      return this.renderRowsItem(gridItemRows);
+              return (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: `${y * yRatio}px`,
+                    left: `${field.x * xRatio}px`,
+                  }}
+                  key={field.key}
+                >
+                  {this.renderFormItem(field, formInfo, newKeyInfo)}
+                </div>
+              );
+            });
+            content = content.concat(cont);
+          }
+        });
+        const lastItem = last(
+          makeMergeSort(
+            data[maxY].map(item => ({ ...item, bottom: row - 0 + (item.row - 0) })),
+            'bottom'
+          )
+        );
+        return (
+          <div
+            key={row}
+            style={
+              template
+                ? {
+                    position: 'relative',
+                    height: `${(maxY - 0 + (lastItem.row - 0) - minY) * yRatio}px`,
+                  }
+                : null
+            }
+          >
+            {content}
+          </div>
+        );
+      });
     }
     const forms = visibleFields.map(field => {
       const formInfo = {
@@ -805,7 +810,7 @@ class EditForm extends PureComponent {
         gridName: name,
         domKey: `${key}${keyInfo.index}${field.key}`,
       };
-      return <div key={field.key}>{this.renderFormItem(field, formInfo, newKeyInfo)}</div>;
+      return <div key={field.key}> {this.renderFormItem(field, formInfo, newKeyInfo)} </div>;
     });
 
     return forms;
@@ -825,8 +830,13 @@ class EditForm extends PureComponent {
         if (y - minY < 0) {
           minY = y;
         }
-        content = content.concat(this.renderFormContent(data[y], y));
+        if (data[y]) {
+          content = content.concat(this.renderFormContent(data[y], y));
+        }
       });
+      if (!judgeIsNothing(data[minY])) {
+        return null;
+      }
       const lastItem = last(
         makeMergeSort(
           data[maxY].map(item => ({ ...item, bottom: row - 0 + (item.row - 0) })),
@@ -862,16 +872,17 @@ class EditForm extends PureComponent {
         return (
           <div key={item.key} style={{ width: row !== undefined ? 'auto' : '600px' }}>
             <div className={style.grid_name} style={{ position: 'relative' }}>
-              {item.required && <span style={{ color: 'rgb(217, 51, 63)' }}>*</span>}
-              {item.name}
+              {' '}
+              {item.required && <span style={{ color: 'rgb(217, 51, 63)' }}> * </span>} {item.name}{' '}
               <span
                 className={style.grid_error}
                 style={{ position: 'absolute', left: '50%', marginLeft: `${w1 - w2 / 2}px` }}
               >
                 {curValue.errorMsg ? '(必填)' : ''}
               </span>
-            </div>
+            </div>{' '}
             <div>
+              {' '}
               {curValue.value.map((itemFormData, i) => {
                 const keyInfo = {
                   gridKey: item.key,
@@ -882,17 +893,18 @@ class EditForm extends PureComponent {
                 const content = this.renderGridItem(item, { ...itemFormData }, keyInfo, row);
                 return (
                   <div className={style.grid_content} key={key}>
+                    {' '}
                     {!item.disabled && (
                       <span onClick={() => this.deleteGridItem(item, curValue, i)} />
-                    )}
+                    )}{' '}
                     {content}
                   </div>
                 );
               })}
-            </div>
+            </div>{' '}
             {/* <Tooltip placement="topLeft" title={curValue.errorMsg}>
-              <div className={styles.error}>{curValue.errorMsg}</div>
-            </Tooltip> */}
+                                              <div className={styles.error}>{curValue.errorMsg}</div>
+                                            </Tooltip> */}{' '}
             {!item.disabled && (
               <div className={style.grid_add} onClick={() => this.gridAdd(item, curValue)} />
             )}
@@ -905,7 +917,6 @@ class EditForm extends PureComponent {
             key={item.key}
             style={{
               position: 'absolute',
-              zIndex: 10,
               top: `${row * yRatio}px`,
               left: `${item.x1 * xRatio}px`,
               border: '1px solid red',
@@ -967,7 +978,7 @@ class EditForm extends PureComponent {
     if (this.props.template) {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
-    return <div>{newForm}</div>;
+    return <div> {newForm} </div>;
   }
 }
 EditForm.defaultProps = {

@@ -44,7 +44,6 @@ class EditForm extends PureComponent {
       // this.rows = this.makeFormInSameRows(this.visibleForm.concat(this.availableGridItem));
       // this.rows = this.makeRowGroup(this.visibleForm, this.availableGridItem);
       this.rows = this.makeRows(this.visibleForm, this.visibleGrid, this.grouplist);
-
       const newFormData = startflow ? this.initFormData() : {};
       this.setState({
         formData: newFormData,
@@ -86,7 +85,7 @@ class EditForm extends PureComponent {
         const { length } = Object.keys(this.serializeRows(containRow));
         const newItem = { isGroup: true, ...item, containRow, newEndY: y1 + length + 1 };
         rows[y1] = (rows[y1] || []).concat(newItem);
-        this.mergeOtherRow(rows, y1, length + 1, newItem);
+        // this.mergeOtherRow(rows, y1, length + 1, newItem);
       }
     });
     return this.sliceOnGrid(rows, gridForm);
@@ -496,62 +495,75 @@ class EditForm extends PureComponent {
   renderGridItem = (grid, curValue, keyInfo, template) => {
     const { visibleFields, key, name } = grid;
     if (template !== undefined) {
-      // const gridItemRows = this.makeRowGroup(visibleFields, []);
       const gridItemRows = this.makeRows(visibleFields);
+      return Object.keys(gridItemRows || {}).map(row => {
+        const items = gridItemRows[row];
+        const { data } = items;
+        let content = [];
+        let maxY = 0;
+        let minY = 0;
+        Object.keys(data).forEach(y => {
+          if (y - maxY > 0) {
+            maxY = y;
+          }
+          if (y - minY < 0) {
+            minY = y;
+          }
+          const cont = data[y].map(field => {
+            const formInfo = {
+              ...{
+                key: field.key,
+                value: curValue[field.key].value,
+                readonly: true,
+                template: true,
+                ratio: { smXRatio: xRatio, smYRatio: yRatio },
+              },
+            };
+            const newKeyInfo = {
+              ...keyInfo,
+              childKey: field.key,
+              isGrid: true,
+              gridName: name,
+              domKey: `${key}${keyInfo.index}${field.key}`,
+            };
 
-      // return Object.keys(gridItemRows || {}).map(row => {
-      //   const { data } = gridItemRows[row];
-      //   const lastItem = data[data.length - 1];
-      //   const content = data.map(field => {
-      //     const formInfo = {
-      //       ...{
-      //         key: field.key,
-      //         value: curValue[field.key].value,
-      //         readonly: true,
-      //         template: true,
-      //         ratio: { smXRatio: xRatio, smYRatio: yRatio },
-      //       },
-      //     };
-      //     const newKeyInfo = {
-      //       ...keyInfo,
-      //       childKey: field.key,
-      //       isGrid: true,
-      //       gridName: name,
-      //       domKey: `${key}${keyInfo.index}${field.key}`,
-      //     };
-      //     return (
-      //       <div
-      //         style={{
-      //           // position: field.base ? 'relative' : 'absolute',
-      //           // minHeight: `${field.row * yRatio}px`,
-      //           // width: `${field.col * xRatio}px`,
-      //           position: 'absolute',
-      //           top: `${(field.y - row) * yRatio}px`,
-      //           left: `${field.x * xRatio}px`,
-      //         }}
-      //         key={field.key}
-      //       >
-      //         {this.renderFormItem(field, formInfo, newKeyInfo)}
-      //       </div>
-      //     );
-      //   });
-      //   return (
-      //     <div
-      //       key={row}
-      //       style={
-      //         template
-      //           ? {
-      //               position: 'relative',
-      //               height: `${(lastItem.y + lastItem.row - data[0].y) * yRatio}px`,
-      //             }
-      //           : null
-      //       }
-      //     >
-      //       {content}
-      //     </div>
-      //   );
-      // });
-      return this.renderRowsItem(gridItemRows);
+            return (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: `${y * yRatio}px`,
+                  left: `${field.x * xRatio}px`,
+                }}
+                key={field.key}
+              >
+                {this.renderFormItem(field, formInfo, newKeyInfo)}
+              </div>
+            );
+          });
+          content = content.concat(cont);
+        });
+        const lastItem = last(
+          makeMergeSort(
+            data[maxY].map(item => ({ ...item, bottom: row - 0 + (item.row - 0) })),
+            'bottom'
+          )
+        );
+        return (
+          <div
+            key={row}
+            style={
+              template
+                ? {
+                    position: 'relative',
+                    height: `${(maxY - 0 + (lastItem.row - 0) - minY) * yRatio}px`,
+                  }
+                : null
+            }
+          >
+            {content}
+          </div>
+        );
+      });
     }
     const forms = visibleFields.map(field => {
       const formInfo = {
@@ -559,6 +571,7 @@ class EditForm extends PureComponent {
           key: field.key,
           value: curValue[field.key].value,
           ratio: { smXRatio: xRatio, smYRatio: yRatio },
+          readonly: true,
         },
       };
       const newKeyInfo = {
@@ -588,8 +601,13 @@ class EditForm extends PureComponent {
         if (y - minY < 0) {
           minY = y;
         }
-        content = content.concat(this.renderFormContent(data[y], y));
+        if (data[y]) {
+          content = content.concat(this.renderFormContent(data[y], y));
+        }
       });
+      if (!judgeIsNothing(data[minY])) {
+        return null;
+      }
       const lastItem = last(
         makeMergeSort(
           data[maxY].map(item => ({ ...item, bottom: row - 0 + (item.row - 0) })),
@@ -605,7 +623,6 @@ class EditForm extends PureComponent {
           key={row}
           style={{
             position: 'relative',
-
             width: !isGrid ? `${20 * xRatio}px` : `${firstItem.col * xRatio}px`,
             height: !isGrid ? `${(maxY - 0 + (lastItem.row - 0) - minY) * yRatio}px` : 'auto',
           }}
@@ -616,14 +633,16 @@ class EditForm extends PureComponent {
     });
 
   renderFormContent = (items, row) => {
-    // const items = this.visibleForm.concat(this.availableGridItem);
     const newForm = items.map(item => {
       const { formData } = this.state;
       const curValue = { ...formData[item.key], readonly: true };
       if (item.visibleFields) {
         // 如果是列表控件
         return (
-          <div key={item.key} style={{ width: row !== undefined ? 'auto' : '600px' }}>
+          <div
+            key={item.key}
+            style={{ width: row !== undefined ? 'auto' : '602px', marginBottom: '9px' }}
+          >
             <div className={style.grid_name}>{item.name}</div>
             {curValue.value.length ? (
               <div>
@@ -649,7 +668,7 @@ class EditForm extends PureComponent {
                   lineHeight: '30px',
                   border: '1px solid #ccc',
                   textAlign: 'center',
-                  margin: '9px 0',
+                  marginTop: '9px',
                 }}
               >
                 {' '}
@@ -665,7 +684,6 @@ class EditForm extends PureComponent {
             key={item.key}
             style={{
               position: 'absolute',
-              zIndex: 10,
               top: `${row * yRatio}px`,
               left: `${item.x1 * xRatio}px`,
               border: '1px solid red',
@@ -732,7 +750,8 @@ class EditForm extends PureComponent {
       return null;
     }
     let newForm = null;
-    if (this.props.template) {
+
+    if (`${this.props.template}` === '1') {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
     return <div>{newForm}</div>;

@@ -84,27 +84,35 @@ class InterfaceItem extends Component {
     } else callback();
   };
 
-  renderInfo = (
-    value,
-    { field, template, field: { row }, ratio: { smYRatio, smXRatio } },
-    multiple
-  ) => (
-    <DetailItem
-      {...field}
-      template={template}
-      extraStyle={
-        multiple
-          ? {
-              height: 'auto',
-              minWidth: template ? `auto` : `${10 * smXRatio}px`,
-              minHeight: template ? `auto` : `${smYRatio}px`,
-            }
-          : {}
-      }
-    >
-      <span>{multiple ? (value || []).join('，') : value}</span>
-    </DetailItem>
-  );
+  renderInfo = (value, { field, template, ratio: { smYRatio, smXRatio } }, multiple) => {
+    let newValue;
+    const source = this.getOptions().map(item => ({ ...item, value: `${item.value}` }));
+    if (multiple) {
+      newValue = (source || [])
+        .filter(item => value.map(it => `${it}`).indexOf(item.value) > -1)
+        .map(item => item.text);
+    } else {
+      const curValue = (source || []).find(item => `${value}` === item.value);
+      newValue = curValue ? curValue.text : '';
+    }
+    return (
+      <DetailItem
+        {...field}
+        template={template}
+        extraStyle={
+          multiple
+            ? {
+                height: 'auto',
+                minWidth: template ? `auto` : `${10 * smXRatio}px`,
+                minHeight: template ? `auto` : `${smYRatio}px`,
+              }
+            : {}
+        }
+      >
+        <span> {multiple ? (newValue || []).join('，') : newValue}</span>
+      </DetailItem>
+    );
+  };
 
   render() {
     const {
