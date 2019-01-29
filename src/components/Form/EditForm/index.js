@@ -975,7 +975,7 @@ class EditForm extends PureComponent {
       return null;
     }
     let newForm = null;
-    if (`${this.props.template}` !== '1') {
+    if (`${this.props.template}` === '1') {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
     return <div> {newForm} </div>;
