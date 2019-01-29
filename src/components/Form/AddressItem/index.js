@@ -58,15 +58,26 @@ class AddressItem extends Component {
 
   renderAddress = () => {
     const { value } = this.state;
-    const { field, template } = this.props;
+    const {
+      field,
+      template,
+      ratio: { smYRatio, smXRatio },
+    } = this.props;
     const prov = district.find(item => item.id === value.province_id) || {};
     const county = district.find(item => item.id === value.county_id) || {};
     const city = district.find(item => item.id === value.city_id) || {};
     const address = `${prov.name || ''}${county.name || ''}${city.name || ''}${value.address ||
       ''}`;
     return (
-      <DetailItem {...field} template={template} text={address}>
-        <span>{address}</span>
+      <DetailItem
+        {...field}
+        template={template}
+        text={address}
+        extraStyle={{
+          minWidth: template ? `auto` : `${10 * smXRatio}px`,
+        }}
+      >
+        <span> {address}</span>
       </DetailItem>
     );
   };

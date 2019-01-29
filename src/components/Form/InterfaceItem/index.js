@@ -167,9 +167,7 @@ class InterfaceItem extends Component {
         template={template}
         disabled={disabled}
         extraStyle={{
-          height: 'auto',
           minWidth: !template ? `${10 * xRatio}px` : 'auto',
-          minHeight: `${row * yRatio}px`,
         }}
       >
         <div className={className} id={newId} style={{ height: '100%' }}>

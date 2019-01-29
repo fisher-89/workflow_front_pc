@@ -903,8 +903,8 @@ class EditForm extends PureComponent {
               })}
             </div>{' '}
             {/* <Tooltip placement="topLeft" title={curValue.errorMsg}>
-                                              <div className={styles.error}>{curValue.errorMsg}</div>
-                                            </Tooltip> */}{' '}
+                                                                                  <div className={styles.error}>{curValue.errorMsg}</div>
+                                                                                </Tooltip> */}{' '}
             {!item.disabled && (
               <div className={style.grid_add} onClick={() => this.gridAdd(item, curValue)} />
             )}
@@ -975,7 +975,7 @@ class EditForm extends PureComponent {
       return null;
     }
     let newForm = null;
-    if (this.props.template) {
+    if (`${this.props.template}` !== '1') {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
     return <div> {newForm} </div>;

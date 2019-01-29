@@ -126,7 +126,12 @@ class EditForm extends PureComponent {
           }
         });
         groups.push({ data: obj });
-        groups.push({ isGrid: true, data: { [y]: [{ ...grid, isGrid: true }] } });
+        groups.push({
+          isGrid: true,
+          data: {
+            [y]: [{ ...grid, isGrid: true }],
+          },
+        });
       });
       if (Object.keys(tempRows).length) {
         groups.push({ data: tempRows });
@@ -642,9 +647,10 @@ class EditForm extends PureComponent {
             key={item.key}
             style={{ width: row !== undefined ? 'auto' : '602px', marginBottom: '9px' }}
           >
-            <div className={style.grid_name}>{item.name}</div>
+            <div className={style.grid_name}> {item.name}</div>{' '}
             {curValue.value.length ? (
               <div>
+                {' '}
                 {curValue.value.map((itemFormData, i) => {
                   const keyInfo = {
                     gridKey: item.key,
@@ -655,6 +661,7 @@ class EditForm extends PureComponent {
                   const content = this.renderGridItem(item, { ...itemFormData }, keyInfo, row);
                   return (
                     <div className={style.grid_content} key={key}>
+                      {' '}
                       {content}
                     </div>
                   );
@@ -753,7 +760,7 @@ class EditForm extends PureComponent {
     if (`${this.props.template}` === '1') {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
-    return <div>{newForm}</div>;
+    return <div> {newForm} </div>;
   }
 }
 export default EditForm;

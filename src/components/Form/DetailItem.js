@@ -34,9 +34,7 @@ class DetailItem extends PureComponent {
 
     const classnames = [styles.form_item, className].join(' ');
     const rightSty = {
-      ...(template
-        ? { height: `${row * smYRatio}px`, overflowX: 'hidden', overflowY: 'scroll' }
-        : null),
+      ...(template ? { height: `${row * smYRatio}px` } : null),
     };
     // {/* {children} */}
     // <div style={{ backgroundColor:'rgba(153,153,153,0.1)',
@@ -70,11 +68,11 @@ class DetailItem extends PureComponent {
               )}
             </div>{' '}
             {/* <div
-                              id={`rightcontent${this.props.id}`} 
-                              style={{maxHeight:`${Math.floor((row * smYRatio - 30) / 20) * 20}px`,position:'relative',overflow:'hidden'}}
-                            >
-                              {m}{textOver ?<span style={{position:'absolute',height:'20px',lineHeight:'20px',right:0,bottom:0,zIndex:10,background:'#fff'}}>...</span>:null}
-                            </div> */}
+                                              id={`rightcontent${this.props.id}`} 
+                                              style={{maxHeight:`${Math.floor((row * smYRatio - 30) / 20) * 20}px`,position:'relative',overflow:'hidden'}}
+                                            >
+                                              {m}{textOver ?<span style={{position:'absolute',height:'20px',lineHeight:'20px',right:0,bottom:0,zIndex:10,background:'#fff'}}>...</span>:null}
+                                            </div> */}
           </div>
         </div>
       </div>

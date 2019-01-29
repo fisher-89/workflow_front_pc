@@ -94,14 +94,27 @@ class UploadItem extends PureComponent {
     return unique;
   };
 
-  renderInfo = (value, { field, template }, suffix) => (
+  renderInfo = (value, { field, template, ratio: { smYRatio, smXRatio } }, suffix) => (
     <DetailItem
       {...field}
       template={template}
       tooltip={false}
-      extraStyle={template ? { overflowY: 'scroll' } : {}}
+      // extraStyle={template ? { overflowY: 'scroll' } : {}}
+      rightContStyle={{ padding: '5px 0 0 10px', overflowY: template ? 'scroll' : ' initial' }}
+      extraStyle={{
+        minHeight: template ? `auto` : `${smYRatio}px`,
+        minWidth: template ? `auto` : `${10 * smXRatio}px`,
+      }}
     >
-      <div className={style.filelist} style={{ width: '100%' }}>
+      <div
+        className={style.filelist}
+        style={{
+          width: '100%',
+          paddingLeft: '10px',
+          height: '100%',
+        }}
+      >
+        {' '}
         {value && value.length ? (
           <FileUpload suffix={suffix} id={`${field.id}`} value={value} readonly />
         ) : null}

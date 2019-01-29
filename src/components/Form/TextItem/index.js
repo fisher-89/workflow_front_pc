@@ -160,7 +160,11 @@ class TextItem extends Component {
     <DetailItem
       {...field}
       template={template}
-      extraStyle={!template && (field.max || 31) > 30 ? { width: `${10 * smXRatio}px` } : {}}
+      extraStyle={
+        !template && field.type === 'text' && (field.max || 31) > 30
+          ? { width: `${10 * smXRatio}px` }
+          : {}
+      }
     >
       <span> {value}</span>
     </DetailItem>
@@ -181,6 +185,7 @@ class TextItem extends Component {
     return (
       <FormItem {...this.makeNewProps()}>
         <div className={[errorMsg ? style.errorMsg : style.noerror, style.text].join(' ')}>
+          {' '}
           {type === 'int' && this.renderNumberInput()} {type === 'text' && this.renderTextArea()}
         </div>
       </FormItem>

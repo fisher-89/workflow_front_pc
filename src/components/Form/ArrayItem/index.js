@@ -65,28 +65,30 @@ class SelectItem extends PureComponent {
       {...field}
       template={template}
       extraStyle={{
-        // height: 'auto',
-        minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
-        minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
+        minWidth: template ? `auto` : `${10 * smXRatio}px`,
       }}
+      rightStyle={template ? { overflowY: 'scroll' } : {}}
       tooltip={false}
-      rightContStyle={{ padding: '3px 0 3px 10px' }}
+      rightContStyle={{ padding: '3px 0 0px 0px', overflowY: template ? 'scroll' : ' initial' }}
     >
-      <div style={{ display: 'flex' }}>
+      <div style={{ paddingLeft: '10px' }}>
         {' '}
         {(value || []).map(item => (
           <div
             style={{
               height: '24px',
+              float: 'left',
               background: '#fff',
               border: '1px solid #ccc',
               padding: '0 10px',
               marginRight: '5px',
+              marginBottom: '3px',
             }}
           >
             {item}
           </div>
         ))}
+        <div style={{ clear: 'left' }} />
       </div>
     </DetailItem>
   );

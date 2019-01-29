@@ -30,7 +30,7 @@ class FormItem extends PureComponent {
             width: `${col * xRatio - 1}px`,
             height: `${row * yRatio - 1}px`,
           }
-        : { width: '300px' }),
+        : { width: `${5 * xRatio}px`, height: 'auto' }),
       ...extraStyle,
     };
     const classnames = [styles.form_item, className].join(' ');
@@ -56,6 +56,7 @@ class FormItem extends PureComponent {
               ...rightStyle,
             }}
           >
+            {' '}
             {children}
           </div>
         </div>{' '}
