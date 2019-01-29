@@ -69,9 +69,11 @@ class SelectItem extends PureComponent {
         minHeight: template ? `${row * smYRatio}px` : `${smYRatio}px`,
         minWidth: template ? `${8 * smXRatio}px` : `${4 * smXRatio}px`,
       }}
+      tooltip={false}
       rightContStyle={{ padding: '3px 0 3px 10px' }}
     >
       <div style={{ display: 'flex' }}>
+        {' '}
         {(value || []).map(item => (
           <div
             style={{

@@ -89,7 +89,7 @@ class InterfaceItem extends Component {
     const source = this.getOptions().map(item => ({ ...item, value: `${item.value}` }));
     if (multiple) {
       newValue = (source || [])
-        .filter(item => value.map(it => `${it}`).indexOf(item.value) > -1)
+        .filter(item => (value || []).map(it => `${it}`).indexOf(item.value) > -1)
         .map(item => item.text);
     } else {
       const curValue = (source || []).find(item => `${value}` === item.value);
