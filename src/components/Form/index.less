@@ -128,11 +128,12 @@
   flex-grow: 1;
   .aside {
     width: 120px;
-    height: 32px;
+    height: 100%;
     line-height: 32px;
     flex-grow: 0;
     flex-shrink: 0;
     text-align: right;
+    white-space: nowrap;
     .form-title-text();
   }
   .right {
@@ -146,6 +147,11 @@
       .ant-select-selection.ant-select-selection--multiple {
         border: none;
         min-height: auto;
+      }
+      .ant-select-selection__placeholder,
+      .ant-select-search__field__placeholder {
+        margin-top: 0;
+        top: 4px;
       }
       .ant-select-focused .ant-select-selection,
       .ant-select-selection:focus,

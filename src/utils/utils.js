@@ -3,6 +3,7 @@
 import moment from 'moment';
 import React from 'react';
 import { parse, stringify } from 'qs';
+import { func } from 'prop-types';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -385,18 +386,22 @@ export function makerFilters(params) {
 export function markTreeData(
   data = [],
   { value = 'id', label = 'name', parentId = 'parent_id' },
-  pid = null
+  pid = null,
+  extend = false
 ) {
   const tree = [];
   data.forEach(item => {
     if (item[parentId] === pid) {
-      const temp = {
+      let temp = {
         title: item[label],
         key: `${item[value]}`,
         disabled: item.disabled,
         value: `${item[value] || ''}`,
       };
-      const children = markTreeData(data, { value, label, parentId }, item[value]);
+      if (extend) {
+        temp = { ...item, ...temp };
+      }
+      const children = markTreeData(data, { value, label, parentId }, item[value], extend);
       if (children.length > 0) {
         temp.children = children;
       }
@@ -667,6 +672,18 @@ Array.prototype.unique = function(name = 'id') {
   return newData;
 };
 
+export function uniqArrayObject(result, name = 'id') {
+  const newData = [];
+  const obj = {};
+  for (let i = 0; i < result.length; i += 1) {
+    if (!obj[result[i][name]]) {
+      // 如果能查找到，证明数组元素重复了
+      obj[result[i][name]] = 1;
+      newData.push(result[i]);
+    }
+  }
+  return newData;
+}
 export function makeFieldValue(value, name, multiple = false, include = false) {
   const keys = Object.keys(name);
   if (multiple) {

@@ -6,7 +6,13 @@ import { connect } from 'dva';
 // import TreeSelect from '../../TreeSelect'
 import request from '../../../utils/request';
 
-import { markTreeData, judgeIsNothing, getTreeChildren } from '../../../utils/utils';
+import {
+  markTreeData,
+  judgeIsNothing,
+  getTreeChildren,
+  uniq,
+  uniqArrayObject,
+} from '../../../utils/utils';
 
 import StaffItem from './StaffItem';
 import ExtraFilters from './ExtraFilters/index';
@@ -14,8 +20,17 @@ import style from './index.less';
 
 const pagesize = 12;
 const defSearchType = [
-  { name: '部门', type: 2, pl: '请选择部门' },
-  { name: '员工', type: 1, pl: '请输入员工姓名/员工编号', checked: 1 },
+  { name: '部门', type: 2, pl: '请选择部门', key: 'department', text: '', value: '', filter: '' },
+  {
+    name: '员工',
+    type: 1,
+    pl: '请输入员工姓名/员工编号',
+    checked: 1,
+    key: 'staff',
+    text: '',
+    value: '',
+    filter: '',
+  },
 ];
 @connect(({ staff, loading, manager }) => ({
   source: staff.source,
@@ -113,6 +128,8 @@ class StaffModal extends Component {
 
   onTreeSelect = value => {
     let depFilters = '';
+    const { searchType } = this.state;
+
     if (value !== 'all') {
       const children = getTreeChildren(value, this.props.department, { parentId: 'parent_id' });
       const childIds = children.map(item => item.id);
@@ -121,10 +138,22 @@ class StaffModal extends Component {
     const filters = {
       ...this.resetObject(this.state.filters),
       department: depFilters,
+      staff: '',
     };
+    const newTypes = searchType.map(item => {
+      const obj = { ...item };
+      if (item.key === 'department') {
+        obj.filter = depFilters;
+        obj.value = value;
+        obj.text = this.props.department.find(dep => `${dep.id}` === `${value}`).name;
+      }
+      return obj;
+    });
     this.setState(
       {
         filters,
+        searchValue: '',
+        searchType: newTypes,
       },
       () => {
         this.fetchFiltersDataSource({
@@ -150,6 +179,7 @@ class StaffModal extends Component {
       );
     } else {
       newCheckedStaffs = data.concat(checkedStaff);
+      this.saveSearchHistory();
     }
     this.setState({
       checkall: { ...this.state.checkall, curpage: value },
@@ -168,6 +198,7 @@ class StaffModal extends Component {
     let newCheckedStaffs = '';
 
     if (!value) {
+      // 取消全选
       newCheckedStaffs = (checkedStaff || []).filter(
         item => staffSns.indexOf(item.staff_sn) === -1
       );
@@ -194,6 +225,7 @@ class StaffModal extends Component {
       }).then(res => {
         this.allDataSource = { filters, data: res };
         newCheckedStaffs = res.concat(checkedStaff);
+        this.saveSearchHistory();
         this.setState({
           checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
         });
@@ -246,14 +278,25 @@ class StaffModal extends Component {
     );
   };
 
-  inputOnChange = e => {
+  inputOnChange = (e, key = 'staff') => {
     const { value } = e.target;
+    const { searchType } = this.state;
     const staffFilter = value ? `realname~${value}|staff_sn~${value}` : '';
     const filters = this.resetObject(this.state.filters);
+    const newTypes = searchType.map(item => {
+      const obj = { ...item };
+      if (item.key === key) {
+        obj.filter = staffFilter;
+        obj.value = value;
+        obj.text = value;
+      }
+      return obj;
+    });
     this.setState(
       {
         searchValue: value,
         filters: { ...filters, staff: staffFilter },
+        searchType: newTypes,
       },
       () => {
         this.fetchFiltersDataSource({
@@ -300,24 +343,41 @@ class StaffModal extends Component {
   handleOnChange = item => {
     const { checkedStaff } = this.state;
     const isChecked = (checkedStaff || []).find(staff => staff.staff_sn === item.staff_sn);
-
     let newCheckedStaff = '';
-
     if (this.multiple) {
       if (isChecked) {
         newCheckedStaff = checkedStaff.filter(staff => staff.staff_sn !== item.staff_sn);
       } else {
         newCheckedStaff = checkedStaff.concat(item);
+        this.saveSearchHistory();
       }
     } else if (isChecked) {
       newCheckedStaff = [];
     } else {
       newCheckedStaff = [item];
+      this.saveSearchHistory();
     }
-
     this.setState({
       checkedStaff: newCheckedStaff,
     });
+  };
+
+  saveSearchHistory = () => {
+    const { searchType } = this.state;
+    const checkedType = searchType.find(item => item.filter !== '');
+    if (checkedType) {
+      const his = localStorage.getItem('pc_wokrflow_StaffSearch') || '[]';
+      let values = JSON.parse(his === 'undefined' ? '[]' : his);
+      const obj = {
+        text: checkedType.text,
+        filter: checkedType.filter,
+        key: checkedType.key,
+        value: checkedType.value,
+      };
+      values = [obj, ...values];
+      const uniqValues = uniqArrayObject(values, 'filter').slice(0, 10);
+      localStorage.setItem('pc_wokrflow_StaffSearch', JSON.stringify(uniqValues));
+    }
   };
 
   deleteItem = item => {
@@ -376,8 +436,22 @@ class StaffModal extends Component {
     return extraFiltersStr;
   };
 
+  historySearch = item => {
+    const { searchType } = this.state;
+    const newTypes = searchType.map(type => {
+      let obj = { ...type, checked: 0 };
+      if (type.key === item.key) {
+        obj = { ...obj, ...item, checked: 1 };
+      }
+      return obj;
+    });
+    this.setState({
+      searchType: newTypes,
+    });
+  };
+
   renderPageHeader = () => {
-    const { searchType, swicthVisible, searchValue } = this.state;
+    const { searchType, swicthVisible } = this.state;
     const { department } = this.props;
     const curTab = searchType.find(item => item.checked);
     const newTreeData = markTreeData(
@@ -416,12 +490,13 @@ class StaffModal extends Component {
         <div className={style.search}>
           {' '}
           {curTab.type === 1 ? (
-            <input value={searchValue} onChange={this.inputOnChange} placeholder={curTab.pl} />
+            <input value={curTab.text} onChange={this.inputOnChange} placeholder={curTab.pl} />
           ) : (
             <TreeSelect
               dropdownClassName={style.dropdown}
               treeDefaultExpandedKeys={['all']}
               showSearch
+              value={curTab.value}
               treeData={[{ value: 'all', title: '全部', children: newTreeData }]}
               onSelect={this.onTreeSelect}
               filterTreeNode={(inputValue, treeNode) =>
@@ -430,6 +505,24 @@ class StaffModal extends Component {
             />
           )}
         </div>
+      </div>
+    );
+  };
+
+  renderSearchHistory = () => {
+    const his = localStorage.getItem('pc_wokrflow_StaffSearch') || '[]';
+    const searchValues = JSON.parse(his === 'undefined' ? '[]' : his);
+    return (
+      <div className={style.history}>
+        {searchValues.map(item => (
+          <div
+            key={`${item.key}-${item.filter}`}
+            className={style.his_item}
+            onClick={() => this.historySearch(item)}
+          >
+            {item.text}
+          </div>
+        ))}
       </div>
     );
   };
@@ -549,7 +642,7 @@ class StaffModal extends Component {
     });
     const btnStyle = { color: '#333', background: '#fff', border: '1px solid #ccc' };
     return (
-      <div>
+      <div style={{ marginTop: '15px' }}>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
           <span> 搜索结果</span>{' '}
           <ExtraFilters
@@ -641,9 +734,8 @@ class StaffModal extends Component {
             <div className={style.modal_content}>
               <div className={style.left_content}>
                 {' '}
-                {this.renderPageHeader()}{' '}
+                {this.renderPageHeader()} {quickUsed ? null : this.renderSearchHistory()}
                 <div className={style.search_result_content}>
-                  <div style={{ height: '44px' }} />{' '}
                   {quickUsed ? this.renderStaffList() : this.renderQuickSearch()}{' '}
                 </div>
               </div>{' '}

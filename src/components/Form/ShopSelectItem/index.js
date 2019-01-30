@@ -198,8 +198,6 @@ class ShopSelectItem extends PureComponent {
         template={template}
         rightStyle={{ overflowY: multiple ? 'scroll' : 'hidden' }}
         extraStyle={{
-          // height: 'auto',
-          // minHeight: template ? `${row * yRatio}px` : '75px',
           ...(multiple && !template ? { minWidth: `${10 * xRatio}px` } : null),
           ...extraStyle,
         }}

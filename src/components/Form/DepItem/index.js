@@ -200,7 +200,8 @@ class SelectDepItem extends PureComponent {
     const newTreeData = markTreeData(
       department,
       { value: 'id', label: 'name', parentId: 'parent_id' },
-      0
+      0,
+      true
     );
     const desc = description || `${defaultInfo}`;
 
@@ -221,6 +222,7 @@ class SelectDepItem extends PureComponent {
               disabled={disabled}
               dropdownClassName={style.dropdown}
               placeholder={desc}
+              treeNodeLabelProp="full_name"
               showSearch
               multiple
               value={newValue}

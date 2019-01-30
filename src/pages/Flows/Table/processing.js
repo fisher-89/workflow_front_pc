@@ -75,8 +75,6 @@ class StartList extends Component {
       },
       {
         title: '当前审批人',
-        dateFilters: true,
-        searcher: true,
         render: a => {
           const stepRun = a.step_run;
           return stepRun.length > 0

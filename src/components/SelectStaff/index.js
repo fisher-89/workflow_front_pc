@@ -180,7 +180,12 @@ class SelectStaff extends Component {
     const { searchResult, value, serachValue } = this.state;
     const { description, name } = this.props;
     const children = searchResult.length ? (
-      searchResult.map(r => <Option key={r.staff_sn}>{r.realname}</Option>)
+      searchResult.map(r => (
+        <Option key={r.staff_sn} title={`${r.realname}(${r.staff_sn})`}>
+          {' '}
+          {r.realname} <span style={{ color: '#999' }}> ({r.staff_sn}) </span>
+        </Option>
+      ))
     ) : (
       <Option key="nothing" disabled>
         无匹配结果{' '}
@@ -191,7 +196,7 @@ class SelectStaff extends Component {
         <span
           className={style.search_icon}
           onClick={!this.props.disabled ? this.handleClick : () => {}}
-        />
+        />{' '}
         <div className={style.single_search} title={serachValue}>
           <AutoComplete
             onSearch={this.searchChange}
@@ -207,8 +212,8 @@ class SelectStaff extends Component {
             // style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}
             dataSource={searchResult.length ? children : [children]}
-          />
-        </div>
+          />{' '}
+        </div>{' '}
       </div>
     );
   };
@@ -222,6 +227,7 @@ class SelectStaff extends Component {
     const { source } = this.state;
     return (
       <div className={style.tag_container} onClick={e => e.stopPropagation()}>
+        {' '}
         {multiple ? (
           <div
             className={style.result}
@@ -229,6 +235,7 @@ class SelectStaff extends Component {
             onClick={disabled ? () => {} : this.handleClick}
           >
             <div className={style.tagItem}>
+              {' '}
               {(source || []).map(item => (
                 <Tag
                   closable={!disabled}
@@ -236,15 +243,15 @@ class SelectStaff extends Component {
                   onClose={e => this.onDelete(e, item)}
                   title={item.realname}
                 >
-                  {item.realname}
+                  {item.realname}{' '}
                 </Tag>
-              ))}
-            </div>
-            {!source.length ? <span className={style.placeholder}>请选择</span> : null}
+              ))}{' '}
+            </div>{' '}
+            {!source.length ? <span className={style.placeholder}> 请选择 </span> : null}{' '}
           </div>
         ) : (
           this.renderSingle()
-        )}
+        )}{' '}
         <StaffModal
           visible={this.state.visible}
           onChange={this.onMaskChange}
@@ -254,7 +261,7 @@ class SelectStaff extends Component {
           range={range}
           checkedStaff={source}
           fetchDataSource={this.fetchDataSource}
-        />
+        />{' '}
       </div>
     );
   }
