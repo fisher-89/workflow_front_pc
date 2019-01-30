@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
+import { last } from 'lodash';
 import moment from 'moment';
 import { convertTimeDis } from '../../../utils/utils';
 import OATable from '../../../components/OATable';
@@ -27,7 +28,6 @@ class CCList extends Component {
   };
 
   makeColums = () => {
-    const { availableFlows } = this.props;
     const columns = [
       {
         title: '序号',
@@ -35,17 +35,6 @@ class CCList extends Component {
         key: 'id',
         sorter: true,
       },
-      // {
-      //   title: '流程类型',
-      //   dataIndex: 'flow_type_id',
-      //   key: 'flow_type_id',
-      //   filters: availableFlows.map(item => ({ text: item.name, value: item.id })),
-      //   render: a => {
-      //     // const { availableFlows } = this.props;
-      //     const flow = (availableFlows || []).find(item => `${item.id} `=== `${a}`);
-      //     return flow ? flow.name : '';
-      //   },
-      // },
       {
         title: '流程名称',
         dataIndex: 'flow_name',
@@ -60,12 +49,26 @@ class CCList extends Component {
         sorter: true,
       },
       {
+        title: '发起人',
+        render: a => a.flow_run.creator_name,
+      },
+      {
+        title: '审批人',
+        render: a => {
+          const stepRun = a.flow_run.step_run;
+          if (stepRun) {
+            const lastStep = last(stepRun);
+            return lastStep.approver_name;
+          }
+          return '';
+        },
+      },
+      {
         title: '步骤名称',
         dataIndex: 'step_name',
         key: 'step_name',
         searcher: true,
       },
-
       {
         title: '历时',
         render: a => {

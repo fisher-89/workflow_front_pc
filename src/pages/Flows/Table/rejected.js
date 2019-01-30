@@ -67,7 +67,7 @@ class StartList extends Component {
         },
       },
       {
-        title: '备注',
+        title: '驳回原因',
         render: a => {
           const stepRun = a.step_run;
           return last(stepRun).remark;

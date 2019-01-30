@@ -755,10 +755,12 @@ export function convertTimeDis(t1, t2) {
   var s1 = new Date(t1.replace(/-/g, '/'));
   var s2 = t2 ? new Date(t2.replace(/-/g, '/')) : new Date();
   let runTime = parseInt((s2.getTime() - s1.getTime()) / 1000);
-  var year = Math.floor(runTime / 86400 / 365);
-  runTime = runTime % (86400 * 365);
-  var month = Math.floor(runTime / 86400 / 30);
-  runTime = runTime % (86400 * 30);
+  // var year = Math.floor(runTime / 86400 / 365);
+  // runTime = runTime % (86400 * 365);
+  // var month = Math.floor(runTime / 86400 / 30);
+  // runTime = runTime % (86400 * 30);
+  var year = '';
+  var month = '';
   var day = Math.floor(runTime / 86400);
   runTime = runTime % 86400;
   var hour = Math.floor(runTime / 3600);

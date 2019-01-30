@@ -378,20 +378,22 @@ class ShopModal extends Component {
               this.setState({ swicthVisible: true });
             }}
           >
-            {curTab.name}
-            <span />
-          </div>
+            {curTab.name} <span />
+          </div>{' '}
           {swicthVisible && (
             <div className={style.type_list}>
+              {' '}
               {searchType.filter(type => !type.checked).map(item => (
                 <div onClick={e => this.switchSearchType(item, e)} key={item.type}>
+                  {' '}
                   {item.name}
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </div>{' '}
         <div className={style.search}>
+          {' '}
           {curTab.type === 1 || curTab.type === 3 ? (
             <input
               value={searchValue}
@@ -417,7 +419,9 @@ class ShopModal extends Component {
 
   renderCheckResult = () => {
     const { checkedShop } = this.state;
-    const { range } = this.props;
+    const {
+      range: { max },
+    } = this.props;
     return (
       <div className={style.select_result}>
         <div
@@ -431,9 +435,15 @@ class ShopModal extends Component {
         >
           <div className={style.checked_count}>
             已选：
-            {checkedShop.length}/
-            <span style={{ color: '#999' }}>{this.multiple ? range.max || '50' : '1'}</span>
-          </div>
+            <span
+              style={{
+                color: checkedShop.length - (max || 50) <= 0 ? 'rgb(51, 51, 51)' : '#d9333f',
+              }}
+            >
+              {checkedShop.length}{' '}
+            </span>
+            / <span style={{ color: '#999' }}> {this.multiple ? max || '50' : '1'}</span>
+          </div>{' '}
           <div
             className={style.checked_clear}
             onClick={() => {
@@ -444,8 +454,9 @@ class ShopModal extends Component {
           >
             清空
           </div>
-        </div>
+        </div>{' '}
         <div className={style.checked_list}>
+          {' '}
           {checkedShop.map(item => (
             <ShopItem
               itemStyle={{ marginRight: '0' }}
@@ -454,7 +465,7 @@ class ShopModal extends Component {
               key={item.shop_sn}
               extra={<div className={style.delete} onClick={() => this.deleteItem(item)} />}
             />
-          ))}
+          ))}{' '}
         </div>
       </div>
     );
@@ -488,7 +499,7 @@ class ShopModal extends Component {
     return (
       <div>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
-          <span>搜索结果</span>
+          <span> 搜索结果</span>{' '}
           <ExtraFilters
             filterDataSource={treeData}
             onChange={this.filtersChange}
@@ -497,29 +508,30 @@ class ShopModal extends Component {
             <span className={cls} id="filter">
               筛选
             </span>
-          </ExtraFilters>
+          </ExtraFilters>{' '}
           {multiple ? (
             <React.Fragment>
               <span className={style.checkall}>
                 <Checkbox onClick={this.checkCurAll} checked={!extra}>
                   选择当前页
                 </Checkbox>
-              </span>
+              </span>{' '}
               <span
                 className={style.checkall}
                 style={btnStyle}
                 onClick={() => this.checkAll(false)}
               >
                 清空全选
-              </span>
+              </span>{' '}
               <span className={style.checkall} style={btnStyle} onClick={() => this.checkAll(true)}>
                 全选
               </span>
             </React.Fragment>
           ) : null}
-        </div>
+        </div>{' '}
         <Spin spinning={fetchLoading || false}>
           <div className={style.search_result}>
+            {' '}
             {(data || []).map(item => {
               const checked =
                 (checkedShop || []).map(staff => staff.shop_sn).indexOf(item.shop_sn) > -1;
@@ -534,8 +546,8 @@ class ShopModal extends Component {
                 />
               );
             })}
-          </div>
-        </Spin>
+          </div>{' '}
+        </Spin>{' '}
         <div className={style.page}>
           <Pagination
             size="small"
@@ -544,7 +556,6 @@ class ShopModal extends Component {
             total={realTotal}
             pageSize={pagesize - 0}
             onChange={this.pageOnChange}
-            showQuickJumper
           />
         </div>
       </div>
@@ -553,6 +564,9 @@ class ShopModal extends Component {
 
   render() {
     const { visible, checkedShop } = this.state;
+    const {
+      range: { max },
+    } = this.props;
     return (
       <div id="shop">
         <Modal
@@ -563,7 +577,7 @@ class ShopModal extends Component {
           bodyStyle={{ padding: 0 }}
           title="选择店铺"
           okText="确认"
-          okButtonProps={{ disabled: checkedShop.length > 49 }}
+          okButtonProps={{ disabled: checkedShop.length - (max || 50) > 0 }}
           cancelText="取消"
           getContainer={() => document.getElementById('shop')}
         >
@@ -573,12 +587,12 @@ class ShopModal extends Component {
           >
             <div className={style.modal_content}>
               <div className={style.left_content}>
-                {this.renderPageHeader()}
+                {' '}
+                {this.renderPageHeader()}{' '}
                 <div className={style.search_result_content}>
-                  <div style={{ height: '44px' }} />
-                  {this.renderStaffList()}
+                  <div style={{ height: '44px' }} /> {this.renderStaffList()}
                 </div>
-              </div>
+              </div>{' '}
               {this.renderCheckResult()}
             </div>
           </div>

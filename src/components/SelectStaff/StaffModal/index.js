@@ -161,6 +161,7 @@ class StaffModal extends Component {
     const {
       fetchUrl,
       source: { total },
+      range: { max },
     } = this.props;
     const { checkedStaff } = this.state;
     const staffSns = this.allDataSource.data.map(item => item.staff_sn);
@@ -174,8 +175,8 @@ class StaffModal extends Component {
         checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
       });
     } else {
-      if (total > 60) {
-        message.warning('超出最大限制，最多选择60人!', 2);
+      if (total - max > 0) {
+        message.warning(`超出最大限制，最多选择${max}人!`, 2);
         return;
       }
       const filters = this.mapFilters(this.makeAllFilters());
@@ -397,20 +398,23 @@ class StaffModal extends Component {
               this.setState({ swicthVisible: true });
             }}
           >
-            {curTab.name}
-            <span />
-          </div>
+            {' '}
+            {curTab.name} <span />
+          </div>{' '}
           {swicthVisible && (
             <div className={style.type_list}>
+              {' '}
               {searchType.filter(type => !type.checked).map(item => (
                 <div onClick={e => this.switchSearchType(item, e)} key={item.type}>
-                  {item.name}
+                  {' '}
+                  {item.name}{' '}
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </div>{' '}
         <div className={style.search}>
+          {' '}
           {curTab.type === 1 ? (
             <input value={searchValue} onChange={this.inputOnChange} placeholder={curTab.pl} />
           ) : (
@@ -445,10 +449,16 @@ class StaffModal extends Component {
           }}
         >
           <div className={style.checked_count}>
-            已选：
-            {checkedStaff.length}/
-            <span style={{ color: '#999' }}>{this.multiple ? range.max || '50' : '1'}</span>
-          </div>
+            已选：{' '}
+            <span
+              style={{
+                color: checkedStaff.length - (range.max || 50) <= 0 ? 'rgb(51, 51, 51)' : '#d9333f',
+              }}
+            >
+              {checkedStaff.length}{' '}
+            </span>
+            /<span style={{ color: '#999' }}> {this.multiple ? range.max || '50' : '1'} </span>
+          </div>{' '}
           <div
             className={style.checked_clear}
             onClick={() => {
@@ -459,8 +469,9 @@ class StaffModal extends Component {
           >
             清空
           </div>
-        </div>
+        </div>{' '}
         <div className={style.checked_list}>
+          {' '}
           {(checkedStaff || []).map(item => (
             <StaffItem
               itemStyle={{ marginRight: '0' }}
@@ -478,14 +489,15 @@ class StaffModal extends Component {
   renderQuickSearch = () => (
     <div>
       <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
-        <span>快捷搜索</span>
-      </div>
+        <span> 快捷搜索</span>
+      </div>{' '}
       <div className={style.search_result} style={{ height: 'auto', cursor: 'pointer' }}>
         <div className={style.quick_item} onClick={this.quickFetch}>
+          {' '}
           {this.props.currentUser && this.props.currentUser.department
             ? this.props.currentUser.department.full_name
             : ''}
-        </div>
+        </div>{' '}
       </div>
     </div>
   );
@@ -539,7 +551,7 @@ class StaffModal extends Component {
     return (
       <div>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
-          <span>搜索结果</span>
+          <span> 搜索结果</span>{' '}
           <ExtraFilters
             filterDataSource={treeData}
             onChange={this.filtersChange}
@@ -548,29 +560,31 @@ class StaffModal extends Component {
             <span className={cls} id="filter">
               筛选
             </span>
-          </ExtraFilters>
+          </ExtraFilters>{' '}
           {multiple ? (
             <React.Fragment>
               <span className={style.checkall}>
                 <Checkbox onClick={this.checkCurAll} checked={!extra}>
                   选择当前页
                 </Checkbox>
-              </span>
+              </span>{' '}
               <span
                 className={style.checkall}
                 style={btnStyle}
                 onClick={() => this.checkAll(false)}
               >
                 清空全选
-              </span>
+              </span>{' '}
               <span className={style.checkall} style={btnStyle} onClick={() => this.checkAll(true)}>
                 全选
               </span>
             </React.Fragment>
           ) : null}
-        </div>
+        </div>{' '}
         <Spin spinning={fetchLoading || false}>
+          {' '}
           <div className={style.search_result}>
+            {' '}
             {(data || []).map(item => {
               const checked =
                 (checkedStaff || []).map(staff => staff.staff_sn).indexOf(item.staff_sn) > -1;
@@ -585,8 +599,8 @@ class StaffModal extends Component {
                 />
               );
             })}
-          </div>
-        </Spin>
+          </div>{' '}
+        </Spin>{' '}
         <div className={style.page}>
           <Pagination
             size="small"
@@ -595,7 +609,6 @@ class StaffModal extends Component {
             total={realTotal}
             pageSize={pagesize - 0}
             onChange={this.pageOnChange}
-            showQuickJumper
           />
         </div>
       </div>
@@ -604,6 +617,9 @@ class StaffModal extends Component {
 
   render() {
     const { visible, quickUsed, checkedStaff } = this.state;
+    const {
+      range: { max },
+    } = this.props;
     return (
       <div id="staff" onClick={e => e.stopPropagation()}>
         <Modal
@@ -614,7 +630,7 @@ class StaffModal extends Component {
           bodyStyle={{ padding: 0 }}
           title="选择员工"
           okText="确认"
-          okButtonProps={{ disabled: checkedStaff.length > 49 }}
+          okButtonProps={{ disabled: checkedStaff.length - (max || 50) > 0 }}
           cancelText="取消"
           getContainer={() => document.getElementById('staff')}
         >
@@ -624,12 +640,13 @@ class StaffModal extends Component {
           >
             <div className={style.modal_content}>
               <div className={style.left_content}>
-                {this.renderPageHeader()}
+                {' '}
+                {this.renderPageHeader()}{' '}
                 <div className={style.search_result_content}>
-                  <div style={{ height: '44px' }} />
-                  {quickUsed ? this.renderStaffList() : this.renderQuickSearch()}
+                  <div style={{ height: '44px' }} />{' '}
+                  {quickUsed ? this.renderStaffList() : this.renderQuickSearch()}{' '}
                 </div>
-              </div>
+              </div>{' '}
               {this.renderCheckResult()}
             </div>
           </div>

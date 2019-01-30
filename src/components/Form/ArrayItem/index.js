@@ -60,7 +60,7 @@ class SelectItem extends PureComponent {
     return newOpts;
   };
 
-  renderInfo = (value, { field, template, field: { row }, ratio: { smXRatio, smYRatio } }) => (
+  renderInfo = (value, { field, template, ratio: { smXRatio } }) => (
     <DetailItem
       {...field}
       template={template}
@@ -85,9 +85,10 @@ class SelectItem extends PureComponent {
               marginBottom: '3px',
             }}
           >
+            {' '}
             {item}
           </div>
-        ))}
+        ))}{' '}
         <div style={{ clear: 'left' }} />
       </div>
     </DetailItem>

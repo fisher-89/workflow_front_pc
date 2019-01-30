@@ -515,11 +515,6 @@ class Step2 extends PureComponent {
     const { formData } = this.state;
     const { preStepData } = this.props;
     const concurrentType = preStepData.concurrent_type;
-    const stepItem = {
-      ...this.makeProps(),
-      asideStyle: { width: '90px' },
-      rightStyle: { border: 'none' },
-    };
     const isEnd = !(preStepData.available_steps.length && preStepData.step_end === 0);
     if (isEnd) {
       return null;
@@ -527,22 +522,10 @@ class Step2 extends PureComponent {
     return (
       <div>
         <div style={{ display: 'flex' }}>
-          {/* {...{
-          name: '执行步骤',
-          errorMsg: formData.next_step.errorMsg,
-          required: true,
-          extraStyle: { height: 'auto' },
-          asideStyle: { width: '90px' },
-          rightStyle: { width: '600px', minWidth: '600px', border: 'none' },
-        }} */}
-          <span style={{ width: '90px', textAlign: 'right', color: '#000' }}>执行步骤：</span>
+          <span style={{ width: '90px', textAlign: 'right', color: '#000' }}> 执行步骤：</span>{' '}
           <div style={{ width: '600px' }}>
+            {' '}
             {formData.next_step.value.map((step, i) => {
-              // const cls = classNames(style.step2_item, {
-              //   [style.checked]: step.checked && concurrentType === 1,
-              //   [style.disabed_checked]: step.checked && concurrentType === 2,
-              //   [style.singelchecked]: step.checked && concurrentType === 0,
-              // });
               const iconCls = classNames(style.icon, {
                 [style.checked]: step.checked && concurrentType === 1,
                 [style.disabed_checked]: step.checked && concurrentType === 2,
@@ -578,17 +561,18 @@ class Step2 extends PureComponent {
                       }}
                     >
                       步骤名称：
-                    </span>
-                    <span>{curStep.name}</span>
-                  </div>
-                  <SelectStaffItem {...this.makeApproProps(step, i)} disabled={!step.checked} />
+                    </span>{' '}
+                    <span> {curStep.name}</span>
+                  </div>{' '}
+                  <SelectStaffItem {...this.makeApproProps(step, i)} disabled={!step.checked} />{' '}
                   <span className={iconCls} />
                 </div>
               );
             })}
           </div>
-        </div>
+        </div>{' '}
         <div style={{ height: '20px', paddingLeft: '90px', color: '#d9333f' }}>
+          {' '}
           {formData.next_step.errorMsg}
         </div>
       </div>
@@ -642,21 +626,23 @@ class Step2 extends PureComponent {
       <Spin spinning={submitLoading || false}>
         <div className={style.step2}>
           <div>
-            {type !== 'deliver' && type !== 'reject' ? this.renderSteps() : null}
+            {' '}
+            {type !== 'deliver' && type !== 'reject' ? this.renderSteps() : null}{' '}
             {(type === 'start' || type === 'approve') && preStepData.is_cc === '1' ? (
               <SelectStaffItem {...this.makeCCProps()} />
-            ) : null}
-            {type === 'deliver' ? <SelectStaffItem {...this.makeDeliverProps()} /> : null}
-            {type !== 'start' ? <TextItem {...this.makeRemarkProps()} /> : null}
+            ) : null}{' '}
+            {type === 'deliver' ? <SelectStaffItem {...this.makeDeliverProps()} /> : null}{' '}
+            {type !== 'start' ? <TextItem {...this.makeRemarkProps()} /> : null}{' '}
             <div style={{ marginLeft: '90px', marginTop: '20px' }}>
               <div style={{ float: 'left', marginRight: '20px', width: '150px' }}>
+                {' '}
                 {this.renderBtn()}
-              </div>
+              </div>{' '}
               <div style={{ float: 'left', width: '150px' }}>
                 <Button onClick={this.handlePrev} block>
                   上一步
                 </Button>
-              </div>
+              </div>{' '}
               <div style={{ clear: 'left' }} />
             </div>
           </div>

@@ -79,7 +79,12 @@ class StartList extends Component {
         searcher: true,
         render: a => {
           const stepRun = a.step_run;
-          return stepRun.length > 0 ? last(stepRun).approver_name : '';
+          return stepRun.length > 0
+            ? stepRun
+                .filter(item => item.action_type === 0)
+                .map(item => item.approver_name)
+                .join('、')
+            : '';
         },
       },
       {
@@ -93,13 +98,13 @@ class StartList extends Component {
         title: '操作',
         render: r => (
           <Fragment>
-            <Link to={`/start/${r.id}`}>查看</Link>
+            <Link to={`/start/${r.id}`}> 查看</Link>{' '}
             {r.status === 0 ? (
               <Fragment>
                 <Divider type="vertical" />
                 <Popconfirm onConfirm={() => this.withDraw(r)} title="确定要撤回该流程吗？">
-                  <a>撤回</a>
-                </Popconfirm>
+                  <a> 撤回</a>
+                </Popconfirm>{' '}
               </Fragment>
             ) : null}
           </Fragment>
@@ -122,7 +127,7 @@ class StartList extends Component {
           data={data}
           fetchDataSource={this.fetchStartList}
           total={total || 0}
-        />
+        />{' '}
       </div>
     );
   }

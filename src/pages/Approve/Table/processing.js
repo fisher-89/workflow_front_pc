@@ -56,14 +56,16 @@ class Processing extends Component {
         searcher: true,
       },
       {
+        title: '发起人',
+        render: a => a.flow_run.creator_name,
+      },
+      {
         title: '发起时间',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        dateFilters: true,
+        render: a => a.flow_run.created_at,
         sorter: true,
       },
       {
-        title: '历时',
+        title: '等待时间',
         render: a => {
           const disTime = a.created_at ? convertTimeDis(a.created_at) : '';
           return disTime;
@@ -73,7 +75,7 @@ class Processing extends Component {
         title: '操作',
         render: ({ id }) => (
           <Fragment>
-            <Link to={`/approve/${id}`}>查看</Link>
+            <Link to={`/approve/${id}`}> 查看</Link>
           </Fragment>
         ),
       },
@@ -94,7 +96,7 @@ class Processing extends Component {
           data={data}
           fetchDataSource={this.fetchApproveList}
           total={total || 0}
-        />
+        />{' '}
       </div>
     );
   }

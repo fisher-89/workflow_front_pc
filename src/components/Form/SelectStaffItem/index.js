@@ -80,8 +80,12 @@ class SelectStaffItem extends PureComponent {
           : {}
       }
     >
+      {' '}
       {value ? (
-        <span>{multiple ? (value || []).map(item => item.text).join('、') : value.text || ''}</span>
+        <span>
+          {' '}
+          {multiple ? (value || []).map(item => item.text).join('、') : value.text || ''}{' '}
+        </span>
       ) : (
         ''
       )}
@@ -143,9 +147,7 @@ class SelectStaffItem extends PureComponent {
         required={required}
         template={template}
         extraStyle={{
-          // height: 'auto',
           minWidth: !template ? `${10 * xRatio}px` : 'auto',
-          // minHeight: `${row * yRatio}px`,
           ...extraStyle,
         }}
       >
