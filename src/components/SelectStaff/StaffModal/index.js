@@ -10,7 +10,6 @@ import {
   markTreeData,
   judgeIsNothing,
   getTreeChildren,
-  uniq,
   uniqArrayObject,
 } from '../../../utils/utils';
 
@@ -50,7 +49,6 @@ class StaffModal extends Component {
       searchType: defSearchType,
       checkedStaff: checkedStaff || [],
       swicthVisible: false,
-      searchValue: '',
       filters: {
         staff: '',
         department: '',
@@ -138,21 +136,18 @@ class StaffModal extends Component {
     const filters = {
       ...this.resetObject(this.state.filters),
       department: depFilters,
-      staff: '',
     };
-    const newTypes = searchType.map(item => {
-      const obj = { ...item };
-      if (item.key === 'department') {
-        obj.filter = depFilters;
-        obj.value = value;
-        obj.text = this.props.department.find(dep => `${dep.id}` === `${value}`).name;
-      }
-      return obj;
+    const newTypes = this.makeNewTypes(searchType, 'department', {
+      filter: depFilters,
+      value,
+      text:
+        value !== 'all'
+          ? this.props.department.find(dep => `${dep.id}` === `${value}`).full_name
+          : '',
     });
     this.setState(
       {
         filters,
-        searchValue: '',
         searchType: newTypes,
       },
       () => {
@@ -265,9 +260,9 @@ class StaffModal extends Component {
     this.setState(
       {
         visible: false,
-        searchType: defSearchType,
+        searchType: [...defSearchType],
         swicthVisible: false,
-        searchValue: '',
+        filters: {},
         quickUsed: false,
       },
       () => {
@@ -278,25 +273,32 @@ class StaffModal extends Component {
     );
   };
 
+  makeNewTypes = (searchType, key, params) => {
+    const newTypes = searchType.map(item => {
+      let obj = { ...defSearchType.find(it => it.key === item.key) };
+      obj.checked = item.checked;
+      if (item.key === key) {
+        obj = { ...obj, ...params };
+      }
+      return obj;
+    });
+    return newTypes;
+  };
+
   inputOnChange = (e, key = 'staff') => {
     const { value } = e.target;
     const { searchType } = this.state;
     const staffFilter = value ? `realname~${value}|staff_sn~${value}` : '';
     const filters = this.resetObject(this.state.filters);
-    const newTypes = searchType.map(item => {
-      const obj = { ...item };
-      if (item.key === key) {
-        obj.filter = staffFilter;
-        obj.value = value;
-        obj.text = value;
-      }
-      return obj;
+    const newTypes = this.makeNewTypes(searchType, key, {
+      filter: staffFilter,
+      value,
+      text: value,
     });
     this.setState(
       {
-        searchValue: value,
         filters: { ...filters, staff: staffFilter },
-        searchType: newTypes,
+        searchType: [...newTypes],
       },
       () => {
         this.fetchFiltersDataSource({
@@ -320,14 +322,14 @@ class StaffModal extends Component {
     e.stopPropagation();
     const { searchType } = this.state;
     const newSearchType = searchType.map(t => {
-      const newItem = { ...t, checked: false };
+      const newItem = { ...t, checked: 0 };
       if (t.type === item.type) {
-        newItem.checked = true;
+        newItem.checked = 1;
       }
       return newItem;
     });
     this.setState({
-      searchType: newSearchType,
+      searchType: [...newSearchType],
       swicthVisible: false,
     });
   };
@@ -395,10 +397,11 @@ class StaffModal extends Component {
       .filter(item => judgeIsNothing(item))
       .join(';');
 
-  quickFetch = () => {
+  quickFetch = dep => {
     const {
       currentUser: { department },
     } = this.props;
+    const { searchType } = this.state;
     const children = getTreeChildren(department.parent_id || department.id, this.props.department, {
       parentId: 'parent_id',
     });
@@ -407,8 +410,16 @@ class StaffModal extends Component {
       .concat(department.parent_id || department.id)
       .join(',')}]`;
     const filters = { ...this.state.filters, department: depFilters };
+    const newTypes = searchType.map(type => {
+      let obj = { ...type, checked: 0 };
+      if (type.key === 'department') {
+        obj = { ...obj, ...{ value: dep.id, text: dep.full_name, filter: depFilters }, checked: 1 };
+      }
+      return obj;
+    });
     this.setState({
       filters,
+      searchType: newTypes,
     });
     this.fetchFiltersDataSource({ page: 1, pagesize, filters: this.mapFilters(filters) });
   };
@@ -445,9 +456,21 @@ class StaffModal extends Component {
       }
       return obj;
     });
-    this.setState({
-      searchType: newTypes,
-    });
+    const filters = { ...this.state.filters, [item.key]: item.filter };
+
+    this.setState(
+      {
+        searchType: newTypes,
+        filters,
+      },
+      () => {
+        this.fetchDataSource({
+          page: 1,
+          pagesize: 12,
+          filters: this.mapFilters(filters),
+        });
+      }
+    );
   };
 
   renderPageHeader = () => {
@@ -456,8 +479,9 @@ class StaffModal extends Component {
     const curTab = searchType.find(item => item.checked);
     const newTreeData = markTreeData(
       department,
-      { value: 'id', title: 'name', parentId: 'parent_id' },
-      0
+      { value: 'id', label: 'name', parentId: 'parent_id' },
+      0,
+      true
     );
     return (
       <div className={style.content_search} style={{ height: '40px' }}>
@@ -497,7 +521,8 @@ class StaffModal extends Component {
               treeDefaultExpandedKeys={['all']}
               showSearch
               value={curTab.value}
-              treeData={[{ value: 'all', title: '全部', children: newTreeData }]}
+              treeNodeLabelProp="full_name"
+              treeData={[{ value: 'all', title: '全部', full_name: '全部', children: newTreeData }]}
               onSelect={this.onTreeSelect}
               filterTreeNode={(inputValue, treeNode) =>
                 treeNode.props.title.indexOf(inputValue) !== -1
@@ -514,6 +539,7 @@ class StaffModal extends Component {
     const searchValues = JSON.parse(his === 'undefined' ? '[]' : his);
     return (
       <div className={style.history}>
+        <div className={style.his_title}>历史记录：</div>
         {searchValues.map(item => (
           <div
             key={`${item.key}-${item.filter}`}
@@ -581,22 +607,30 @@ class StaffModal extends Component {
 
   renderQuickSearch = () => (
     <div>
-      <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
-        <span> 快捷搜索</span>
-      </div>{' '}
-      <div className={style.search_result} style={{ height: 'auto', cursor: 'pointer' }}>
-        <div className={style.quick_item} onClick={this.quickFetch}>
+      <div className={style.history}>
+        <div className={style.his_title}>快捷搜索：</div>
+        <div
+          className={style.his_item}
+          onClick={() => this.quickFetch(this.props.currentUser.department)}
+        >
+          {this.props.currentUser && this.props.currentUser.department
+            ? this.props.currentUser.department.full_name
+            : ''}
+        </div>
+      </div>
+      {/* <div className={style.search_result} style={{ height: 'auto', cursor: 'pointer' }}>
+        <div className={style.quick_item} onClick={()=>this.quickFetch(this.props.currentUser.department)}>
           {' '}
           {this.props.currentUser && this.props.currentUser.department
             ? this.props.currentUser.department.full_name
             : ''}
         </div>{' '}
-      </div>
+      </div> */}
     </div>
   );
 
   renderStaffList = () => {
-    const { checkedStaff, extraFilters, searchValue } = this.state;
+    const { checkedStaff, extraFilters, searchType } = this.state;
     const {
       source: { data, total, page },
       fetchLoading,
@@ -685,7 +719,11 @@ class StaffModal extends Component {
                 <StaffItem
                   extra={null}
                   detail={item}
-                  keywords={searchValue}
+                  keywords={
+                    searchType.find(it => it.checked === 1)
+                      ? searchType.find(it => it.checked === 1).text
+                      : ''
+                  }
                   checked={checked}
                   handleClick={() => this.handleOnChange(item)}
                   key={item.staff_sn}

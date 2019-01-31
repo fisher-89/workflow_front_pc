@@ -6,7 +6,12 @@ import { connect } from 'dva';
 // import TreeSelect from '../../TreeSelect'
 import request from '../../../utils/request';
 
-import { markTreeData, judgeIsNothing, getTreeChildren } from '../../../utils/utils';
+import {
+  markTreeData,
+  judgeIsNothing,
+  getTreeChildren,
+  uniqArrayObject,
+} from '../../../utils/utils';
 
 import ShopItem from './ShopItem';
 import ExtraFilters from './ExtraFilters/index';
@@ -14,9 +19,26 @@ import style from './index.less';
 
 const pagesize = 8;
 const defSearchType = [
-  { name: '名称', type: 1, checked: 1, pl: '请输入店铺名称/店铺代码' },
-  { name: '部门', type: 2, pl: '请选择部门' },
-  { name: '员工', type: 3, pl: '请输入员工姓名/员工编号' },
+  {
+    name: '名称',
+    type: 1,
+    checked: 1,
+    pl: '请输入店铺名称/店铺代码',
+    key: 'name',
+    text: '',
+    value: '',
+    filter: '',
+  },
+  { name: '部门', type: 2, pl: '请选择部门', key: 'department', text: '', value: '', filter: '' },
+  {
+    name: '员工',
+    type: 3,
+    pl: '请输入员工姓名/员工编号',
+    key: 'staff',
+    text: '',
+    value: '',
+    filter: '',
+  },
 ];
 @connect(({ staff, loading, manager }) => ({
   source: staff.shopSource,
@@ -36,7 +58,6 @@ class ShopModal extends Component {
       searchType: defSearchType,
       checkedShop: checkedShop || [],
       swicthVisible: false,
-      searchValue: '',
       filters: {
         shop: '',
         staff: '',
@@ -53,9 +74,19 @@ class ShopModal extends Component {
     this.multiple = multiple;
     this.currentUser = currentUser;
     this.fetchFiltersDataSource = debounce(params => {
+      if (!this.state.quickUsed) {
+        this.setState({
+          quickUsed: true,
+        });
+      }
       fetchDataSource(params);
     }, 500);
     this.fetchDataSource = params => {
+      if (!this.state.quickUsed) {
+        this.setState({
+          quickUsed: true,
+        });
+      }
       fetchDataSource(params);
     };
   }
@@ -104,19 +135,29 @@ class ShopModal extends Component {
 
   onTreeSelect = value => {
     let depFilters = '';
+    const { searchType } = this.state;
     if (value !== 'all') {
       const children = getTreeChildren(value, this.props.department, { parentId: 'parent_id' });
       const childIds = children.map(item => item.id);
       depFilters = `department.id=[${childIds.concat(value).join(',')}]`;
     }
+    const newTypes = this.makeNewTypes(searchType, 'department', {
+      filter: depFilters,
+      value,
+      text:
+        value !== 'all'
+          ? this.props.department.find(dep => `${dep.id}` === `${value}`).full_name
+          : '',
+    });
     const filters = {
       ...this.resetObject(this.state.filters),
       department: depFilters,
     };
+
     this.setState(
       {
-        searchValue: '',
         filters,
+        searchType: newTypes,
       },
       () => {
         this.fetchFiltersDataSource({
@@ -148,6 +189,7 @@ class ShopModal extends Component {
       newCheckedStaffs = checkedShop.filter(item => staffSns.indexOf(item.shop_sn) === -1);
     } else {
       newCheckedStaffs = data.concat(checkedShop);
+      this.saveSearchHistory();
     }
     this.setState({
       checkedShop: [...newCheckedStaffs].unique('shop_sn'),
@@ -188,6 +230,7 @@ class ShopModal extends Component {
       }).then(res => {
         this.allDataSource = { filters, data: res };
         newCheckedStaffs = res.concat(checkedShop);
+        this.saveSearchHistory();
         this.setState({
           checkedShop: [...newCheckedStaffs].unique('shop_sn'),
         });
@@ -229,7 +272,7 @@ class ShopModal extends Component {
         visible: false,
         searchType: defSearchType,
         swicthVisible: false,
-        searchValue: '',
+        filters: {},
         quickUsed: false,
       },
       () => {
@@ -240,21 +283,35 @@ class ShopModal extends Component {
     );
   };
 
-  inputOnChange = (e, type) => {
+  makeNewTypes = (searchType, key, params) => {
+    const newTypes = searchType.map(item => {
+      let obj = { ...defSearchType.find(it => it.key === item.key) };
+      obj.checked = item.checked;
+      if (item.key === key) {
+        obj = { ...obj, ...params };
+      }
+      return obj;
+    });
+    return newTypes;
+  };
+
+  inputOnChange = (e, { type, key }) => {
     const { value } = e.target;
+    const { searchType } = this.state;
     const filter = this.resetObject(this.state.filters);
+    let curFilter = '';
     if (value) {
       if (type === 1) {
-        filter.shop = `name~${value}|shop_sn~${value}`;
+        curFilter = `name~${value}|shop_sn~${value}`;
       } else {
-        filter.staff = `staff.realname~${value}|staff.staff_sn~${value}`;
+        curFilter = `staff.realname~${value}|staff.staff_sn~${value}`;
       }
     }
-    const filters = { ...filter };
+    const newTypes = this.makeNewTypes(searchType, key, { filter: curFilter, value, text: value });
     this.setState(
       {
-        searchValue: value,
-        filters,
+        filters: { ...filter, [key]: curFilter },
+        searchType: [...newTypes],
       },
       () => {
         this.fetchFiltersDataSource({
@@ -270,12 +327,13 @@ class ShopModal extends Component {
     e.stopPropagation();
     const { searchType } = this.state;
     const newSearchType = searchType.map(t => {
-      const newItem = { ...t, checked: false };
+      const newItem = { ...t, checked: 0 };
       if (t.type === item.type) {
-        newItem.checked = true;
+        newItem.checked = 1;
       }
       return newItem;
     });
+    console.log(newSearchType);
     this.setState({
       searchType: newSearchType,
       swicthVisible: false,
@@ -299,15 +357,35 @@ class ShopModal extends Component {
         newCheckedShop = checkedShop.filter(shop => shop.shop_sn !== item.shop_sn);
       } else {
         newCheckedShop = checkedShop.concat(item);
+        this.saveSearchHistory();
       }
     } else if (isChecked) {
       newCheckedShop = [];
     } else {
       newCheckedShop = [item];
+      this.saveSearchHistory();
     }
     this.setState({
       checkedShop: newCheckedShop,
     });
+  };
+
+  saveSearchHistory = () => {
+    const { searchType } = this.state;
+    const checkedType = searchType.find(item => item.filter !== '');
+    if (checkedType) {
+      const his = localStorage.getItem('pc_wokrflow_ShopSearch') || '[]';
+      let values = JSON.parse(his === 'undefined' ? '[]' : his);
+      const obj = {
+        text: checkedType.text,
+        filter: checkedType.filter,
+        key: checkedType.key,
+        value: checkedType.value,
+      };
+      values = [obj, ...values];
+      const uniqValues = uniqArrayObject(values, 'filter').slice(0, 10);
+      localStorage.setItem('pc_wokrflow_ShopSearch', JSON.stringify(uniqValues));
+    }
   };
 
   deleteItem = item => {
@@ -356,14 +434,41 @@ class ShopModal extends Component {
     return extraFiltersStr;
   };
 
+  historySearch = item => {
+    const { searchType } = this.state;
+    const newTypes = searchType.map(type => {
+      let obj = { ...type, checked: 0 };
+      if (type.key === item.key) {
+        obj = { ...obj, ...item, checked: 1 };
+      }
+      return obj;
+    });
+    const filters = { ...this.state.filters, [item.key]: item.filter };
+
+    this.setState(
+      {
+        searchType: newTypes,
+        filters,
+      },
+      () => {
+        this.fetchDataSource({
+          page: 1,
+          pagesize,
+          filters: this.mapFilters(filters),
+        });
+      }
+    );
+  };
+
   renderPageHeader = () => {
-    const { searchType, swicthVisible, searchValue } = this.state;
+    const { searchType, swicthVisible } = this.state;
     const { department } = this.props;
     const curTab = searchType.find(item => item.checked);
     const newTreeData = markTreeData(
       department,
-      { value: 'id', title: 'name', parentId: 'parent_id' },
-      0
+      { value: 'id', label: 'name', parentId: 'parent_id' },
+      0,
+      true
     );
     return (
       <div className={style.content_search} style={{ height: '40px' }}>
@@ -396,16 +501,18 @@ class ShopModal extends Component {
           {' '}
           {curTab.type === 1 || curTab.type === 3 ? (
             <input
-              value={searchValue}
+              value={curTab.text}
               placeholder={curTab.pl}
-              onChange={e => this.inputOnChange(e, curTab.type)}
+              onChange={e => this.inputOnChange(e, curTab)}
             />
           ) : (
             <TreeSelect
               dropdownClassName={style.dropdown}
               treeDefaultExpandedKeys={['all']}
               showSearch
-              treeData={[{ value: 'all', title: '全部', children: newTreeData }]}
+              value={curTab.value}
+              treeNodeLabelProp="full_name"
+              treeData={[{ value: 'all', title: '全部', full_name: '全部', children: newTreeData }]}
               onSelect={this.onTreeSelect}
               filterTreeNode={(inputValue, treeNode) =>
                 treeNode.props.title.indexOf(inputValue) !== -1
@@ -413,6 +520,25 @@ class ShopModal extends Component {
             />
           )}
         </div>
+      </div>
+    );
+  };
+
+  renderSearchHistory = () => {
+    const his = localStorage.getItem('pc_wokrflow_ShopSearch') || '[]';
+    const searchValues = JSON.parse(his === 'undefined' ? '[]' : his);
+    return (
+      <div className={style.history}>
+        <div className={style.his_title}>历史记录：</div>
+        {searchValues.map(item => (
+          <div
+            key={`${item.key}-${item.filter}`}
+            className={style.his_item}
+            onClick={() => this.historySearch(item)}
+          >
+            {item.text}
+          </div>
+        ))}
       </div>
     );
   };
@@ -472,7 +598,7 @@ class ShopModal extends Component {
   };
 
   renderStaffList = () => {
-    const { checkedShop, extraFilters, searchValue, searchType } = this.state;
+    const { checkedShop, extraFilters, searchType } = this.state;
     const {
       source: { data, total, page },
       fetchLoading,
@@ -497,7 +623,7 @@ class ShopModal extends Component {
     });
     const btnStyle = { color: '#333', background: '#fff', border: '1px solid #ccc' };
     return (
-      <div>
+      <div style={{ marginTop: '15px' }}>
         <div style={{ color: '#333333', fontSize: '12px', lineHeight: '20px' }}>
           <span> 搜索结果</span>{' '}
           <ExtraFilters
@@ -540,7 +666,7 @@ class ShopModal extends Component {
                   extra={null}
                   detail={item}
                   checked={checked}
-                  keywords={{ type: curTab.type, value: searchValue }}
+                  keywords={{ type: curTab.type, value: curTab.text }}
                   handleClick={() => this.handleOnChange(item)}
                   key={item.shop_sn}
                 />
@@ -563,7 +689,7 @@ class ShopModal extends Component {
   };
 
   render() {
-    const { visible, checkedShop } = this.state;
+    const { visible, checkedShop, quickUsed } = this.state;
     const {
       range: { max },
     } = this.props;
@@ -589,9 +715,11 @@ class ShopModal extends Component {
               <div className={style.left_content}>
                 {' '}
                 {this.renderPageHeader()}{' '}
-                <div className={style.search_result_content}>
-                  <div style={{ height: '44px' }} /> {this.renderStaffList()}
-                </div>
+                {quickUsed ? (
+                  <div className={style.search_result_content}>{this.renderStaffList()}</div>
+                ) : (
+                  this.renderSearchHistory()
+                )}
               </div>{' '}
               {this.renderCheckResult()}
             </div>

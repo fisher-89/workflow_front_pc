@@ -62,7 +62,7 @@ class EditForm extends PureComponent {
     const availableForm = startflow.fields.form.filter(
       item => startflow.step.available_fields.indexOf(item.key) > -1
     );
-    this.grouplist = startflow.grouplist;
+    this.grouplist = startflow.field_groups || [];
     this.availableForm = availableForm.map(item => {
       const newItem = { ...item };
       const disabled = startflow.step.editable_fields.indexOf(item.key) === -1;
@@ -117,7 +117,11 @@ class EditForm extends PureComponent {
       }
     });
     grouplist.forEach(item => {
-      const { x1, y1, x2, y2 } = item;
+      // const { x1, y1, x2, y2 } = item;
+      const x1 = item.left;
+      const y1 = item.top;
+      const x2 = item.right;
+      const y2 = item.bottom;
       let containRow = {};
       let containFields = [];
       Object.keys(rows).forEach(rowY => {
@@ -902,9 +906,6 @@ class EditForm extends PureComponent {
                 );
               })}
             </div>{' '}
-            {/* <Tooltip placement="topLeft" title={curValue.errorMsg}>
-                                                                                  <div className={styles.error}>{curValue.errorMsg}</div>
-                                                                                </Tooltip> */}{' '}
             {!item.disabled && (
               <div className={style.grid_add} onClick={() => this.gridAdd(item, curValue)} />
             )}
@@ -918,23 +919,23 @@ class EditForm extends PureComponent {
             style={{
               position: 'absolute',
               top: `${row * yRatio}px`,
-              left: `${item.x1 * xRatio}px`,
-              border: '1px solid red',
+              left: `${item.left * xRatio}px`,
+              border: '1px solid #999',
               boxSizing: 'content-box',
               margin: '-1px',
-              width: `${(item.x2 - item.x1) * xRatio - 1}px`,
-              height: `${(item.newEndY - item.y1) * yRatio - 1}px`,
+              width: `${(item.right - item.left) * xRatio - 1}px`,
+              height: `${(item.newEndY - item.top) * yRatio - 1}px`,
             }}
           >
             <div
               style={{
                 height: `${yRatio}px`,
-                borderBottom: '1px solid red',
+                borderBottom: '1px solid #999',
                 textAlign: 'center',
                 lineHeight: `${yRatio - 1}px`,
               }}
             >
-              {item.name}
+              {item.title}
             </div>
           </div>
         );
@@ -978,7 +979,7 @@ class EditForm extends PureComponent {
     if (`${this.props.template}` === '1') {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
-    return <div> {newForm} </div>;
+    return <div style={{ marginLeft: '1px' }}> {newForm} </div>;
   }
 }
 EditForm.defaultProps = {
