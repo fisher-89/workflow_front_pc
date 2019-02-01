@@ -333,7 +333,6 @@ class ShopModal extends Component {
       }
       return newItem;
     });
-    console.log(newSearchType);
     this.setState({
       searchType: newSearchType,
       swicthVisible: false,

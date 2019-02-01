@@ -50,7 +50,7 @@ class DetailItem extends PureComponent {
           <div className={styles.right} style={{ ...rightSty, ...rightStyle }}>
             <div
               style={{
-                padding: '5px 0 5px 10px',
+                padding: '5px 10px 5px 10px',
                 height: '100%',
                 background: 'rgba(153,153,153,0.05)',
                 ...rightContStyle,

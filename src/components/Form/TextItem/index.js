@@ -49,6 +49,36 @@ class TextItem extends Component {
     }
     this.setState(
       {
+        // errorMsg,
+        value,
+      }
+      // () => {
+      //   onChange(value, errorMsg);
+      // }
+    );
+  };
+
+  inputOnFocus = e => {
+    this.setState({
+      errorMsg: '',
+    });
+  };
+
+  inputOnBlur = e => {
+    const {
+      field: { max, name },
+      onChange,
+      required,
+    } = this.props;
+    const { value } = e.target;
+    let errorMsg = '';
+    if (max !== '' && value.length > max) {
+      errorMsg = `长度需小于${max}`;
+    } else if (required && value === '') {
+      errorMsg = `请输入${name}`;
+    }
+    this.setState(
+      {
         errorMsg,
         value,
       },
@@ -59,6 +89,13 @@ class TextItem extends Component {
   };
 
   numberInputChange = value => {
+    this.setState({
+      value,
+    });
+  };
+
+  numberOnBlur = e => {
+    const { value } = e.target;
     const {
       field: { name, required },
       onChange,
@@ -94,6 +131,8 @@ class TextItem extends Component {
         value={value}
         placeholder={desc}
         onChange={this.numberInputChange}
+        onBlur={this.numberOnBlur}
+        onFocus={this.numberOnFocus}
       />
     );
   };
@@ -114,19 +153,9 @@ class TextItem extends Component {
         placeholder={desc}
         disabled={disabled}
         onChange={this.inputOnChange}
+        onBlur={this.inputOnBlur}
+        onFocus={this.inputOnFocus}
       />
-    );
-  };
-
-  renderInput = () => {
-    const { value } = this.state;
-    const {
-      disabled,
-      field: { description },
-    } = this.props;
-    const desc = description || `${defaultInfo}`;
-    return (
-      <Input value={value} placeholder={desc} onChange={this.inputOnChange} disabled={disabled} />
     );
   };
 
@@ -150,7 +179,7 @@ class TextItem extends Component {
       disabled,
       asideStyle,
       extraStyle: { ...extraStyles, ...extraStyle },
-      rightStyle: type === 'int' ? { overflowY: 'hidden' } : null,
+      rightStyle: { overflowY: 'hidden' },
       template,
     };
     return props;

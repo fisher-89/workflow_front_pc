@@ -218,6 +218,7 @@ class SelectStaffItem extends PureComponent {
             multiple={multiple}
             description={desc}
             defaultValue={defaultValue}
+            extraFilter=""
             name={this.props.formName}
             value={value}
             range={{ max, min }}
@@ -233,6 +234,7 @@ class SelectStaffItem extends PureComponent {
 SelectStaffItem.defaultProps = {
   onChange: () => {},
   ratio: {},
+  extraFilter: '',
   formName: { realname: 'text', staff_sn: 'value' },
 };
 export default SelectStaffItem;

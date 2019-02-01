@@ -46,7 +46,7 @@ class CCDetail extends PureComponent {
 
     return (
       <div
-        style={{ paddingBottom: '20px', width: '902px', maxWidth: '926px', paddingRight: '24px' }}
+        style={{ paddingBottom: '20px', width: '1202px', maxWidth: '1206px', paddingRight: '24px' }}
       >
         <Spin spinning={startLoading || false}>
           <div className={style.clearfix} style={{ marginBottom: '20px' }}>

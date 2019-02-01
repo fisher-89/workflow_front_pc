@@ -630,8 +630,11 @@ class EditForm extends PureComponent {
           key={row}
           style={{
             position: 'relative',
-            width: !isGrid ? `${20 * xRatio}px` : `${firstItem.col * xRatio}px`,
+            width: !isGrid ? `${20 * xRatio}px` : `${firstItem.col * xRatio - 1}px`,
             height: !isGrid ? `${(maxY - 0 + (lastItem.row - 0) - minY) * yRatio}px` : 'auto',
+            ...(isGrid
+              ? { boxSizing: 'content-box', border: '1px solid #999', marginBottom: '-1px' }
+              : {}),
           }}
         >
           {content}
@@ -648,6 +651,7 @@ class EditForm extends PureComponent {
         return (
           <div
             key={item.key}
+            className={style.grid}
             style={{ width: row !== undefined ? 'auto' : '602px', marginBottom: '9px' }}
           >
             <div className={style.grid_name}> {item.name}</div>{' '}
@@ -677,7 +681,8 @@ class EditForm extends PureComponent {
                   lineHeight: '30px',
                   border: '1px solid #ccc',
                   textAlign: 'center',
-                  marginTop: '9px',
+                  width: '180px',
+                  margin: '9px auto 0 auto',
                 }}
               >
                 {' '}
@@ -696,8 +701,10 @@ class EditForm extends PureComponent {
               top: `${row * yRatio}px`,
               left: `${item.left * xRatio}px`,
               border: '1px solid #999',
+              color: '#000',
+              fontWeight: 'bold',
+
               boxSizing: 'content-box',
-              margin: '-1px',
               width: `${(item.right - item.left) * xRatio - 1}px`,
               height: `${(item.newEndY - item.top) * yRatio - 1}px`,
             }}
@@ -710,7 +717,7 @@ class EditForm extends PureComponent {
                 lineHeight: `${yRatio - 1}px`,
               }}
             >
-              {item.name}
+              {item.title}
             </div>
           </div>
         );

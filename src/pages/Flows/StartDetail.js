@@ -64,7 +64,7 @@ class StartDetail extends PureComponent {
     const flowRun = startflow.flow_run;
 
     return (
-      <div style={{ paddingBottom: '20px', width: '902px' }}>
+      <div style={{ paddingBottom: '20px', width: '1202px' }}>
         <Spin spinning={startLoading || presetSubmit || false}>
           <div className={style.clearfix} style={{ marginBottom: '30px' }}>
             <span className={style.flow_title}>流程名称</span>

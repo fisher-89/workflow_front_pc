@@ -854,9 +854,10 @@ class EditForm extends PureComponent {
       return (
         <div
           key={row}
+          className={isGrid ? style.grid : ''}
           style={{
             position: 'relative',
-            width: !isGrid ? `${20 * xRatio}px` : `${firstItem.col * xRatio}px`,
+            width: !isGrid ? `${20 * xRatio}px` : `${firstItem.col * xRatio - 1}px`,
             height: !isGrid ? `${(maxY - 0 + (lastItem.row - 0) - minY) * yRatio}px` : 'auto',
           }}
         >
@@ -922,7 +923,9 @@ class EditForm extends PureComponent {
               left: `${item.left * xRatio}px`,
               border: '1px solid #999',
               boxSizing: 'content-box',
-              margin: '-1px',
+              color: '#000',
+              // margin: '-1px',
+              fontWeight: 'bold',
               width: `${(item.right - item.left) * xRatio - 1}px`,
               height: `${(item.newEndY - item.top) * yRatio - 1}px`,
             }}
@@ -979,7 +982,7 @@ class EditForm extends PureComponent {
     if (`${this.props.template}` === '1') {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
-    return <div style={{ marginLeft: '1px' }}> {newForm} </div>;
+    return <div> {newForm} </div>;
   }
 }
 EditForm.defaultProps = {

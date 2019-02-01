@@ -1,8 +1,12 @@
 @import '../../../utils/utils.less';
-
+.grid {
+  box-sizing: content-box;
+  border: 1px solid #999;
+  margin-bottom: -1px;
+}
 .grid_name {
-  height: 40px;
-  line-height: 40px;
+  height: 60px;
+  line-height: 60px;
   text-align: center;
   .grid-title-text();
   font-weight: bold;
@@ -13,8 +17,8 @@
 }
 
 .grid_content {
-  padding: 25px 0 10px;
-  border: 1px solid #ccc;
+  padding: 20px 0 10px;
+  border-bottom: 1px solid #ccc;
   border-top: none;
   &:first-child {
     border-top: 1px solid #ccc;
@@ -23,7 +27,7 @@
     width: 25px;
     height: 25px;
     background: url('/delete.png') no-repeat center center;
-    background-size: 16px 16px;
+    background-size: 14px 14px;
     float: right;
     margin-top: -20px;
     margin-right: 10px;
@@ -34,10 +38,11 @@
   height: 32px;
   // padding-top: 10px;
   text-align: center;
+  width: 180px;
   border: 1px dotted #ccc;
   background: url('/add.png') no-repeat center center;
   background-size: 14px;
-  margin: 9px 0;
+  margin: 9px auto;
   // .btn {
   //   margin: 0 auto;
   //   width: 150px;

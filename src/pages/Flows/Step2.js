@@ -160,6 +160,7 @@ class Step2 extends PureComponent {
       extraStyle: { width: '300px' },
       // itemStyle: { width: '290px' },
       formName: { realname: 'approver_name', staff_sn: 'approver_sn' },
+      extraFilter: 'status_id',
       value: item.approvers.value,
       errorMsg: item.approvers.errorMsg,
       onChange: (value, errorMsg) =>
