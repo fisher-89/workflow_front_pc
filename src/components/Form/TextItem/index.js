@@ -127,12 +127,12 @@ class TextItem extends Component {
         max={max === '' ? Infinity : max - 0}
         min={min === '' ? -Infinity : min - 0}
         disabled={disabled}
-        precision={scale}
+        precision={scale || 0}
         value={value}
         placeholder={desc}
         onChange={this.numberInputChange}
         onBlur={this.numberOnBlur}
-        onFocus={this.numberOnFocus}
+        onFocus={this.inputOnFocus}
       />
     );
   };

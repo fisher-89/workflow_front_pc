@@ -46,6 +46,7 @@ class SelectDepItem extends PureComponent {
     const newValue = selected.length
       ? makeFieldValue(muti ? selected : selected[0], { id: 'value', name: 'text' }, muti)
       : '';
+
     this.dealValueOnChange(newValue);
   };
 
@@ -58,7 +59,20 @@ class SelectDepItem extends PureComponent {
     } else {
       newValue = options.find(item => value === item.value);
     }
-    this.dealValueOnChange(newValue || (muti ? [] : ''));
+    this.setState({
+      value: newValue,
+    });
+  };
+
+  onDeselect = removeId => {
+    const { value } = this.state;
+    const newValue = (value || []).filter(item => `${item.value}` !== `${removeId}`);
+    this.dealValueOnChange(newValue);
+  };
+
+  onBlur = (e, muti) => {
+    const { value } = this.state;
+    this.dealValueOnChange(value || (muti ? [] : ''));
   };
 
   dealValueOnChange = value => {
@@ -114,6 +128,7 @@ class SelectDepItem extends PureComponent {
               optionFilterProp="children"
               getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSelectChange}
+              onBlur={this.onBlur}
             />
           </div>
         </FormItem>
@@ -143,6 +158,8 @@ class SelectDepItem extends PureComponent {
             optionFilterProp="children"
             value={newValue}
             onChange={v => this.onSelectChange(v, 1)}
+            onBlur={e => this.onBlur(e, 1)}
+            onDeselect={this.onDeselect}
             getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}
           />
