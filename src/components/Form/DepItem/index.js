@@ -44,7 +44,7 @@ class SelectDepItem extends PureComponent {
       selected = tempDeps.filter(item => `${v}` === item.id);
     }
     const newValue = selected.length
-      ? makeFieldValue(muti ? selected : selected[0], { id: 'value', name: 'text' }, muti)
+      ? makeFieldValue(muti ? selected : selected[0], { id: 'value', full_name: 'text' }, muti)
       : '';
 
     this.dealValueOnChange(newValue);
@@ -73,6 +73,19 @@ class SelectDepItem extends PureComponent {
   onBlur = (e, muti) => {
     const { value } = this.state;
     this.dealValueOnChange(value || (muti ? [] : ''));
+  };
+
+  onFocus = () => {
+    const { onChange } = this.props;
+    const { value } = this.state;
+    this.setState(
+      {
+        errorMsg: '',
+      },
+      () => {
+        onChange(value, '');
+      }
+    );
   };
 
   dealValueOnChange = value => {
@@ -129,6 +142,7 @@ class SelectDepItem extends PureComponent {
               getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSelectChange}
               onBlur={this.onBlur}
+              onFocus={this.onFocus}
             />
           </div>
         </FormItem>
@@ -159,6 +173,7 @@ class SelectDepItem extends PureComponent {
             value={newValue}
             onChange={v => this.onSelectChange(v, 1)}
             onBlur={e => this.onBlur(e, 1)}
+            onFocus={this.onFocus}
             onDeselect={this.onDeselect}
             getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}
@@ -271,6 +286,7 @@ class SelectDepItem extends PureComponent {
             showSearch
             allowClear
             value={newValue}
+            treeNodeLabelProp="full_name"
             treeData={newTreeData}
             onChange={v => this.onTreeChange(v, 0)}
             filterTreeNode={(inputValue, treeNode) =>

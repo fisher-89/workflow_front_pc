@@ -33,9 +33,10 @@ class SelectItem extends PureComponent {
     let errorMsg = '';
     const {
       field: { name },
+      required,
       onChange,
     } = this.props;
-    if (!judgeIsNothing(value)) {
+    if (required && !judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
     }
     this.setState(

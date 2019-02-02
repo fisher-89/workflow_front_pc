@@ -59,9 +59,15 @@ class TextItem extends Component {
   };
 
   inputOnFocus = e => {
-    this.setState({
-      errorMsg: '',
-    });
+    const { value } = this.state;
+    this.setState(
+      {
+        errorMsg: '',
+      },
+      () => {
+        this.props.onChange(value, '');
+      }
+    );
   };
 
   inputOnBlur = e => {
