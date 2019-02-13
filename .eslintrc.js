@@ -39,6 +39,7 @@ module.exports = {
     'import/no-unresolved': 0,
     'no-unused-expressions': 0,
     'no-eval': 0,
+    'no-restricted-globals': 0,
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url'],

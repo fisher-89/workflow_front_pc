@@ -37,25 +37,17 @@ class TextItem extends Component {
   inputOnChange = e => {
     const {
       field: { max, name },
-      onChange,
       required,
     } = this.props;
     const { value } = e.target;
-    let errorMsg = '';
     if (max !== '' && value.length > max) {
       errorMsg = `长度需小于${max}`;
     } else if (required && value === '') {
       errorMsg = `请输入${name}`;
     }
-    this.setState(
-      {
-        // errorMsg,
-        value,
-      }
-      // () => {
-      //   onChange(value, errorMsg);
-      // }
-    );
+    this.setState({
+      value,
+    });
   };
 
   inputOnFocus = e => {
@@ -100,23 +92,45 @@ class TextItem extends Component {
     });
   };
 
+  formatIntValue = (v, field) => {
+    const { scale, min } = field;
+    const value = v !== '' && min !== '' && min - v > 0 ? min : v;
+    const idx = value.indexOf('.');
+    const curScale = idx > -1 ? value.slice(idx + 1).length : 0;
+    // const newValue = curScale > scale ? (value.slice(0, value.indexOf('.') + (scale - 0) + 1))
+    // : Number(value).toFixed(scale);
+    let newValue;
+    if (v !== '' && !isNaN(v)) {
+      const tmpValue = `${Number(value)}`;
+      newValue =
+        curScale > scale
+          ? tmpValue.slice(0, tmpValue.indexOf('.') + (scale - 0) + 1)
+          : Number(value).toFixed(scale);
+    } else {
+      newValue = '';
+    }
+    return newValue;
+  };
+
   numberOnBlur = e => {
     const { value } = e.target;
     const {
       field: { name, required },
+      field,
       onChange,
     } = this.props;
     let errorMsg = '';
     if (required && (value === '' || value === undefined)) {
       errorMsg = `请输入${name}`;
     }
+    const newValue = this.formatIntValue(`${value || ''}`, field);
     this.setState(
       {
         errorMsg,
-        value,
+        value: newValue,
       },
       () => {
-        onChange(value, errorMsg);
+        onChange(newValue, errorMsg);
       }
     );
   };
@@ -125,6 +139,7 @@ class TextItem extends Component {
     const { value } = this.state;
     const {
       field: { max, min, scale, description },
+      field,
       disabled,
     } = this.props;
     const desc = description || `${defaultInfo}`;
@@ -133,7 +148,7 @@ class TextItem extends Component {
         max={max === '' ? Infinity : max - 0}
         min={min === '' ? -Infinity : min - 0}
         disabled={disabled}
-        precision={scale || 0}
+        // precision={scale || 0}
         value={value}
         placeholder={desc}
         onChange={this.numberInputChange}
