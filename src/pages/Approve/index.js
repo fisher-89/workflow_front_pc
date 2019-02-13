@@ -95,7 +95,7 @@ class Sumbit extends PureComponent {
     ];
     const startflow = this.props.approveDetails[this.id] || null;
     return (
-      <div style={{ maxWidth: '926px', paddingRight: '24px', paddingBottom: '20px' }}>
+      <div style={{ maxWidth: '1226px', paddingRight: '24px', paddingBottom: '20px' }}>
         {startflow && startflow.step_run.action_type === 0 ? (
           <Steps size="small" current={current}>
             {steps.map(step => (
