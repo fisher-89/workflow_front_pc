@@ -64,6 +64,7 @@ class SelectItem extends PureComponent {
       readonly,
       template,
       field: { max, min, type, description },
+      ratio: { xRatio },
     } = this.props;
     const { errorMsg, value } = this.state;
     const className = [style.date, errorMsg ? style.errorMsg : ''].join(' ');
@@ -80,6 +81,7 @@ class SelectItem extends PureComponent {
           required={required}
           template={template}
           disabled={disabled}
+          extraStyle={!template ? { minWidth: `${6 * xRatio}px` } : null}
         >
           <div className={className}>
             <DatePicker

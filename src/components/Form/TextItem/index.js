@@ -40,11 +40,11 @@ class TextItem extends Component {
       required,
     } = this.props;
     const { value } = e.target;
-    if (max !== '' && value.length > max) {
-      errorMsg = `长度需小于${max}`;
-    } else if (required && value === '') {
-      errorMsg = `请输入${name}`;
-    }
+    // if (max !== '' && value.length > max) {
+    //   errorMsg = `长度需小于${max}`;
+    // } else if (required && value === '') {
+    //   errorMsg = `请输入${name}`;
+    // }
     this.setState({
       value,
     });

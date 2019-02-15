@@ -117,7 +117,7 @@ class SelectItem extends PureComponent {
         disabled={disabled}
         required={required}
         template={template}
-        extraStyle={{ minWidth: `${8 * xRatio}px` }}
+        extraStyle={!template ? { minWidth: `${10 * xRatio}px` } : null}
         rightStyle={{ paddingLeft: '10px' }}
       >
         <div className={className}>

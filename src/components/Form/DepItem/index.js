@@ -247,7 +247,7 @@ class SelectDepItem extends PureComponent {
           required={required}
           template={template}
           disabled={disabled}
-          extraStyle={!template ? { minWidth: `${8 * xRatio}px` } : null}
+          extraStyle={!template ? { minWidth: `${10 * xRatio}px` } : null}
         >
           <div className={className}>
             <TreeSelect
