@@ -29,7 +29,8 @@ class SelectItem extends PureComponent {
     }
   }
 
-  handleOnChange = value => {
+  handleOnChange = (v, type) => {
+    let value = v;
     let errorMsg = '';
     const {
       field: { name },
@@ -38,6 +39,9 @@ class SelectItem extends PureComponent {
     } = this.props;
     if (required && !judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
+    }
+    if (type === 'datetime' && value) {
+      value = `${v}:00`;
     }
     this.setState(
       {
@@ -50,11 +54,18 @@ class SelectItem extends PureComponent {
     );
   };
 
-  renderInfo = (value, field, template) => (
-    <DetailItem {...field} template={template}>
-      <span>{value}</span>
-    </DetailItem>
-  );
+  renderInfo = (value, field, template) => {
+    const { type } = field;
+    let newValue = value;
+    if (type === 'datetime' && value) {
+      newValue = value.slice(0, -3);
+    }
+    return (
+      <DetailItem {...field} template={template}>
+        <span>{newValue}</span>
+      </DetailItem>
+    );
+  };
 
   render() {
     const {
@@ -82,6 +93,7 @@ class SelectItem extends PureComponent {
           template={template}
           disabled={disabled}
           extraStyle={!template ? { minWidth: `${6 * xRatio}px` } : null}
+          rightStyle={{ overflow: 'hidden' }}
         >
           <div className={className}>
             <DatePicker
@@ -90,9 +102,9 @@ class SelectItem extends PureComponent {
               value={newValue}
               range={{ min, max }}
               popupClassName={style.date_popup}
-              format="YYYY-MM-DD HH:mm:ss"
-              showTime
-              onChange={this.handleOnChange}
+              format="YYYY-MM-DD HH:mm"
+              showTime={{ format: 'HH:mm' }}
+              onChange={v => this.handleOnChange(v, 'datetime')}
             />
           </div>
         </FormItem>
@@ -113,7 +125,7 @@ class SelectItem extends PureComponent {
             placeholder={desc}
             range={{ min, max }}
             format="YYYY-MM-DD"
-            onChange={this.handleOnChange}
+            onChange={v => this.handleOnChange(v, 'datetime')}
           />
         </div>
       </FormItem>

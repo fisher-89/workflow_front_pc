@@ -30,13 +30,14 @@ class TimeItem extends PureComponent {
     }
   }
 
-  handleOnChange = value => {
+  handleOnChange = v => {
     let errorMsg = '';
     const {
       field: { name },
       required,
       onChange,
     } = this.props;
+    const value = v ? `${v}:00` : '';
     if (required && !judgeIsNothing(value)) {
       errorMsg = `请选择${name}`;
     }
@@ -53,7 +54,7 @@ class TimeItem extends PureComponent {
 
   renderInfo = (value, field, template) => (
     <DetailItem {...field} template={template}>
-      <span>{value}</span>
+      <span>{value ? value.slice(0, -3) : ''}</span>
     </DetailItem>
   );
 
@@ -68,7 +69,7 @@ class TimeItem extends PureComponent {
     } = this.props;
     const { errorMsg, value } = this.state;
     const className = [style.date, errorMsg ? style.errorMsg : ''].join(' ');
-    const newValue = value ? moment(value, 'HH:mm:ss') : null;
+    const newValue = value ? moment(value, 'HH:mm') : null;
     const desc = description || `${defaultInfo}`;
 
     if (readonly) {
@@ -89,7 +90,7 @@ class TimeItem extends PureComponent {
             disabled={disabled}
             placeholder={desc}
             popupClassName={style.time_popup}
-            format="HH:mm:ss"
+            format="HH:mm"
             onChange={this.handleOnChange}
           />
         </div>

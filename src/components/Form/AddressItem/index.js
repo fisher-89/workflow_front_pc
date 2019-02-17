@@ -61,11 +61,11 @@ class AddressItem extends Component {
     const {
       field,
       template,
-      ratio: { smYRatio, smXRatio },
+      ratio: { smXRatio },
     } = this.props;
-    const prov = district.find(item => item.id === value.province_id) || {};
-    const county = district.find(item => item.id === value.county_id) || {};
-    const city = district.find(item => item.id === value.city_id) || {};
+    const prov = district.find(item => `${item.id}` === `${value.province_id}`) || {};
+    const county = district.find(item => `${item.id}` === `${value.county_id}`) || {};
+    const city = district.find(item => `${item.id}` === `${value.city_id}`) || {};
     const address = `${prov.name || ''}${county.name || ''}${city.name || ''}${value.address ||
       ''}`;
     return (
