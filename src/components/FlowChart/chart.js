@@ -15,6 +15,7 @@ const lineStyle = {
   color: 'rgba(24,144,255,0.4)',
   width: 6,
 };
+const disableColor = 'rgb(153, 153, 153)';
 const firstColLineStyle = {
   color: 'rgba(24,144,255,0.4)',
   width: 6,
@@ -366,20 +367,21 @@ class FlowChart extends Component {
     this.drawArc(x, y, r, 0, 2 * Math.PI, color, false);
   };
 
-  drawCurve = (x1, y1, x2, y2, direction, r = curveRadius) => {
+  drawCurve = (x1, y1, x2, y2, direction, r = curveRadius, color) => {
     let c = { x: x1, y: y1 - 0 + r / verticalRate };
     if (direction < 0) {
       c = { x: x1, y: y1 - r / verticalRate };
     }
     this.drawLine(x1 * colGap, y1 * verticalRate, x2 * colGap, y1 * verticalRate, '#fff');
     this.drawLine(x2 * colGap, y1 * verticalRate, x2 * colGap, y2 * verticalRate, '#fff');
+    console.log(color);
     this.drawArc(
       c.x * colGap,
       c.y * verticalRate,
       r,
       0,
       direction > 0 ? -0.5 * Math.PI : 0.5 * Math.PI,
-      lineStyle.color,
+      color,
       !!(direction > 0),
       false
     );
@@ -387,13 +389,19 @@ class FlowChart extends Component {
 
   draw = () => {
     const { chartRows, chartData, chartLines } = this.state;
+    const { status } = this.props;
+
     chartLines.forEach((line, i) => {
       const {
         col: { index },
         start,
         end,
       } = line;
-      const color = index === 1 ? firstColLineStyle.color : lineStyle.color;
+
+      let color = index === 1 ? firstColLineStyle.color : lineStyle.color;
+      if (status === -2) {
+        color = disableColor;
+      }
       this.drawLine(
         index * colGap,
         start * verticalRate,
@@ -409,14 +417,22 @@ class FlowChart extends Component {
         y * verticalRate,
         end.index * colGap,
         y * verticalRate,
-        lineStyle.color
+        status === -2 ? disableColor : lineStyle.color
       );
       const p1 = { x: end.index - curveRadius / colGap, y };
       const p2 = { x: end.index, y: y + direction * (curveRadius / verticalRate) };
-      this.drawCurve(p1.x, p1.y, p2.x, p2.y, direction);
+      this.drawCurve(
+        p1.x,
+        p1.y,
+        p2.x,
+        p2.y,
+        direction,
+        curveRadius,
+        status === -2 ? disableColor : lineStyle.color
+      );
       if (crossingPoint.length) {
         const crossing = crossingPoint.map(item => item.index);
-        this.drawCrossPoint(crossing, y, lineStyle.color, '#fff');
+        this.drawCrossPoint(crossing, y, status === -2 ? disableColor : lineStyle.color, '#fff');
       }
     });
     chartData.forEach(point => {
@@ -432,18 +448,23 @@ class FlowChart extends Component {
           y * verticalRate,
           node.radius,
           node.radius - 1,
-          node.color,
+          status === -2 ? disableColor : node.color,
           '#fff'
         );
       } else {
         const color = `${point.action_type}` === '0' ? 'rgb(245,166,35)' : node.color;
-        this.drawGeneralArc(index * colGap, y * verticalRate, node.radius, color);
+        this.drawGeneralArc(
+          index * colGap,
+          y * verticalRate,
+          node.radius,
+          status === -2 ? disableColor : color
+        );
       }
     });
   };
 
   renderPopContent = modalInfo => {
-    const { remark, statusMsg, approverName, statusColor, cc, optTime } = modalInfo;
+    const { remark, statusMsg, approverName, statusColor, cc, optTime, withdrawTime } = modalInfo;
     return (
       <div style={{ width: '375px' }}>
         <div className={style.remark}>
@@ -462,6 +483,13 @@ class FlowChart extends Component {
           <span>操作时间</span>
           <div>{optTime || '无'}</div>
         </div>
+        {withdrawTime ? (
+          <div className={style.remark}>
+            <span>撤回时间</span>
+            <div>{withdrawTime}</div>
+          </div>
+        ) : null}
+
         <div className={style.remark}>
           <span>抄送人</span>
           <div>{cc && cc.length ? cc.map(c => `${c.staff_name}`).join('、') : '无'}</div>
@@ -506,11 +534,17 @@ class FlowChart extends Component {
         marginRight: '40px',
         width: '150px',
       };
-      const statusMsg =
+      let statusMsg =
         i === chartData.length - 1 && status === 1 ? '完成' : flowchartStatus(line.action_type);
+      if (status === -2 && i === 0) {
+        statusMsg = '发起（撤回）';
+      } else if (line.action_type === -2) {
+        statusMsg = '';
+      }
       const optater =
         `${line.approver_sn}` === `${currentUser.staff_sn}` ? '我' : line.approver_name;
-      const statusColor = flowchartStatusColor(line.action_type);
+
+      const statusColor = status === -2 ? disableColor : flowchartStatusColor(line.action_type);
       const remarkBtnStyle = {
         dispaly: 'inline-block',
         cursor: 'pointer',
@@ -523,6 +557,9 @@ class FlowChart extends Component {
         cc: line.step_cc,
         optTime: line.acted_at,
       };
+      if (i === 0 && status === -2) {
+        modalInfo.withdrawTime = chartData[chartData.length - 1].acted_at;
+      }
       return (
         <React.Fragment key={id}>
           <div style={{ ...leftStyle, background: '#fff' }}>
@@ -535,14 +572,16 @@ class FlowChart extends Component {
               </span>
             </div>
           </div>
-          <div style={{ ...rightStyle }}>
-            <span style={{ ...timeStyle }}>{line.acted_at}</span>
-            <Popover placement="right" content={this.renderPopContent(modalInfo)}>
-              <span className={style.look} style={{ ...remarkBtnStyle }}>
-                查看详情
-              </span>
-            </Popover>
-          </div>
+          {line.action_type === -2 ? null : (
+            <div style={{ ...rightStyle }}>
+              <span style={{ ...timeStyle }}>{line.acted_at}</span>
+              <Popover placement="right" content={this.renderPopContent(modalInfo)}>
+                <span className={style.look} style={{ ...remarkBtnStyle }}>
+                  查看详情
+                </span>
+              </Popover>
+            </div>
+          )}
         </React.Fragment>
       );
     });

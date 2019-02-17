@@ -45,7 +45,7 @@ class FormItem extends PureComponent {
         <div className={styles.item}>
           <div className={styles.aside} style={asideStyle}>
             {' '}
-            {required && <span style={{ color: '#d9333f' }}> * </span>} {name}：
+            {required ? <span style={{ color: '#d9333f' }}> * </span> : ''} {name}：
           </div>{' '}
           <div
             className={cls}

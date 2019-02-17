@@ -58,6 +58,7 @@ class Step2 extends PureComponent {
             value: {},
             errorMsg: '',
             id: step.id,
+            required: preStepData.concurrent_type === 2,
           };
           return { checked: preStepData.concurrent_type === 2, approvers: temp };
         });
@@ -233,11 +234,16 @@ class Step2 extends PureComponent {
     const { formData } = this.state;
     const nextStep = { ...formData.next_step };
     const concurrentType = preStepData.concurrent_type;
+    if (concurrentType === 2) {
+      console.log(concurrentType);
+      return;
+    }
     const items = nextStep.value;
     let newItems = [...items];
+
     let errorMsg = '';
     if (!nextStep.value.find(item => item.checked)) {
-      errorMsg = preStepData.concurrent_type === 0 ? '请任选一个步骤' : '请至少选择一个步骤';
+      errorMsg = concurrentType === 0 ? '请任选一个步骤' : '请至少选择一个步骤';
     }
     if (concurrentType === 1) {
       // 多选
@@ -256,7 +262,13 @@ class Step2 extends PureComponent {
     } else if (concurrentType === 0) {
       // 单选
       newItems = items.map((item, index) => {
-        let obj = { ...item };
+        let obj = {
+          ...item,
+          checked: 0,
+        };
+        obj.approvers.required = false;
+        obj.approvers.errorMsg = '';
+
         if (index === i) {
           obj = { ...item };
           obj.checked = 1;
@@ -282,6 +294,7 @@ class Step2 extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const data = this.submitValidator();
+    console.log();
     const {
       preStepData,
       parProps: { handleSubmit },
@@ -370,6 +383,7 @@ class Step2 extends PureComponent {
     let hasError = '';
     const newFormData = { ...formData };
     let submitFormData = {};
+    console.log('formData', formData);
     Object.keys(formData).forEach(key => {
       const curData = formData[key];
       const oldErrorMsg = curData.errorMsg;
@@ -396,7 +410,7 @@ class Step2 extends PureComponent {
             gridValue.push(submitValue);
           }
           const msg = oldErrorMsg || this.doValidator(curGridItemValue);
-
+          console.log('curGridItemValue', curGridItemValue);
           hasError = hasError || msg;
           newValueItem.approvers = { ...curGridItemValue, errorMsg: msg };
           return newValueItem;

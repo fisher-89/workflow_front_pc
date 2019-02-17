@@ -120,7 +120,7 @@ export const flowchartStatus = status => {
 export const flowchartStatusColor = status => {
   switch (status - 0) {
     case 0:
-      return '#666';
+      return 'rgb(245, 166, 35)';
     case 1:
       return 'rgb(102,102,102)';
     case 2:
