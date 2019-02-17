@@ -200,6 +200,7 @@ class ShopModal extends Component {
     const {
       fetchUrl,
       source: { total },
+      range: { max },
     } = this.props;
     const { checkedShop } = this.state;
     const staffSns = this.allDataSource.data.map(item => item.shop_sn);
@@ -211,8 +212,8 @@ class ShopModal extends Component {
         checkedShop: [...newCheckedStaffs].unique('shop_sn'),
       });
     } else {
-      if (total > 60) {
-        message.warning('超出最大限制，最多选择60人!', 2);
+      if (total - (max || 50) > 0) {
+        message.warning(`超出最大限制，最多选择${max || 50}个店铺!`, 2);
         return;
       }
       const filters = this.mapFilters(this.makeAllFilters());

@@ -68,7 +68,7 @@ class UploadCropper extends React.Component {
   handleChange = ({ file, fileList }) => {
     const { max, onChange, cropper } = this.props;
     if (fileList.length > max) {
-      message.error('上传数量已经达到最大限制!!');
+      message.error(`上传数量已经达到最大限制!!，最多上传文件数量为${max}`);
       return;
     }
     const { value } = this.state;

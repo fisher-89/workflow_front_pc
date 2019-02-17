@@ -201,8 +201,8 @@ class StaffModal extends Component {
         checkedStaff: [...newCheckedStaffs].unique('staff_sn'),
       });
     } else {
-      if (total - max > 0) {
-        message.warning(`超出最大限制，最多选择${max}人!`, 2);
+      if (total - (max || 50) > 0) {
+        message.warning(`超出最大限制，最多选择${max || 50}人!`, 2);
         return;
       }
       const filters = this.mapFilters(this.makeAllFilters());
@@ -413,7 +413,11 @@ class StaffModal extends Component {
     const newTypes = searchType.map(type => {
       let obj = { ...type, checked: 0 };
       if (type.key === 'department') {
-        obj = { ...obj, ...{ value: dep.id, text: dep.full_name, filter: depFilters }, checked: 1 };
+        obj = {
+          ...obj,
+          ...{ value: dep.parent_id || dep.id, text: dep.full_name, filter: depFilters },
+          checked: 1,
+        };
       }
       return obj;
     });
@@ -614,7 +618,13 @@ class StaffModal extends Component {
           onClick={() => this.quickFetch(this.props.currentUser.department)}
         >
           {this.props.currentUser && this.props.currentUser.department
-            ? this.props.currentUser.department.full_name
+            ? (() => {
+                const names = this.props.currentUser.department.full_name.split('-');
+                if (names.length > 1) {
+                  return names[names.length - 2];
+                }
+                return names[0];
+              })()
             : ''}
         </div>
       </div>

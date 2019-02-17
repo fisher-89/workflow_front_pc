@@ -3,6 +3,7 @@
 import moment from 'moment';
 import React from 'react';
 import { parse, stringify } from 'qs';
+import * as path from 'path';
 import { func } from 'prop-types';
 
 export function fixedZero(val) {
@@ -601,15 +602,17 @@ export function isImage(src) {
   let imgtype = '';
   if (src.indexOf('.') > 0) {
     // 如果包含有"/"号 从最后一个"/"号+1的位置开始截取字符串
-    imgtype = src.substring(src.lastIndexOf('.') + 1, src.length);
+    // imgtype = src.substring(src.lastIndexOf('.') + 1, src.length);
+
+    imgtype = path.extname(src);
   }
   imgtype = imgtype.toLowerCase();
   if (
-    imgtype === 'png' ||
-    imgtype === 'jpeg' ||
-    imgtype === 'bmp' ||
-    imgtype === 'jpg' ||
-    imgtype === 'gif'
+    imgtype === '.png' ||
+    imgtype === '.jpeg' ||
+    imgtype === '.bmp' ||
+    imgtype === '.jpg' ||
+    imgtype === '.gif'
   ) {
     return true;
   }

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button, Spin } from 'antd';
+import { Button, Spin, message } from 'antd';
 import { connect } from 'dva';
 import { judgeIsNothing } from '../../utils/utils';
 import { EditForm } from '../../components/Form/index';
@@ -64,6 +64,8 @@ class StartForm extends PureComponent {
           },
         },
       });
+    } else {
+      message.error('表单存在未处理的错误');
     }
   };
 

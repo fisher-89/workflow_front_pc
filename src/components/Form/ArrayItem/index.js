@@ -68,7 +68,6 @@ class SelectItem extends PureComponent {
       extraStyle={{
         minWidth: template ? `auto` : `${10 * smXRatio}px`,
       }}
-      rightStyle={template ? { overflowY: 'scroll' } : {}}
       tooltip={false}
       rightContStyle={{ padding: '3px 0 0px 0px', overflowY: template ? 'scroll' : ' initial' }}
     >

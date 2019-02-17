@@ -63,11 +63,11 @@ export default class Address extends PureComponent {
     const province = district.filter(item => item.parent_id === 0);
     let city = [];
     if (value && value.province_id) {
-      city = district.filter(item => item.parent_id === value.province_id);
+      city = district.filter(item => `${item.parent_id}` === `${value.province_id}`);
     }
     let county = [];
     if (value && value.city_id) {
-      county = district.filter(item => item.parent_id === value.city_id);
+      county = district.filter(item => `${item.parent_id}` === `${value.city_id}`);
     }
     this.setState({
       province,
@@ -77,7 +77,7 @@ export default class Address extends PureComponent {
   };
 
   makeCity = value => {
-    const city = district.filter(item => item.parent_id === value);
+    const city = district.filter(item => `${item.parent_id}` === `${value}`);
     const newValue = {
       province_id: value,
       city_id: null,
@@ -89,7 +89,7 @@ export default class Address extends PureComponent {
 
   makeCounty = cityId => {
     const { value } = this.state;
-    const county = district.filter(item => item.parent_id === cityId);
+    const county = district.filter(item => `${item.parent_id}` === `${cityId}`);
     this.setState(
       {
         county,
@@ -115,7 +115,7 @@ export default class Address extends PureComponent {
             disabled={disabled || regionLevel < 1}
             key="province_id"
             style={{ width: '33.33%' }}
-            value={value.province_id}
+            value={value.province_id ? value.province_id - 0 : ''}
             onChange={this.makeCity}
             allowClear
             placeholder="请选择"
@@ -130,7 +130,7 @@ export default class Address extends PureComponent {
             disabled={disabled || regionLevel < 2}
             key="city_id"
             style={{ width: '33.33%' }}
-            value={value.city_id}
+            value={value.city_id ? value.city_id - 0 : ''}
             onChange={this.makeCounty}
             allowClear
             placeholder="请选择"
@@ -158,7 +158,7 @@ export default class Address extends PureComponent {
                 this.setPropsValue
               );
             }}
-            value={value.county_id}
+            value={value.county_id ? value.county_id - 0 : ''}
             placeholder="请选择"
           >
             {county.map(item => (
