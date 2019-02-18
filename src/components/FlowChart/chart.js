@@ -575,11 +575,13 @@ class FlowChart extends Component {
           {line.action_type === -2 ? null : (
             <div style={{ ...rightStyle }}>
               <span style={{ ...timeStyle }}>{line.acted_at}</span>
-              <Popover placement="right" content={this.renderPopContent(modalInfo)}>
-                <span className={style.look} style={{ ...remarkBtnStyle }}>
-                  查看详情
-                </span>
-              </Popover>
+              {line.remark || line.step_cc.length || i === 0 ? (
+                <Popover placement="right" content={this.renderPopContent(modalInfo)}>
+                  <span className={style.look} style={{ ...remarkBtnStyle }}>
+                    查看详情
+                  </span>
+                </Popover>
+              ) : null}
             </div>
           )}
         </React.Fragment>

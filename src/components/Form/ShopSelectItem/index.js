@@ -85,6 +85,9 @@ class ShopSelectItem extends PureComponent {
 
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
+      if (newValue && !options.find(item => item.value === newValue)) {
+        newValue = value.text;
+      }
       return (
         <FormItem
           {...field}

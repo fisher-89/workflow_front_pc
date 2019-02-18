@@ -2691,10 +2691,6 @@ const obj = {
           validator_id: [],
           available_options: [
             {
-              value: 'lsw2729',
-              text: '河南C02.南阳市ODVS-400A1+C',
-            },
-            {
               value: 'lsc1203',
               text: '四川B12.宜宾市14店KEDD-120A1',
             },

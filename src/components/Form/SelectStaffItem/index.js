@@ -107,13 +107,15 @@ class SelectStaffItem extends PureComponent {
     const muti = field.is_checkbox;
     let newValue = '';
     if (value) {
-      newValue = muti ? value.map(item => item.value) : value.value;
+      newValue = muti ? value.map(item => `${item.value}`) : `${value.value}`;
     }
     const newId = `${id}-select`;
     const desc = description || `${defaultInfo}${name}`;
-
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
+      if (newValue && !options.find(item => item.value === newValue)) {
+        newValue = value.text;
+      }
       return (
         <FormItem
           {...field}
@@ -138,6 +140,7 @@ class SelectStaffItem extends PureComponent {
         </FormItem>
       );
     }
+
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     return (
       <FormItem
@@ -189,7 +192,10 @@ class SelectStaffItem extends PureComponent {
     if (readonly) {
       return this.renderInfo(value, this.props, multiple);
     }
-    const options = field.available_options || [];
+    const options = (field.available_options || []).map(item => ({
+      ...item,
+      value: `${item.value}`,
+    }));
     const className = [style.mutiselect, errorMsg ? style.errorMsg : ''].join(' ');
     if (options.length) {
       return this.renderSelect(options);
