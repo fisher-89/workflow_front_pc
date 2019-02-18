@@ -122,13 +122,16 @@ class SelectDepItem extends PureComponent {
     const muti = field.is_checkbox;
     let newValue = '';
     if (judgeIsNothing(value)) {
-      newValue = muti ? (value || []).map(item => item.value) : value.value;
+      newValue = muti ? (value || []).map(item => `${item.value}`) : `${value.value}`;
     }
     const newId = `${id}-select`;
     const desc = description || `${defaultInfo}`;
 
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
+      if (newValue && !options.find(item => `${item.value}` === `${newValue}`)) {
+        newValue = value.text;
+      }
       return (
         <FormItem {...field} template={template} errorMsg={errorMsg} required={required}>
           <div className={className} id={newId}>
@@ -222,7 +225,10 @@ class SelectDepItem extends PureComponent {
     } = this.props;
     const { errorMsg, value } = this.state;
     const multiple = field.is_checkbox;
-    const options = field.available_options;
+    const options = (field.available_options || []).map(item => ({
+      ...item,
+      value: `${item.value}`,
+    }));
     if (readonly) {
       return this.renderInfo(value, this.props, multiple);
     }
