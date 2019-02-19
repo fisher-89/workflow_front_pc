@@ -92,7 +92,7 @@ class SelectItem extends PureComponent {
           required={required}
           template={template}
           disabled={disabled}
-          extraStyle={!template ? { minWidth: `${6 * xRatio}px` } : null}
+          extraStyle={!template ? { minWidth: `${5 * xRatio}px` } : null}
           rightStyle={{ overflow: 'hidden' }}
         >
           <div className={className}>

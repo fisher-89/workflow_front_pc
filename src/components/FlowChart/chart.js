@@ -534,10 +534,17 @@ class FlowChart extends Component {
         marginRight: '40px',
         width: '150px',
       };
+      let modalInfo = {
+        remark: line.remark,
+        approverName: line.approver_name,
+        cc: line.step_cc,
+        optTime: line.acted_at,
+      };
       let statusMsg =
         i === chartData.length - 1 && status === 1 ? '完成' : flowchartStatus(line.action_type);
       if (status === -2 && i === 0) {
         statusMsg = '发起（撤回）';
+        modalInfo.withdrawTime = chartData[chartData.length - 1].acted_at;
       } else if (line.action_type === -2) {
         statusMsg = '';
       }
@@ -549,17 +556,12 @@ class FlowChart extends Component {
         dispaly: 'inline-block',
         cursor: 'pointer',
       };
-      const modalInfo = {
-        remark: line.remark,
+      modalInfo = {
+        ...modalInfo,
         statusMsg,
-        approverName: line.approver_name,
         statusColor,
-        cc: line.step_cc,
-        optTime: line.acted_at,
       };
-      if (i === 0 && status === -2) {
-        modalInfo.withdrawTime = chartData[chartData.length - 1].acted_at;
-      }
+
       return (
         <React.Fragment key={id}>
           <div style={{ ...leftStyle, background: '#fff' }}>
@@ -575,7 +577,7 @@ class FlowChart extends Component {
           {line.action_type === -2 ? null : (
             <div style={{ ...rightStyle }}>
               <span style={{ ...timeStyle }}>{line.acted_at}</span>
-              {line.remark || line.step_cc.length || i === 0 ? (
+              {line.remark || line.step_cc.length || (i === 0 && status === -2) ? (
                 <Popover placement="right" content={this.renderPopContent(modalInfo)}>
                   <span className={style.look} style={{ ...remarkBtnStyle }}>
                     查看详情

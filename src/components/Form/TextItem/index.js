@@ -115,7 +115,7 @@ class TextItem extends Component {
   numberOnBlur = e => {
     const { value } = e.target;
     const {
-      field: { name, required },
+      field: { name, required, max, min },
       field,
       onChange,
     } = this.props;
@@ -123,6 +123,16 @@ class TextItem extends Component {
     if (required && (value === '' || value === undefined)) {
       errorMsg = `请输入${name}`;
     }
+    if (value !== '' || value !== undefined) {
+      if (min !== '' && max !== '' && (value - max > 0 || value - min < 0)) {
+        errorMsg = `输入的值应介于${min}~${max}之间`;
+      } else if (min === '' && max !== '' && value - max > 0) {
+        errorMsg = `输入的值应小于${max}`;
+      } else if (max === '' && min !== '' && value - min < 0) {
+        errorMsg = `输入的值应大于${min}`;
+      }
+    }
+
     const newValue = this.formatIntValue(`${value || ''}`, field);
     this.setState(
       {
@@ -145,8 +155,8 @@ class TextItem extends Component {
     const desc = description || `${defaultInfo}`;
     return (
       <InputNumber
-        max={max === '' ? Infinity : max - 0}
-        min={min === '' ? -Infinity : min - 0}
+        // max={max === '' ? Infinity : max - 0}
+        // min={min === '' ? -Infinity : min - 0}
         disabled={disabled}
         // precision={scale || 0}
         value={value}
