@@ -5,9 +5,11 @@ import Redirect from 'umi/redirect';
 
 const Authority = getAuthority();
 const Authorized = RenderAuthorized(Authority);
-
 export default ({ children }) => (
-  <Authorized authority={children.props.route.authority} noMatch={<Redirect to="/passport/redirect_to_getAccessToken" />}>
+  <Authorized
+    authority={children.props.route.authority}
+    noMatch={<Redirect to="/passport/redirect_to_getAccessToken" />}
+  >
     {children}
   </Authorized>
 );

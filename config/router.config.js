@@ -23,10 +23,7 @@ export default [
         name: '发起流程',
         component: './Flows/AvailableFlows',
       },
-      {
-        path: '/test',
-        component: './Test/test',
-      },
+
       {
         path: '/start_form/:id',
         component: './Flows',
