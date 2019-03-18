@@ -92,7 +92,7 @@ class InterfaceItem extends Component {
         .filter(item => (value || []).map(it => `${it}`).indexOf(item.value) > -1)
         .map(item => item.text);
     } else {
-      const curValue = (source || []).find(item => `${value}` === item.value);
+      const curValue = (source || []).find(item => `${value}` === `${item.value}`);
       newValue = curValue ? curValue.text : '';
     }
     return (
