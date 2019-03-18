@@ -96,6 +96,7 @@ class ShopSelectItem extends PureComponent {
           required={required}
           template={template}
           extraStyle={extraStyle}
+          rightStyle={{ overflowY: 'hidden' }}
         >
           <div className={className} id={newId} style={{ height: '100%' }}>
             <Select

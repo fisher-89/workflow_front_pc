@@ -141,6 +141,7 @@ class InterfaceItem extends Component {
           required={required}
           template={template}
           disabled={disabled}
+          rightStyle={{ overflowY: 'hidden' }}
         >
           <div className={className} id={newId} style={{ height: '100%' }}>
             <Select

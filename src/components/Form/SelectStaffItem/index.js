@@ -124,6 +124,7 @@ class SelectStaffItem extends PureComponent {
           asideStyle={asideStyle}
           extraStyle={extraStyle}
           template={template}
+          rightStyle={{ overflowY: 'hidden' }}
         >
           <div className={className} id={newId} style={{ height: '100%' }}>
             <Select

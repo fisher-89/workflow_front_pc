@@ -133,7 +133,13 @@ class SelectDepItem extends PureComponent {
         newValue = value.text;
       }
       return (
-        <FormItem {...field} template={template} errorMsg={errorMsg} required={required}>
+        <FormItem
+          {...field}
+          template={template}
+          errorMsg={errorMsg}
+          rightStyle={{ overflowY: 'hidden' }}
+          required={required}
+        >
           <div className={className} id={newId}>
             <Select
               disabled={disabled}

@@ -112,6 +112,7 @@ class SelectItem extends Component {
           template={template}
           required={required}
           disabled={disabled}
+          rightStyle={{ overflowY: 'hidden' }}
         >
           <div className={className} id={newId} style={{ height: '100%' }}>
             <Select
