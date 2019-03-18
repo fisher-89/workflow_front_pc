@@ -149,7 +149,7 @@ class InterfaceItem extends Component {
               optionFilterProp="children"
               placeholder={desc}
               options={options}
-              value={value}
+              value={value || ''}
               getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSingleChange}
             />

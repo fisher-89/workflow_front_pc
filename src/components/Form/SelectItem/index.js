@@ -82,7 +82,7 @@ class SelectItem extends Component {
       }
       template={template}
     >
-      <span> {multiple ? (value || []).join('、') : value}</span>
+      <span> {multiple ? (value || []).join('、') : value || ''}</span>
     </DetailItem>
   );
 
@@ -117,7 +117,7 @@ class SelectItem extends Component {
             <Select
               disabled={disabled}
               options={options}
-              value={value}
+              value={value || ''}
               placeholder={desc}
               showArrow
               showSearch
@@ -147,7 +147,7 @@ class SelectItem extends Component {
           <Select
             options={options}
             mode="multiple"
-            value={value}
+            value={value || []}
             placeholder={desc}
             allowClear={false}
             onChange={this.onMutiChange}
