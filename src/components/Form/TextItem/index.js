@@ -64,17 +64,27 @@ class TextItem extends Component {
 
   inputOnBlur = e => {
     const {
-      field: { max, name },
+      field: { max, min, name },
       onChange,
       required,
     } = this.props;
     const { value } = e.target;
     let errorMsg = '';
-    if (max !== '' && value.length > max) {
-      errorMsg = `长度需小于${max}`;
+    // if (max !== '' && (value.length - max>0)) {
+    //   errorMsg = `长度需小于${max}`;
+    // } else if (required && value === '') {
+    //   errorMsg = `请输入${name}`;
+    // }
+    if (min !== '' && max !== '' && (value.length - max > 0 || value.length - min < 0)) {
+      errorMsg = `长度应介于${min}~${max}之间`;
+    } else if (min === '' && max !== '' && value.length - max > 0) {
+      errorMsg = `长度应小于${max}`;
+    } else if (max === '' && min !== '' && value.length - min < 0) {
+      errorMsg = `输入的长度应大于${min}`;
     } else if (required && value === '') {
       errorMsg = `请输入${name}`;
     }
+
     this.setState(
       {
         errorMsg,
