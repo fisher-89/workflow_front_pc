@@ -95,9 +95,9 @@ class AddressItem extends Component {
     if (readonly) {
       return this.renderAddress();
     }
+
     return (
       <FormItem
-        className={style.address}
         {...field}
         required={required}
         errorMsg={errorMsg}
@@ -105,7 +105,7 @@ class AddressItem extends Component {
         rightStyle={{ overflowY: 'hidden', borderColor: 'transparent' }}
         extraStyle={!template ? { minWidth: `${10 * xRatio}px` } : null}
       >
-        <div className={errorMsg ? style.errorMsg : style.noerror}>
+        <div className={[style.address, errorMsg ? style.errorMsg : style.noerror].join(' ')}>
           <Address
             {...field}
             value={value}

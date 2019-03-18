@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
 import { last } from 'lodash';
-import moment from 'moment';
 import { convertTimeDis } from '../../../utils/utils';
 import OATable from '../../../components/OATable';
 

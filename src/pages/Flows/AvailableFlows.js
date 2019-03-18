@@ -24,7 +24,7 @@ class AvailableFlows extends PureComponent {
       const { flow } = flowType;
       const flows = flow.map(item => (
         <div className={style.content_item} key={item.id}>
-          <img src={`${item.icon || '/default_avatar.png'}`} alt="流程" />
+          <img src={`${item.icon || '/default_flow_icon.png'}`} alt="流程" />
           <div className={style.detail} onClick={() => this.redirectTo(item)}>
             <div className={style.name}>{item.name}</div>
             <div className={style.des}>{item.description}</div>

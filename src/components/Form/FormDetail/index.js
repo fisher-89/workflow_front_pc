@@ -770,7 +770,7 @@ class EditForm extends PureComponent {
     if (`${this.props.template}` === '1') {
       newForm = this.renderRowsItem(this.rows);
     } else newForm = this.renderFormContent(this.visibleForm.concat(this.visibleGrid));
-    return <div style={{ marginLeft: '1px' }}> {newForm} </div>;
+    return <div style={{ marginLeft: '1px', marginBottom: '1px' }}> {newForm} </div>;
   }
 }
 export default EditForm;
