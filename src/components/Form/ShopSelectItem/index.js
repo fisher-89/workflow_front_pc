@@ -137,7 +137,7 @@ class ShopSelectItem extends PureComponent {
             showSearch
             placeholder={desc}
             optionFilterProp="children"
-            value={newValue}
+            value={newValue || []}
             onChange={v => this.onSelectChange(v, 1)}
             getPopupContainer={() => document.getElementById(newId)}
             disabled={disabled}

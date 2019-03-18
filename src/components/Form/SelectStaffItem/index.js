@@ -160,7 +160,7 @@ class SelectStaffItem extends PureComponent {
             mode="multiple"
             allowClear={false}
             placeholder={desc}
-            value={newValue}
+            value={newValue || []}
             showSearch
             optionFilterProp="children"
             onChange={v => this.onSelectChange(v, 1)}

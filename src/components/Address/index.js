@@ -44,10 +44,10 @@ export default class Address extends PureComponent {
   combineValue = (value, name) => {
     const newValue = value
       ? {
-          province_id: value[name.province_id],
-          city_id: value[name.city_id],
-          county_id: value[name.county_id],
-          address: value[name.address],
+          province_id: value[name.province_id] || null,
+          city_id: value[name.city_id] || null,
+          county_id: value[name.county_id] || null,
+          address: value[name.address] || null,
         }
       : {
           province_id: null,
