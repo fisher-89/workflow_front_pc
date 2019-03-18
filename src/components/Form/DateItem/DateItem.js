@@ -125,7 +125,7 @@ class SelectItem extends PureComponent {
             placeholder={desc}
             range={{ min, max }}
             format="YYYY-MM-DD"
-            onChange={v => this.handleOnChange(v, 'datetime')}
+            onChange={v => this.handleOnChange(v, 'date')}
           />
         </div>
       </FormItem>
