@@ -201,7 +201,7 @@ class StartForm extends PureComponent {
             ref={r => {
               this.form = r;
             }}
-            template={0}
+            template={startflow.flow.form.pc_template}
             formData={this.state.formData}
             onChange={data => this.setState({ formData: data })}
           />{' '}

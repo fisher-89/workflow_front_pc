@@ -205,9 +205,9 @@ class SelectStaff extends Component {
               this.setState({ serachValue: '' });
             }}
             onBlur={() => {
-              this.setState({ serachValue: value[name.realname] });
+              this.setState({ serachValue: value ? value[name.realname] : '' });
             }}
-            placeholder={value[name.realname] || description}
+            placeholder={value ? value[name.realname] : '' || description}
             onSelect={this.onSelect}
             // style={{ border: '1px solid #d9d9d9' }}
             value={serachValue}

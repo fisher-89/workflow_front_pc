@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Tag, AutoComplete } from 'antd';
 import { connect } from 'dva';
-import { debounce } from 'lodash';
 
 import request from '../../utils/request';
 import { makeFieldValue, judgeIsNothing } from '../../utils/utils';
@@ -205,10 +204,10 @@ class SelectShop extends Component {
             }}
             disabled={this.props.disabled}
             onBlur={() => {
-              this.setState({ serachValue: value[name.name] });
+              this.setState({ serachValue: value ? value[name.name] : '' });
             }}
             dataSource={searchResult.length ? children : [children]}
-            placeholder={value[name.name] || description || '请输入'}
+            placeholder={value ? value[name.name] : '' || description || '请输入'}
             onSelect={this.onSelect}
             value={serachValue}
           />
