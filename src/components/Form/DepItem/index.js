@@ -28,7 +28,7 @@ class SelectDepItem extends PureComponent {
     const { value, errorMsg } = props;
     if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
       this.setState({
-        value: `${value}` === '0' || judgeIsNothing(value) ? defaultValue : '',
+        value: `${value}` === '0' || judgeIsNothing(value) ? value : '',
         errorMsg,
       });
     }
