@@ -3,7 +3,7 @@ import FormItem from '../FormItem';
 import DetailItem from '../DetailItem';
 
 import Select from '../../Select';
-import { validValue } from '../../../utils/utils';
+import { validValue, judgeIsNothing } from '../../../utils/utils';
 import style from './index.less';
 
 const defaultInfo = '请选择';
@@ -13,7 +13,8 @@ class SelectItem extends Component {
     const { defaultValue, field } = this.props;
     const muti = field.is_checkbox;
     this.state = {
-      value: defaultValue || (muti ? [] : ''),
+      // value: defaultValue || (muti ? [] : ''),
+      value: `${defaultValue}` === '0' || judgeIsNothing(defaultValue) ? defaultValue : '',
       errorMsg: '',
     };
   }
@@ -22,7 +23,7 @@ class SelectItem extends Component {
     const { value, errorMsg } = props;
     if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
       this.setState({
-        value,
+        value: `${value}` === '0' || judgeIsNothing(value) ? value : '',
         errorMsg,
       });
     }
@@ -118,7 +119,7 @@ class SelectItem extends Component {
             <Select
               disabled={disabled}
               options={options}
-              value={value || ''}
+              value={value}
               placeholder={desc}
               showArrow
               showSearch

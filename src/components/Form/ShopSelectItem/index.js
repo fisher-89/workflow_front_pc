@@ -4,10 +4,11 @@ import FormItem from '../FormItem';
 import DetailItem from '../DetailItem';
 import SelectShop from '../../SelectShop';
 import Select from '../../Select';
-import { judgeIsNothing, validValue } from '../../../utils/utils';
+import { judgeIsNothing, validValue, makeFieldValue } from '../../../utils/utils';
 import style from './index.less';
 
 const defaultInfo = '请选择';
+
 @connect()
 class ShopSelectItem extends PureComponent {
   constructor(props) {
@@ -24,7 +25,7 @@ class ShopSelectItem extends PureComponent {
     const { value, errorMsg } = props;
     if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
       this.setState({
-        value,
+        value: judgeIsNothing(value) ? value : '',
         errorMsg,
       });
     }
@@ -40,12 +41,19 @@ class ShopSelectItem extends PureComponent {
 
   onSelectChange = (value, muti) => {
     const { field } = this.props;
-    const options = field.available_options;
+    const options = field.available_options.map(item => ({
+      ...item,
+      value: `${item.value}`,
+      name: item.text,
+      shop_sn: item.value,
+    }));
     let newValue = '';
     if (muti) {
-      newValue = options.filter(item => value.indexOf(item.value) > -1);
+      const v = options.filter(item => value.indexOf(item.value) > -1);
+      newValue = makeFieldValue(v, this.props.formName, true);
     } else {
-      newValue = options.find(item => value === item.value);
+      const v = options.find(item => `${value}` === `${item.value}`);
+      newValue = makeFieldValue(v, this.props.formName, false);
     }
     this.dealValueOnChange(newValue || (muti ? [] : ''));
   };

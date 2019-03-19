@@ -5,7 +5,7 @@ import DetailItem from '../DetailItem';
 
 import SelectStaff from '../../SelectStaff';
 import Select from '../../Select';
-import { judgeIsNothing, validValue } from '../../../utils/utils';
+import { judgeIsNothing, validValue, makeFieldValue } from '../../../utils/utils';
 
 import style from './index.less';
 
@@ -27,7 +27,7 @@ class SelectStaffItem extends PureComponent {
     const { value, errorMsg } = props;
     if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
       this.setState({
-        value,
+        value: judgeIsNothing(value) ? value : '',
         errorMsg,
       });
     }
@@ -43,12 +43,19 @@ class SelectStaffItem extends PureComponent {
 
   onSelectChange = (value, muti) => {
     const { field } = this.props;
-    const options = field.available_options;
+    const options = field.available_options.map(item => ({
+      ...item,
+      value: `${item.value}`,
+      realname: item.text,
+      staff_sn: item.value,
+    }));
     let newValue = '';
     if (muti) {
-      newValue = options.filter(item => value.indexOf(item.value) > -1);
+      const v = options.filter(item => value.indexOf(`${item.value}`) > -1);
+      newValue = makeFieldValue(v, this.props.formName, true);
     } else {
-      newValue = options.find(item => value === item.value);
+      const v = options.find(item => `${value}` === `${item.value}`);
+      newValue = makeFieldValue(v, this.props.formName, false);
     }
     this.dealValueOnChange(newValue || (muti ? [] : ''));
   };
@@ -84,7 +91,9 @@ class SelectStaffItem extends PureComponent {
       {value ? (
         <span>
           {' '}
-          {multiple ? (value || []).map(item => item.text).join('、') : value.text || ''}{' '}
+          {multiple
+            ? (value || []).map(item => item[this.props.formName.realname]).join('、')
+            : value[this.props.formName.realname] || ''}{' '}
         </span>
       ) : (
         ''
@@ -107,13 +116,15 @@ class SelectStaffItem extends PureComponent {
     const muti = field.is_checkbox;
     let newValue = '';
     if (value) {
-      newValue = muti ? value.map(item => `${item.value}`) : `${value.value}`;
+      newValue = muti
+        ? value.map(item => `${item[this.props.formName.staff_sn]}`)
+        : `${value[this.props.formName.staff_sn]}`;
     }
     const newId = `${id}-select`;
     const desc = description || `${defaultInfo}${name}`;
     if (!muti) {
       const className = [style.select, errorMsg ? style.errorMsg : ''].join(' ');
-      if (newValue && !options.find(item => item.value === newValue)) {
+      if (newValue && !options.find(item => `${item.value}` === `${newValue}`)) {
         newValue = value.text;
       }
       return (

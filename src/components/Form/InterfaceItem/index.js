@@ -4,7 +4,7 @@ import FormItem from '../FormItem';
 import DetailItem from '../DetailItem';
 
 import Select from '../../Select';
-import { validValue } from '../../../utils/utils';
+import { validValue, judgeIsNothing } from '../../../utils/utils';
 import style from './index.less';
 
 const defaultInfo = '请选择';
@@ -14,9 +14,10 @@ class InterfaceItem extends Component {
   constructor(props) {
     super(props);
     const { defaultValue, field } = this.props;
-    const muti = field.is_checkbox;
+    // const muti = field.is_checkbox;
     this.state = {
-      value: defaultValue || (muti ? [] : ''),
+      // value: defaultValue || (muti ? [] : ''),
+      value: `${defaultValue}` === '0' || judgeIsNothing(defaultValue) ? defaultValue : '',
       errorMsg: '',
     };
   }
@@ -36,7 +37,7 @@ class InterfaceItem extends Component {
     const { value, errorMsg } = props;
     if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
       this.setState({
-        value,
+        value: `${value}` === '0' || judgeIsNothing(value) ? value : '',
         errorMsg,
       });
     }
@@ -125,7 +126,8 @@ class InterfaceItem extends Component {
       readonly,
     } = this.props;
     const { errorMsg, value } = this.state;
-    const options = this.getOptions();
+    const options = this.getOptions().map(item => ({ ...item, value: `${item.value}` }));
+
     const newId = `${id}-select`;
     const desc = description || `${defaultInfo}`;
 
@@ -150,7 +152,7 @@ class InterfaceItem extends Component {
               optionFilterProp="children"
               placeholder={desc}
               options={options}
-              value={value || ''}
+              value={`${value}`}
               getPopupContainer={() => document.getElementById(newId)}
               onChange={this.onSingleChange}
             />

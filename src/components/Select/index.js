@@ -22,8 +22,8 @@ class SelectComp extends PureComponent {
 
   handleOnChange = v => {
     const { onChange } = this.props;
-    this.setState({ value: v || '' }, () => {
-      onChange(v || '');
+    this.setState({ value: v }, () => {
+      onChange(v);
     });
   };
 

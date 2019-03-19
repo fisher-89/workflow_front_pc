@@ -53,7 +53,7 @@ class SelectStaff extends Component {
     const { value } = props;
     if (JSON.stringify(value) !== JSON.stringify(this.props.value)) {
       this.setState({
-        value,
+        value: judgeIsNothing(value) ? value : '',
       });
     }
   }

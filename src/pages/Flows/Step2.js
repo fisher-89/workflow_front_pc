@@ -150,9 +150,20 @@ class Step2 extends PureComponent {
   });
 
   makeApproProps = (item, i) => {
+    const { preStepData } = this.props;
+
+    const options =
+      preStepData.available_steps &&
+      preStepData.available_steps.length &&
+      preStepData.available_steps[i].approvers
+        ? preStepData.available_steps[i].approvers.map(it => ({
+            value: it.staff_sn,
+            text: it.realname,
+          }))
+        : [];
     const field = {
       is_checkbox: false,
-      available_options: [],
+      available_options: options,
       name: '审批人',
     };
     return {
@@ -161,7 +172,7 @@ class Step2 extends PureComponent {
       extraStyle: { width: '300px' },
       // itemStyle: { width: '290px' },
       formName: { realname: 'approver_name', staff_sn: 'approver_sn' },
-      extraFilter: 'status_id',
+      // extraFilter: 'status_id',
       value: item.approvers.value,
       errorMsg: item.approvers.errorMsg,
       onChange: (value, errorMsg) =>
@@ -235,7 +246,6 @@ class Step2 extends PureComponent {
     const nextStep = { ...formData.next_step };
     const concurrentType = preStepData.concurrent_type;
     if (concurrentType === 2) {
-      console.log(concurrentType);
       return;
     }
     const items = nextStep.value;
@@ -294,7 +304,6 @@ class Step2 extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const data = this.submitValidator();
-    console.log();
     const {
       preStepData,
       parProps: { handleSubmit },
@@ -383,7 +392,6 @@ class Step2 extends PureComponent {
     let hasError = '';
     const newFormData = { ...formData };
     let submitFormData = {};
-    console.log('formData', formData);
     Object.keys(formData).forEach(key => {
       const curData = formData[key];
       const oldErrorMsg = curData.errorMsg;
@@ -410,7 +418,6 @@ class Step2 extends PureComponent {
             gridValue.push(submitValue);
           }
           const msg = oldErrorMsg || this.doValidator(curGridItemValue);
-          console.log('curGridItemValue', curGridItemValue);
           hasError = hasError || msg;
           newValueItem.approvers = { ...curGridItemValue, errorMsg: msg };
           return newValueItem;

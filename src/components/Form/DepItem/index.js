@@ -13,7 +13,7 @@ class SelectDepItem extends PureComponent {
   constructor(props) {
     super(props);
     const { defaultValue } = this.props;
-    const deps = judgeIsNothing(defaultValue) ? defaultValue : '';
+    const deps = `${defaultValue}` === '0' || judgeIsNothing(defaultValue) ? defaultValue : '';
     this.state = {
       value: deps,
       errorMsg: '',
@@ -28,7 +28,7 @@ class SelectDepItem extends PureComponent {
     const { value, errorMsg } = props;
     if (JSON.stringify(value) !== this.props.value || errorMsg !== this.props.errorMsg) {
       this.setState({
-        value,
+        value: `${value}` === '0' || judgeIsNothing(value) ? defaultValue : '',
         errorMsg,
       });
     }
