@@ -79,7 +79,7 @@ export default class Address extends PureComponent {
   makeCity = value => {
     const city = district.filter(item => `${item.parent_id}` === `${value}`);
     const newValue = {
-      province_id: value,
+      province_id: value || null,
       city_id: null,
       county_id: null,
       address: null,
@@ -95,7 +95,7 @@ export default class Address extends PureComponent {
         county,
         value: {
           ...value,
-          city_id: cityId,
+          city_id: cityId || null,
           county_id: null,
           address: null,
         },
@@ -151,7 +151,7 @@ export default class Address extends PureComponent {
                 {
                   value: {
                     ...value,
-                    county_id: countyId,
+                    county_id: countyId || null,
                     address: null,
                   },
                 },
