@@ -118,10 +118,12 @@ export default function request(uri, params) {
         });
       })
       .catch(e => {
-        console.log('e', e);
         const {
           response,
-          response: { status, message },
+          response: {
+            status,
+            data: { message },
+          },
         } = e;
         if (status === 422) {
           return new Promise(resolve => {
@@ -157,6 +159,7 @@ export default function request(uri, params) {
               message,
             });
           });
+          // router.push('/exception/400');
         }
         // environment should not be used
         if (status === 403) {

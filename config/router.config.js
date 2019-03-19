@@ -68,6 +68,10 @@ export default [
         component: './Exception/500',
       },
       {
+        path: '/exception/400',
+        component: './Exception/400',
+      },
+      {
         component: './Exception/404',
       },
     ],

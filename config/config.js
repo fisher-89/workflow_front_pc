@@ -47,7 +47,7 @@ if (process.env.APP_TYPE === 'site') {
     },
   ]);
 }
-const localIp = 'http://192.168.20.16:8006';
+const localIp = 'http://192.168.1.16:8006';
 const test = 'http://112.74.177.132:8006';
 const host = test;
 const proxy = {
@@ -64,7 +64,7 @@ const proxy = {
     pathRewrite: { '^/api/oa': '' },
   },
   '/api': {
-    target: `http://112.74.177.132:8006/api`,
+    target: `${host}/api`,
     pathRewrite: { '^/api': '' },
   },
   '/storage/uploads': {
