@@ -26,7 +26,7 @@ const links = [{
   blankTarget: true,
 }];
 
-const copyright = <div>Copyright <Icon type="copyright" /> 2017 喜哥实业IT部开发组出品</div>;
+const copyright = <div>Copyright <Icon type="copyright" /> 2019 喜歌实业IT部开发组出品</div>;
 
 ReactDOM.render(
   <div style={{ background: '#f5f5f5', overflow: 'hidden' }}>
